@@ -398,4 +398,5 @@ FodyWeavers.xsd
 *.sln.iml
 
 # Blacklisted folders
-Source/DiscordBot/Saves
+Source/DiscordBot/Saves/Servers
+Source/DiscordBot/Saves/Config.json
