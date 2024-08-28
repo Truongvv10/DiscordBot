@@ -25,8 +25,11 @@ namespace XironiteDiscordBot.Commands {
                 Stopwatch stopwatch = Stopwatch.StartNew();
                 DiscordChannel channel = await DiscordUtil.GetChannelByIdAsync(ctx.Guild, channelId);
 
+                // List of components
+                List<DiscordActionRowComponent> components = new();
+
                 // Define select menu options for editing the embed
-                var selectOptions = new List<DiscordSelectComponentOption>() {
+                var selectOptionDefault = new List<DiscordSelectComponentOption>() {
                     new DiscordSelectComponentOption("Edit title", Identity.SELECTION_TITLE, "Edit your embed title & url.", emoji: new DiscordComponentEmoji("✏️")),
                     new DiscordSelectComponentOption("Edit description", Identity.SELECTION_DESCRIPTION, "Edit your embed description.", emoji: new DiscordComponentEmoji("📄")),
                     new DiscordSelectComponentOption("Edit footer", Identity.SELECTION_FOOTER, "Edit your embed footer & image.", emoji: new DiscordComponentEmoji("🧩")),
@@ -37,31 +40,26 @@ namespace XironiteDiscordBot.Commands {
                     new DiscordSelectComponentOption("Edit roles to ping", Identity.SELECTION_PINGROLE, "Add roles to ping on message sent.", emoji: new DiscordComponentEmoji("🔔")),
                     new DiscordSelectComponentOption("Toggle timestamp", Identity.SELECTION_TIMESTAMP, "Toggle embed timestamp.", emoji: new DiscordComponentEmoji("🕙")),
                     new DiscordSelectComponentOption("Add field message", Identity.SELECTION_FIELD_ADD, "Add field message.", emoji: new DiscordComponentEmoji("📕")),
-                    new DiscordSelectComponentOption("Remove field message", Identity.SELECTION_FIELD_REMOVE, "Remove field message.", emoji: new DiscordComponentEmoji("❌")),
-                    new DiscordSelectComponentOption("Use from template", Identity.SELECTION_TEMPLATE_USE, "Choose an existing template.", emoji: new DiscordComponentEmoji("🗂️")),
-                    new DiscordSelectComponentOption("Save to template", Identity.SELECTION_TEMPLATE_ADD, "Save this embed to be a template.", emoji: new DiscordComponentEmoji("🗂️"))};
+                    new DiscordSelectComponentOption("Remove field message", Identity.SELECTION_FIELD_REMOVE, "Remove field message.", emoji: new DiscordComponentEmoji("❌"))};
 
+                var selectOptionsTemplate = new List<DiscordSelectComponentOption>() {
+                    new DiscordSelectComponentOption("Use from template", Identity.SELECTION_TEMPLATE_USE, "Choose an existing template.", emoji: new DiscordComponentEmoji("🗂")),
+                    new DiscordSelectComponentOption("Save to template", Identity.SELECTION_TEMPLATE_ADD, "Save this embed to be a template.", emoji: new DiscordComponentEmoji("🗃️"))};
 
-                var selectOptions2 = new List<DiscordSelectComponentOption>() {
-                    new DiscordSelectComponentOption("Edit title", Identity.SELECTION_TITLE, "Edit your embed title & url.", emoji: new DiscordComponentEmoji("✏️")),
-                    new DiscordSelectComponentOption("Edit description", Identity.SELECTION_DESCRIPTION, "Edit your embed description.", emoji: new DiscordComponentEmoji("📄")),
-                    new DiscordSelectComponentOption("Edit footer", Identity.SELECTION_FOOTER, "Edit your embed footer & image.", emoji: new DiscordComponentEmoji("🧩")),
-                    new DiscordSelectComponentOption("Edit author", Identity.SELECTION_AUTHOR, "Edit your embed author text, link & url.", emoji: new DiscordComponentEmoji("👤")),
-                    new DiscordSelectComponentOption("Edit main image", Identity.SELECTION_IMAGE, "Edit your embed image.", emoji: new DiscordComponentEmoji("🪪")),
-                    new DiscordSelectComponentOption("Edit thumbnail image", Identity.SELECTION_THUMBNAIL, "Edit your embed tumbnail.", emoji: new DiscordComponentEmoji("🖼")),
-                    new DiscordSelectComponentOption("Edit color", Identity.SELECTION_COLOR, "Edit your embed color.", emoji: new DiscordComponentEmoji("🎨")),
-                    new DiscordSelectComponentOption("Edit roles to ping", Identity.SELECTION_PINGROLE, "Add roles to ping on message sent.", emoji: new DiscordComponentEmoji("🔔")),
-                    new DiscordSelectComponentOption("Toggle timestamp", Identity.SELECTION_TIMESTAMP, "Toggle embed timestamp.", emoji: new DiscordComponentEmoji("🕙")),
-                    new DiscordSelectComponentOption("Add field message", Identity.SELECTION_FIELD_ADD, "Add field message.", emoji: new DiscordComponentEmoji("📕")),
-                    new DiscordSelectComponentOption("Remove field message", Identity.SELECTION_FIELD_REMOVE, "Remove field message.", emoji: new DiscordComponentEmoji("❌")),
-                    new DiscordSelectComponentOption("Use from template", Identity.SELECTION_TEMPLATE_USE, "Choose an existing template.", emoji: new DiscordComponentEmoji("🗂️")),
-                    new DiscordSelectComponentOption("Save to template", Identity.SELECTION_TEMPLATE_ADD, "Save this embed to be a template.", emoji: new DiscordComponentEmoji("🗂️"))};
+                List<DiscordComponent> selectComponentDefault = new() {
+                new DiscordSelectComponent("embedSelect", "Select which module you want to edit...", selectOptionDefault)};
+                List<DiscordComponent> selectComponentTemplate = new() {
+                new DiscordSelectComponent("embedSelectTemplate", "Select from a template or save template...", selectOptionsTemplate)};
 
                 switch (type) {
                     case EmbedType.DEFAULT:
+                        components.Add(new DiscordActionRowComponent(selectComponentDefault));
+                        components.Add(new DiscordActionRowComponent(selectComponentTemplate));
                         break;
                     case EmbedType.EVENT:
-                        selectOptions.Insert(0, new DiscordSelectComponentOption("Change Timestamp", Identity.SELECTION_TIMESTAMP_CHANGE, "Change timestamp of the event.", emoji: new DiscordComponentEmoji("⏰")));
+                        selectOptionDefault.Insert(0, new DiscordSelectComponentOption("Change Timestamp", Identity.SELECTION_TIMESTAMP_CHANGE, "Change timestamp of the event.", emoji: new DiscordComponentEmoji("⏰")));
+                        components.Add(new DiscordActionRowComponent(selectComponentDefault));
+                        components.Add(new DiscordActionRowComponent(selectComponentTemplate));
                         break;
                     case EmbedType.BROADCAST:
                         break;
@@ -69,23 +67,13 @@ namespace XironiteDiscordBot.Commands {
                         break;
                 }
 
-                List<DiscordComponent> selectComponent = new() {
-                new DiscordSelectComponent("embedSelect", "Select which module you want to edit...", selectOptions)};
-                List<DiscordComponent> selectComponent2 = new() {
-                new DiscordSelectComponent("embedSelect2", "Select which module you want to edit...", selectOptions2)};
-
                 // Define button components with corresponding actions
                 List<DiscordComponent> buttonComponent = new() {
                     new DiscordButtonComponent(ButtonStyle.Success, "embedButtonChannel", $"Send to {channel.Name}"),
                     new DiscordButtonComponent(ButtonStyle.Secondary, "embedButtonCurrent", $"Send here"),
                     new DiscordButtonComponent(ButtonStyle.Primary, "embedButtonUpdate", $"Update"),
                     new DiscordButtonComponent(ButtonStyle.Danger, "embedButtonCancel", "Cancel", hidden)};
-
-                // Put all discord components in action row component
-                List<DiscordActionRowComponent> components = new() {
-                new DiscordActionRowComponent(selectComponent),
-                new DiscordActionRowComponent(selectComponent2),
-                new DiscordActionRowComponent(buttonComponent)};
+                components.Add(new DiscordActionRowComponent(buttonComponent));
 
                 // Build the embed and response
                 var embed = embedBuilder.Build();
