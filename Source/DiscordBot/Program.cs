@@ -74,6 +74,7 @@ namespace DiscordBot {
             slashCommandConfiguration.RegisterCommands<BroadcastCmd>();
             slashCommandConfiguration.RegisterCommands<PermissionCmd>();
             slashCommandConfiguration.RegisterCommands<TimestampCmd>();
+            slashCommandConfiguration.RegisterCommands<NotionCmd>();
 
 
             // (10) Connect to get the Bot online
