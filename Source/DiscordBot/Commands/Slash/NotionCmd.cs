@@ -13,51 +13,58 @@ using Notion.Client;
 using XironiteDiscordBot.Model;
 using DiscordBot.Utils;
 using DSharpPlus;
+using DSharpPlus.Interactivity;
 
 namespace DiscordBot.Commands.Slash {
     internal class NotionCmd : SlashCommand {
 
         private NotionClient _notionClient;
-        private string databaseId = "ae8ebac78dfe4407ba11e6c7ff77be03";
+        private const string token = @"secret_4CS7Rgs0Jwr3FpxPdWfSZQsvhQEafvTq21SoxLvtzbA";
+        private const string databaseId = "ae8ebac78dfe4407ba11e6c7ff77be03";
 
         [SlashCommand("notion", "Notion editor")]
         public async Task UseNotionCommand(InteractionContext ctx) {
             var client = NotionClientFactory.Create(new ClientOptions {
-                AuthToken = @"secret_4CS7Rgs0Jwr3FpxPdWfSZQsvhQEafvTq21SoxLvtzbA"
+                AuthToken = token
             });
 
             try {
-                var dateFilter = new DateFilter("Due", onOrAfter: DateTime.Now);
-                var queryParams = new DatabasesQueryParameters { Filter = dateFilter };
-                var pages = await client.Databases.QueryAsync(databaseId, queryParams);
-                Console.WriteLine(pages);
+                var databasesQueryParameters = new DatabasesQueryParameters();
+                var queryResult = await client.Databases.QueryAsync(databaseId, databasesQueryParameters);
+                foreach (var result in queryResult.Results) {
+                    Console.WriteLine("Page Id: " + result.Id);
+                    foreach (var property in result.Properties) {
+                        var retrieveCommentsParameters = new RetrieveCommentsParameters() {
+                            BlockId = result.Id
+                        };
+                        var comments = await client.Comments.RetrieveAsync(retrieveCommentsParameters);
+                        Console.WriteLine(property.Key + ": " + GetValue(property.Value));
+                        foreach (var comment in comments.Results) {
+                            var commentText = string.Join(" ", comment.RichText.Select(t => t.PlainText));
+                            Console.WriteLine($"Comment: {commentText}");
+                        }
+                    }
+                }
             } catch (Exception ex) {
                 Console.WriteLine(ex);
                 throw;
             }
+        }
 
-
-
-            //var usersList = await client.Users.ListAsync();
-            //if (usersList.Results != null && usersList.Results.Any()) {
-            //    var userInfo = usersList.Results
-            //                            .Select(user => $"{user.Id}, {user.Name}")
-            //                            .Aggregate((a, b) => $"{a}\n{b}");
-
-            //    var response = new DiscordInteractionResponseBuilder()
-            //        .AsEphemeral(true)
-            //        .WithContent(userInfo);
-
-            //    // Send the response
-            //    await ctx.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, response);
-            //} else {
-            //    var response = new DiscordInteractionResponseBuilder()
-            //        .AsEphemeral(true)
-            //        .WithContent("No users found.");
-
-            //    // Send the response
-            //    await ctx.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, response);
-            //}
+        private object GetValue(PropertyValue p) {
+            switch (p) {
+                case TitlePropertyValue titlePropertyValue:
+                    
+                    return titlePropertyValue.Title.FirstOrDefault()?.PlainText;
+                case DatePropertyValue dateProperty:
+                    if (dateProperty.Date != null) {
+                        return dateProperty.Date.Start.GetValueOrDefault().ToString("dd/MM/yyyy");
+                    } else {
+                        return "N/A";
+                    }
+                default:
+                    return "???";
+            }
         }
 
     }
