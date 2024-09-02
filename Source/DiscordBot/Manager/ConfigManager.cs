@@ -1,13 +1,14 @@
-﻿using Newtonsoft.Json;
+﻿using DiscordBot.Configuration;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using XironiteDiscordBot.Exceptions;
-using XironiteDiscordBot.Model;
 
-namespace XironiteDiscordBot.Manager {
+namespace XironiteDiscordBot.Manager
+{
     public class ConfigManager {
 
         #region Properties
@@ -22,11 +23,11 @@ namespace XironiteDiscordBot.Manager {
 
 
         #region Method
-        public async Task<Config> GetDiscordBotConfig() {
+        public async Task<BotConfig> GetDiscordBotConfig() {
             try {
                 using (StreamReader sr = new StreamReader(configFolder)) {
                     string text = await sr.ReadToEndAsync();
-                    return JsonConvert.DeserializeObject<Config>(text)!;
+                    return JsonConvert.DeserializeObject<BotConfig>(text)!;
                 }
 
             } catch (Exception ex) {

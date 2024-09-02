@@ -1,4 +1,5 @@
-﻿using DiscordBot.Model;
+﻿using DiscordBot.Configuration;
+using DiscordBot.Model;
 using DiscordBot.Model.Enums;
 using DSharpPlus;
 using Newtonsoft.Json;
@@ -14,9 +15,9 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using XironiteDiscordBot.Exceptions;
-using XironiteDiscordBot.Model;
 
-namespace DiscordBot.Utils {
+namespace DiscordBot.Utils
+{
     public static class CacheData {
 
         #region Properties
@@ -25,7 +26,7 @@ namespace DiscordBot.Utils {
         private static Dictionary<ulong, Dictionary<string, EmbedBuilder>> templates = new();
         private static Dictionary<ulong, Dictionary<CommandEnum, Permission>> permissions = new();
         private static Dictionary<ulong, List<string>> activities = new();
-        private static Dictionary<ulong, Config> configs = new();
+        private static Dictionary<ulong, BotConfig> configs = new();
         private static List<string> timeZones = new();
         #endregion
 
@@ -90,7 +91,7 @@ namespace DiscordBot.Utils {
                 Directory.CreateDirectory(pathSaves);
             }
             if (!File.Exists(pathConfig)) {
-                string json = JsonConvert.SerializeObject(new Config(), Formatting.Indented);
+                string json = JsonConvert.SerializeObject(new BotConfig(), Formatting.Indented);
                 await File.WriteAllTextAsync(pathConfig, json);
             }
             if (!File.Exists(pathEmbed)) {
