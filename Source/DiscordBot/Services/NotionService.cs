@@ -25,10 +25,10 @@ namespace DiscordBot.Services {
         #endregion
 
         #region Methods
-        private async Task<Dictionary<string, string>> FetchAllDataAsync(string databaseId) {
+        private async Task<Dictionary<string, (string, string)>> FetchAllDataAsync(string databaseId) {
 
             // Data output
-            var fetchedData = new Dictionary<string, string>();
+            var fetchedData = new Dictionary<string, (string, string)>();
 
             // Database querries
             var parameters = new DatabasesQueryParameters();
@@ -37,10 +37,7 @@ namespace DiscordBot.Services {
             // Result of all pages
             foreach (var result in queryResult.Results) {
                 foreach (var property in result.Properties) {
-                    
-                    //
-
-                    fetchedData.Add(property.Key, await GetValueAsync(property.Value));
+                    fetchedData.Add(result.Id, (property.Key, await GetValueAsync(property.Value)));
                 }
             }
 
