@@ -27,7 +27,7 @@ namespace DiscordBot.Services {
         #region Methods
         private async Task<Dictionary<string, string>> FetchAllDataAsync(string databaseId) {
 
-            // Output
+            // Data output
             var fetchedData = new Dictionary<string, string>();
 
             // Database querries
@@ -37,17 +37,40 @@ namespace DiscordBot.Services {
             // Result of all pages
             foreach (var result in queryResult.Results) {
                 foreach (var property in result.Properties) {
-                    var retrieveCommentsParameters = new RetrieveCommentsParameters() { BlockId = result.Id };
-                    //var comments = await _notionClient.Comments.RetrieveAsync(retrieveCommentsParameters);
-                    //foreach (var comment in comments.Results) {
-                    //    var commentText = string.Join(" ", comment.RichText.Select(t => t.PlainText));
-                    //    Console.WriteLine($"Comment: {commentText}");
-                    //}
+                    
+                    //
+
                     fetchedData.Add(property.Key, await GetValueAsync(property.Value));
                 }
             }
 
             // Return fetched data
+            return fetchedData;
+        }
+
+        private async Task<Dictionary<string, string>> FetchPageCommentAsync(string pageId) {
+            // Data output
+            var fetchedData = new Dictionary<string, string>();
+
+            // Database page queries
+            var retrieveCommentsParameters = new RetrieveCommentsParameters() { BlockId = pageId };
+            var comments = await _notionClient.Comments.RetrieveAsync(retrieveCommentsParameters);
+
+            foreach (var comment in comments.Results) {
+                // Extract the comment text
+                var commentText = string.Join(" ", comment.RichText.Select(t => t.PlainText));
+
+                // Get the author's information
+                var author = comment.CreatedBy;
+
+                // Output the comment and author
+                Console.WriteLine($"Comment: {commentText} - by {author}");
+
+                // Add to the dictionary (you can customize the key-value pair as needed)
+                fetchedData.Add(author.Id, commentText);
+            }
+
+            // Return fetched comment
             return fetchedData;
         }
 
