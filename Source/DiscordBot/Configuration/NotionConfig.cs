@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DiscordBot.Exceptions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -36,13 +37,18 @@ namespace DiscordBot.Configuration {
         #region Methods
         public void AddDatabase(string name, string id) {
             if (!_databases.TryAdd(name, id)) {
-
+                throw new ConfigException($"ID: \"{id}\" for \"{name}\" already exist!");
             }
         }
         public void RemoveDatabase(string name) {
             if (_databases.TryGetValue(name, out string dbName)) {
                 _databases.Remove(dbName);
-            }
+            } else throw new ConfigException($"No database with the name \"{name}\" has been found.");
+        }
+        public void RemoveDatabaseId(string id) {
+            if (_databases.Any(x => x.Value == id)) {
+                _databases.Remove(_databases.Where(x => x.Value == id).Select(x => x.Key).First());
+            } else throw new ConfigException($"No database with the ID \"{id}\" has been found.");
         }
         #endregion
     }
