@@ -273,6 +273,10 @@ namespace DiscordBot.Model {
             _childEmbeds.Clear();
             return this;
         }
+        public EmbedBuilder AddField(string title, string description) {
+            _fields.Add((title, description, true));
+            return this;
+        }
         public EmbedBuilder AddField(string title, string description, bool isInline) {
             _fields.Add((title, description, isInline));
             return this;

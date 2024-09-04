@@ -18,7 +18,7 @@ namespace DiscordBot.Model {
         private bool allowAddReaction;
         private Dictionary<ulong, DiscordUser> allowedUsers = new();
         private Dictionary<ulong, DiscordRole> allowedRoles = new();
-        private Dictionary<ulong, DiscordChannel> channels = new();
+        private Dictionary<ulong, DiscordChannel> allowedChannels = new();
         #endregion
 
         #region Constructors
@@ -53,6 +53,10 @@ namespace DiscordBot.Model {
             get => allowEveryone;
             set => allowEveryone = value;
         }
+        public bool AllowAddReaction {
+            get => allowAddReaction;
+            set => allowAddReaction = value;
+        }
         public IReadOnlyDictionary<ulong, DiscordUser> AllowedUsers {
             get => allowedUsers;
             set { foreach (var user in value) AddUser(user.Value); }
@@ -61,8 +65,8 @@ namespace DiscordBot.Model {
             get => allowedRoles;
             set { foreach (var role in value) AddRole(role.Value); }
         }
-        public IReadOnlyDictionary<ulong, DiscordChannel> Channels {
-            get => channels;
+        public IReadOnlyDictionary<ulong, DiscordChannel> AllowedChannels {
+            get => allowedChannels;
             set { foreach (var channel in value) AddChannel(channel.Value); }
         }
         #endregion
@@ -75,7 +79,7 @@ namespace DiscordBot.Model {
             if (allowedRoles.TryAdd(role.Id, role)) return true; return false;
         }
         public bool AddChannel(DiscordChannel channel) {
-            if (channels.TryAdd(channel.Id, channel)) return true; return false;
+            if (allowedChannels.TryAdd(channel.Id, channel)) return true; return false;
         }
         #endregion
 
