@@ -129,9 +129,9 @@ namespace DiscordBot.Listeners {
                             embed.SetCustomSaveMessage("EndDate", end);
                         } else throw new ListenerException($"Time \"{end}\" has incorrect format");
 
-                        string startDate = await DiscordUtil.TranslateTimestamp(parsedStartDateTime, embed.CustomSaves["TimeZone"], TimestampEnum.LONG_DATE_AND_SHORT_TIME);
-                        string endDate = await DiscordUtil.TranslateTimestamp(parsedEndDateTime, embed.CustomSaves["TimeZone"], TimestampEnum.LONG_DATE_AND_SHORT_TIME);
-                        string startDateRelative = await DiscordUtil.TranslateTimestamp(parsedStartDateTime, embed.CustomSaves["TimeZone"], TimestampEnum.RELATIVE);
+                        string startDate = await DiscordUtil.TranslateTimestamp(parsedStartDateTime, embed.CustomSaves["TimeZone"] as string, TimestampEnum.LONG_DATE_AND_SHORT_TIME);
+                        string endDate = await DiscordUtil.TranslateTimestamp(parsedEndDateTime, embed.CustomSaves["TimeZone"] as string, TimestampEnum.LONG_DATE_AND_SHORT_TIME);
+                        string startDateRelative = await DiscordUtil.TranslateTimestamp(parsedStartDateTime, embed.CustomSaves["TimeZone"] as string, TimestampEnum.RELATIVE);
 
                         embed.ClearFields();
                         embed.AddField("Start Date:", $"{startDate} ({startDateRelative})", false);

@@ -1,53 +1,43 @@
-﻿using DiscordBot.Model.Enums;
+﻿using DiscordBot.Exceptions;
+using DiscordBot.Model;
+using DiscordBot.Model.Enums;
 using DSharpPlus.SlashCommands;
+using System.Threading.Channels;
 using XironiteDiscordBot.Commands;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace DiscordBot.Commands.Slash {
     public class PermissionCmd : SlashCommand {
 
         [SlashCommand("permissions", "Show an overview of permissions")]
-        public async Task UsePermissionEditCommand(InteractionContext ctx,
-            [Option("cmd", "Choose which command permission to edit")] CommandEnum cmd) {
+        public async Task UsePermissionEditCommand(InteractionContext ctx) {
 
-            if (!await CheckPermission(ctx, CommandEnum.PERMISSIONS)) {
-                await showNoPermissionMessage(ctx);
-                return;
+            try {
+                // Check if user has permission to use command
+                if (!await CheckPermission(ctx, CommandEnum.PERMISSIONS)) {
+                    await showNoPermissionMessage(ctx);
+                    return;
+                }
+
+                // Build the embed message with default values
+                EmbedBuilder embed = new EmbedBuilder() {
+                    Title = "This is an example title",
+                    Description = "This is the description text.",
+                    Image = @"https://i.imgur.com/07DVuUb.gif",
+                    Thumbnail = @"https://i.imgur.com/sHL1DQQ.gif",
+                    Footer = "Footer sample text",
+                    HasTimeStamp = true,
+                    Owner = ctx.User.Id
+                };
+
+                // Create the embed message
+                await CreateEmbedMessageAsync(ctx, embed, EmbedType.PERMISSION, ctx.Interaction.Channel.Id, false);
+
+            } catch (Exception ex) {
+                throw new CommandException($"Embed.UseEmbedCommand: {ex}");
             }
-            LogCommand(ctx, CommandEnum.PERMISSIONS);
-
-            //try {
-            //    var permission = await Json.ReadPermissionFile(ctx.Guild.Id, cmd);
-
-            //    List<string> roles = new() { "Administrator", "Everyone" };
-            //    List<bool> canUse = new() { permission.AllowAdministrator, permission.AllowEveryone };
-
-            //    foreach (var role in permission.AllowedRoles) {
-            //        roles.Add(role.Value.Name);
-            //        canUse.Add(true);
-            //    }
-            //    foreach (var role in permission.AllowedUsers) {
-            //        roles.Add(role.Value.Username);
-            //        canUse.Add(true);
-            //    }
-
-            //    EmbedBuilder embedBuilder = new EmbedBuilder() {
-            //        Author = $"Command /{cmd.ToString().ToLower()} management",
-            //        AuthorUrl = ctx.Client.CurrentUser.AvatarUrl,
-            //    };
-
-            //    embedBuilder.AddField("Roles & Users", $"```\n------------------------------\n{string.Join("\n", roles)}```", true);
-            //    embedBuilder.AddField("Access", $"```\n \n{canUse.Select(b => b ? " ✅ " : " ❌ ").Aggregate((a, b) => $"{a}\n{b}")}```", true);
 
 
-            //    var ephemeral = new DiscordInteractionResponseBuilder()
-            //        .AddEmbed(embedBuilder.Build())
-            //        .AsEphemeral(true);
-
-            //    await ctx.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, ephemeral);
-
-            //} catch (Exception ex) {
-            //    throw new CommandException($"Permission.UsePermissionEditCommand: {ex}");
-            //}
         }
 
     }

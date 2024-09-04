@@ -10,7 +10,6 @@ using System.Text;
 using System.Threading.Tasks;
 using XironiteDiscordBot.Commands;
 using Notion.Client;
-using XironiteDiscordBot.Model;
 using DiscordBot.Utils;
 using DSharpPlus;
 using DSharpPlus.Interactivity;

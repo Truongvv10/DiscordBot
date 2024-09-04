@@ -20,11 +20,11 @@ namespace DiscordBot.Commands.Slash {
             [Option("thumbnail", "The thumbnail of your embeded message that will be added.")] DiscordAttachment? thumbnail = null,
             [Option("ping", "The role that will get pinged on sending message.")] DiscordRole? pingrole = null) {
 
-            if (!await CheckPermission(ctx, CommandEnum.EVENT_CREATE)) {
+            if (!await CheckPermission(ctx, CommandEnum.EVENTS)) {
                 await showNoPermissionMessage(ctx);
                 return;
             }
-            LogCommand(ctx, CommandEnum.EVENT_CREATE);
+            LogCommand(ctx, CommandEnum.EVENTS);
 
             if (!CacheData.Timezones.Contains(timeZone, StringComparer.OrdinalIgnoreCase)) {
                 return;

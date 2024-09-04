@@ -46,6 +46,13 @@ namespace XironiteDiscordBot.Commands {
                     new DiscordSelectComponentOption("Use from template", Identity.SELECTION_TEMPLATE_USE, "Choose an existing template.", emoji: new DiscordComponentEmoji("🗂")),
                     new DiscordSelectComponentOption("Save to template", Identity.SELECTION_TEMPLATE_ADD, "Save this embed to be a template.", emoji: new DiscordComponentEmoji("🗃️"))};
 
+                // Define button components with corresponding actions
+                var buttonComponent = new List<DiscordComponent> {
+                    new DiscordButtonComponent(ButtonStyle.Success, "embedButtonChannel", $"Send to {channel.Name}"),
+                    new DiscordButtonComponent(ButtonStyle.Secondary, "embedButtonCurrent", $"Send here"),
+                    new DiscordButtonComponent(ButtonStyle.Primary, "embedButtonUpdate", $"Update"),
+                    new DiscordButtonComponent(ButtonStyle.Danger, "embedButtonCancel", "Cancel", hidden)};
+
                 List<DiscordComponent> selectComponentDefault = new() {
                 new DiscordSelectComponent("embedSelect", "Select which module you want to edit...", selectOptionDefault)};
                 List<DiscordComponent> selectComponentTemplate = new() {
@@ -55,25 +62,24 @@ namespace XironiteDiscordBot.Commands {
                     case EmbedType.DEFAULT:
                         components.Add(new DiscordActionRowComponent(selectComponentDefault));
                         components.Add(new DiscordActionRowComponent(selectComponentTemplate));
+                        components.Add(new DiscordActionRowComponent(buttonComponent));
                         break;
                     case EmbedType.EVENT:
                         selectOptionDefault.Insert(0, new DiscordSelectComponentOption("Change Timestamp", Identity.SELECTION_TIMESTAMP_CHANGE, "Change timestamp of the event.", emoji: new DiscordComponentEmoji("⏰")));
                         components.Add(new DiscordActionRowComponent(selectComponentDefault));
                         components.Add(new DiscordActionRowComponent(selectComponentTemplate));
+                        components.Add(new DiscordActionRowComponent(buttonComponent));
                         break;
                     case EmbedType.BROADCAST:
+                        break;
+                    case EmbedType.PERMISSION:
+                        foreach (var item in await PermissionComponent(embedBuilder)) {
+                            components.Add(item);
+                        }
                         break;
                     default:
                         break;
                 }
-
-                // Define button components with corresponding actions
-                List<DiscordComponent> buttonComponent = new() {
-                    new DiscordButtonComponent(ButtonStyle.Success, "embedButtonChannel", $"Send to {channel.Name}"),
-                    new DiscordButtonComponent(ButtonStyle.Secondary, "embedButtonCurrent", $"Send here"),
-                    new DiscordButtonComponent(ButtonStyle.Primary, "embedButtonUpdate", $"Update"),
-                    new DiscordButtonComponent(ButtonStyle.Danger, "embedButtonCancel", "Cancel", hidden)};
-                components.Add(new DiscordActionRowComponent(buttonComponent));
 
                 // Build the embed and response
                 var embed = embedBuilder.Build();
@@ -168,6 +174,37 @@ namespace XironiteDiscordBot.Commands {
                 throw;
             }
 
+        }
+
+        private async Task<List<DiscordActionRowComponent>> PermissionComponent(EmbedBuilder embed) {
+
+            var selectPermissionOption = new List<DiscordSelectComponentOption>();
+            var buttonEditOption = new List<DiscordActionRowComponent>();
+            var hideButtons = embed.CustomSaves.ContainsKey(Identity.SELECTION_PERMS);
+            var commandPermissions = Enum.GetValues(typeof(CommandEnum)).Cast<CommandEnum>().ToList();
+
+            foreach (var cmd in commandPermissions) {
+                string title = cmd.ToString().ToUpper();
+                string id = $"{Identity.SELECTION_PERMS}.{cmd.ToString().ToLower()}";
+                string desc = $"Edit permissions for command /{cmd.ToString().ToLower()}";
+                selectPermissionOption.Add(new DiscordSelectComponentOption(title, id, desc));
+            }
+
+            List<DiscordComponent> buttonComponents = new() {
+                new DiscordButtonComponent(ButtonStyle.Success, Identity.BUTTON_PERMISSION_USERS, "Users", hideButtons),
+                new DiscordButtonComponent(ButtonStyle.Success, Identity.BUTTON_PERMISSION_ROLES, "Roles", hideButtons),
+                new DiscordButtonComponent(ButtonStyle.Success, Identity.BUTTON_PERMISSION_CHANNELS, "Channels", hideButtons),
+                new DiscordButtonComponent(ButtonStyle.Primary, Identity.BUTTON_PERMISSION_SETTINGS, "Settings", hideButtons),
+                new DiscordButtonComponent(ButtonStyle.Danger, Identity.BUTTON_PERMISSION_RESET, "Reset", hideButtons)};
+
+            List<DiscordComponent> selectComponents = new() {
+                new DiscordSelectComponent(Identity.SELECTION_PERMS, "Choose which permission you want to edit...", selectPermissionOption)};
+
+            List<DiscordActionRowComponent> results = new() { 
+                new DiscordActionRowComponent(selectComponents),
+                new DiscordActionRowComponent(buttonComponents)};
+
+            return results;
         }
     }
 }

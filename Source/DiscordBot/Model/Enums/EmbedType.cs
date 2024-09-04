@@ -10,5 +10,6 @@ namespace DiscordBot.Model.Enums {
         EVENT = 1,
         BROADCAST = 2,
         CHANGELOG = 3,
+        PERMISSION = 4,
     }
 }

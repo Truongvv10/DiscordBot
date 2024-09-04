@@ -113,9 +113,9 @@ namespace DiscordBot.Listeners {
                             break;
                         case Identity.SELECTION_TIMESTAMP_CHANGE:
                             modal.WithTitle($"CHANGE EVENT TIMESTAMP").WithCustomId($"embedModal;{option};{messageId}");
-                            modal.AddComponents(new TextInputComponent("TIME ZONE", "eventTimeZone", "Europe/Brussels", embed.CustomSaves[Identity.EVENT_TIMEZONE], true, TextInputStyle.Short));
-                            modal.AddComponents(new TextInputComponent("START DATE", "eventStart", "DD/MM/YYYY hh:mm", embed.CustomSaves[Identity.EVENT_START], true, TextInputStyle.Short));
-                            modal.AddComponents(new TextInputComponent("END DATE", "eventEnd", "DD/MM/YYYY hh:mm", embed.CustomSaves[Identity.EVENT_END], true, TextInputStyle.Short));
+                            modal.AddComponents(new TextInputComponent("TIME ZONE", "eventTimeZone", "Europe/Brussels", embed.CustomSaves[Identity.EVENT_TIMEZONE] as string, true, TextInputStyle.Short));
+                            modal.AddComponents(new TextInputComponent("START DATE", "eventStart", "DD/MM/YYYY hh:mm", embed.CustomSaves[Identity.EVENT_START] as string, true, TextInputStyle.Short));
+                            modal.AddComponents(new TextInputComponent("END DATE", "eventEnd", "DD/MM/YYYY hh:mm", embed.CustomSaves[Identity.EVENT_END] as string, true, TextInputStyle.Short));
                             await e.Interaction.CreateResponseAsync(InteractionResponseType.Modal, modal);
                             break;
                     }

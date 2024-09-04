@@ -6,54 +6,74 @@ using System.Threading.Tasks;
 
 namespace DiscordBot.Utils {
     public  static class Identity {
+
+        // Prefix
+        private const string PREFIX = "";
+
         // Button Component
-        public const string BUTTON_CHANNEL = "button.channel";
-        public const string BUTTON_CURRENT_CHANNEL = "button.current.channel";
-        public const string BUTTON_UPDATE = "button.update";
-        public const string BUTTON_CANCEL = "button.cancel";
+        public const string BUTTON_CHANNEL = PREFIX + PREFIX + "button.channel";
+        public const string BUTTON_CURRENT_CHANNEL = PREFIX + "button.current.channel";
+        public const string BUTTON_UPDATE = PREFIX + "button.update";
+        public const string BUTTON_CANCEL = PREFIX + "button.cancel";
+
+        // Button Component Permission
+        public const string BUTTON_PERMISSION_USERS = PREFIX + "button.permission.users";
+        public const string BUTTON_PERMISSION_ROLES = PREFIX + "button.permission.roles";
+        public const string BUTTON_PERMISSION_CHANNELS = PREFIX + "button.permission.channels";
+        public const string BUTTON_PERMISSION_SETTINGS = PREFIX + "button.permission.settings";
+        public const string BUTTON_PERMISSION_RESET = PREFIX + "button.permission.reset";
 
         // Selection Component
-        public const string SELECTION_TITLE = "selection.title";
-        public const string SELECTION_DESCRIPTION = "selection.description";
-        public const string SELECTION_FOOTER = "selection.footer";
-        public const string SELECTION_AUTHOR = "selection.author";
-        public const string SELECTION_COLOR = "selection.color";
-        public const string SELECTION_IMAGE = "selection.image";
-        public const string SELECTION_THUMBNAIL = "selection.thumbnail";
-        public const string SELECTION_PINGROLE = "selection.pingrole";
-        public const string SELECTION_TIMESTAMP = "selection.timestamp";
-        public const string SELECTION_TIMESTAMP_CHANGE = "selection.timestamp.change";
-        public const string SELECTION_FIELD_ADD = "selection.field.add";
-        public const string SELECTION_FIELD_REMOVE = "selection.field.remove";
-        public const string SELECTION_TEMPLATE_ADD = "selection.template.add";
-        public const string SELECTION_TEMPLATE_USE = "selection.template.use";
-        public const string SELECTION_TEMPLATE_REMOVE = "selection.template.remove";
+        public const string SELECTION_TITLE = PREFIX + "selection.title";
+        public const string SELECTION_DESCRIPTION = PREFIX + "selection.description";
+        public const string SELECTION_FOOTER = PREFIX + "selection.footer";
+        public const string SELECTION_AUTHOR = PREFIX + "selection.author";
+        public const string SELECTION_COLOR = PREFIX + "selection.color";
+        public const string SELECTION_IMAGE = PREFIX + "selection.image";
+        public const string SELECTION_THUMBNAIL = PREFIX + "selection.thumbnail";
+        public const string SELECTION_PINGROLE = PREFIX + "selection.pingrole";
+        public const string SELECTION_TIMESTAMP = PREFIX + "selection.timestamp";
+        public const string SELECTION_TIMESTAMP_CHANGE = PREFIX + "selection.timestamp.change";
+        public const string SELECTION_FIELD_ADD = PREFIX + "selection.field.add";
+        public const string SELECTION_FIELD_REMOVE = PREFIX + "selection.field.remove";
+        public const string SELECTION_TEMPLATE_ADD = PREFIX + "selection.template.add";
+        public const string SELECTION_TEMPLATE_USE = PREFIX + "selection.template.use";
+        public const string SELECTION_TEMPLATE_REMOVE = PREFIX + "selection.template.remove";
+
+        // Selection Component Permission
+        public const string SELECTION_PERMS = PREFIX + "selection.permission";
+        public const string SELECTION_PERMS_PERMS = PREFIX + "selection.permission.permission";
+        public const string SELECTION_PERMS_EMBED = PREFIX + "selection.permission.embed";
+        public const string SELECTION_PERMS_EVENTS = PREFIX + "selection.permission.events";
+        public const string SELECTION_PERMS_TIMESTAMP = PREFIX + "selection.permission.timestamp";
+        public const string SELECTION_PERMS_BROADCAST = PREFIX + "selection.permission.broadcast";
+        public const string SELECTION_PERMS_NOTION = PREFIX + "selection.permission.notion";
 
         // Modal
-        public const string MODAL_TITLE = "modal.title";
-        public const string MODAL_TITLE_LINK = "modal.title.link";
-        public const string MODAL_DESCRIPTION = "modal.description";
-        public const string MODAL_FOOTER = "modal.footer";
-        public const string MODAL_FOOTER_URL = "modal.footer.url";
-        public const string MODAL_AUTHOR = "modal.author";
-        public const string MODAL_AUTHOR_LINK = "modal.author.link";
-        public const string MODAL_AUTHOR_URL = "modal.author.url";
-        public const string MODAL_COLOR = "modal.color";
-        public const string MODAL_IMAGE = "modal.image";
-        public const string MODAL_THUMBNAIL = "modal.thumnail";
-        public const string MODAL_PINGROLE = "modal.pingrole";
-        public const string MODAL_TIMESTAMP = "modal.timestamp";
-        public const string MODAL_FIELD_TITLE = "modal.field.title";
-        public const string MODAL_FIELD_TEXT = "modal.field.text";
-        public const string MODAL_FIELD_INLINE = "modal.field.inline";
-        public static string MODAL_FIELD_INDEX = "modal.field.index";
-        public const string MODAL_TEMPLATE_ADD = "modal.template.add";
-        public const string MODAL_TEMPLATE_REMOVE = "modal.template.remove";
-        public const string MODAL_TEMPLATE_USE = "modal.template.use";
+        public const string MODAL_TITLE = PREFIX + "modal.title";
+        public const string MODAL_TITLE_LINK = PREFIX + "modal.title.link";
+        public const string MODAL_DESCRIPTION = PREFIX + "modal.description";
+        public const string MODAL_FOOTER = PREFIX + "modal.footer";
+        public const string MODAL_FOOTER_URL = PREFIX + "modal.footer.url";
+        public const string MODAL_AUTHOR = PREFIX + "modal.author";
+        public const string MODAL_AUTHOR_LINK = PREFIX + "modal.author.link";
+        public const string MODAL_AUTHOR_URL = PREFIX + "modal.author.url";
+        public const string MODAL_COLOR = PREFIX + "modal.color";
+        public const string MODAL_IMAGE = PREFIX + "modal.image";
+        public const string MODAL_THUMBNAIL = PREFIX + "modal.thumnail";
+        public const string MODAL_PINGROLE = PREFIX + "modal.pingrole";
+        public const string MODAL_TIMESTAMP = PREFIX + "modal.timestamp";
+        public const string MODAL_FIELD_TITLE = PREFIX + "modal.field.title";
+        public const string MODAL_FIELD_TEXT = PREFIX + "modal.field.text";
+        public const string MODAL_FIELD_INLINE = PREFIX + "modal.field.inline";
+        public const string MODAL_FIELD_INDEX = PREFIX + "modal.field.index";
+        public const string MODAL_TEMPLATE_ADD = PREFIX + "modal.template.add";
+        public const string MODAL_TEMPLATE_REMOVE = PREFIX + "modal.template.remove";
+        public const string MODAL_TEMPLATE_USE = PREFIX + "modal.template.use";
 
         // Event
-        public const string EVENT_TIMEZONE = "event.timezone";
-        public const string EVENT_START = "event.start";
-        public const string EVENT_END = "event.end";
+        public const string EVENT_TIMEZONE = PREFIX + "event.timezone";
+        public const string EVENT_START = PREFIX + "event.start";
+        public const string EVENT_END = PREFIX + "event.end";
     }
 }

@@ -7,29 +7,31 @@ using System.Threading.Tasks;
 
 namespace DiscordBot.Model.Enums {
     public enum CommandEnum {
+
+
         [ChoiceName("/embed")]
-        EMBED,
+        EMBED = 0,
         [ChoiceName("/embed-edit")]
-        EMBED_EDIT,
+        EMBED_EDIT = 1,
+
+
         [ChoiceName("/permissions")]
-        PERMISSIONS,
-        [ChoiceName("/permission-add")]
-        PERMISSION_ADD,
-        [ChoiceName("/permission-remove")]
-        PERMISSION_REMOVE,
-        [ChoiceName("/image")]
-        IMAGE,
-        [ChoiceName("/gradient")]
-        GRADIENT,
+        PERMISSIONS = 100,
+
+
         [ChoiceName("/events")]
-        EVENTS,
-        [ChoiceName("/event-create")]
-        EVENT_CREATE,
-        [ChoiceName("/event-list")]
-        EVENT_LIST,
+        EVENTS = 200,
+
+
         [ChoiceName("/timestamp")]
-        TIMESTAMP,
+        TIMESTAMP = 300,
+
+
         [ChoiceName("/broadcast")]
-        BROADCAST
+        BROADCAST = 400,
+
+
+        [ChoiceName("/notion")]
+        NOTION = 500
     }
 }

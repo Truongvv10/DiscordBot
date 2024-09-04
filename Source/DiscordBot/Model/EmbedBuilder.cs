@@ -35,7 +35,7 @@ namespace DiscordBot.Model {
         private ulong _owner;
         private ulong _messageId;
         private ulong _channelId;
-        private Dictionary<string, string> _customSaves = new();
+        private Dictionary<string, object> _customSaves = new();
         private Dictionary<ulong, ulong> _childEmbeds = new();
         private List<ulong> _pingRoles = new();
         private List<(string, string, bool)> _fields = new();
@@ -147,7 +147,7 @@ namespace DiscordBot.Model {
             get => _messageId;
             set => _messageId = value;
         }
-        public IReadOnlyDictionary<string, string> CustomSaves {
+        public IReadOnlyDictionary<string, object> CustomSaves {
             get => _customSaves;
             set { foreach (var item in value) { AddCustomSaveMessage(item.Key, item.Value); } }
         }
@@ -243,7 +243,7 @@ namespace DiscordBot.Model {
             _channelId = channelId;
             return this;
         }
-        public EmbedBuilder AddCustomSaveMessage(string customKey, string customValue) {
+        public EmbedBuilder AddCustomSaveMessage(string customKey, object customValue) {
             _customSaves.Add(customKey, customValue);
             return this;
         }
@@ -251,9 +251,9 @@ namespace DiscordBot.Model {
             _customSaves.Remove(customKey);
             return this;
         }
-        public EmbedBuilder SetCustomSaveMessage(string id, string value) {
-            if (_customSaves.TryGetValue(id, out string key)) {
-                _customSaves[key] = value;
+        public EmbedBuilder SetCustomSaveMessage(string id, object value) {
+            if (_customSaves.TryGetValue(id, out object key)) {
+                _customSaves[id] = key;
             }
             return this;
         }
