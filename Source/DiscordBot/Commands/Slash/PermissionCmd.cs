@@ -29,12 +29,12 @@ namespace DiscordBot.Commands.Slash {
                 foreach (var perms in CacheData.Permissions[ctx.Guild.Id]) {
                     string desc =
                         $"```ansi\n" +
-                        $"{AnsiColor.RESET}Everyone  {AnsiColor.GREEN}{perms.Value.AllowEveryone}\n" +
-                        $"{AnsiColor.RESET}Admins    {AnsiColor.GREEN}{perms.Value.AllowAdministrator}\n" +
-                        $"{AnsiColor.RESET}Reactions {AnsiColor.GREEN}{perms.Value.AllowAddReaction}\n" +
-                        $"{AnsiColor.RESET}Users     {AnsiColor.YELLOW}{perms.Value.AllowedUsers.Count()}\n" +
-                        $"{AnsiColor.RESET}Roles     {AnsiColor.YELLOW}{perms.Value.AllowedUsers.Count()}\n" +
-                        $"{AnsiColor.RESET}Channels  {AnsiColor.MAGENTA}{perms.Value.AllowedChannels.Count()}\n" +
+                        $"{AnsiColor.RESET}Everyone : {AnsiColor.GREEN}{perms.Value.AllowEveryone}\n" +
+                        $"{AnsiColor.RESET}Admins   : {AnsiColor.GREEN}{perms.Value.AllowAdministrator}\n" +
+                        $"{AnsiColor.RESET}Reactions: {AnsiColor.GREEN}{perms.Value.AllowAddReaction}\n" +
+                        $"{AnsiColor.RESET}Users    : {AnsiColor.YELLOW}{perms.Value.AllowedUsers.Count()}\n" +
+                        $"{AnsiColor.RESET}Roles    : {AnsiColor.YELLOW}{perms.Value.AllowedRoles.Count()}\n" +
+                        $"{AnsiColor.RESET}Channels : {AnsiColor.MAGENTA}{perms.Value.AllowedChannels.Count()}\n" +
                         $"```";
                     embed.AddField(perms.Value.Cmd, desc);
                 }

@@ -15,7 +15,7 @@ namespace DiscordBot.Model {
         private string _name;
         private string _version;
         private Dictionary<string, List<string>> _changes = new();
-        private Dictionary<string, Changelog> _oldChanges = new();
+        private Dictionary<string, Changelog> _logs = new();
         #endregion
 
         #region Constructors
@@ -43,8 +43,8 @@ namespace DiscordBot.Model {
         public IReadOnlyDictionary<string, List<string>> Changes {
             get => _changes;
         }
-        public IReadOnlyDictionary<string, Changelog> OldChangelogs {
-            get => _oldChanges;
+        public IReadOnlyDictionary<string, Changelog> Logs {
+            get => _logs;
         }
         #endregion
 
@@ -69,8 +69,8 @@ namespace DiscordBot.Model {
         }
         private void LogChangelog(Changelog changelog) {
             if (changelog is not null) {
-                if (!_oldChanges.ContainsKey(_version)) {
-                    _oldChanges.Add(_version, changelog);
+                if (!_logs.ContainsKey(_version)) {
+                    _logs.Add(_version, changelog);
                 }
             } else throw new DomainException($"$\"Changelog.UpdateChangelog: \"{changelog.Name}\" can not be null");
         }
