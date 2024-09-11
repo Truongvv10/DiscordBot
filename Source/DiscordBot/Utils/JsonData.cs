@@ -58,6 +58,10 @@ namespace DiscordBot.Utils {
                         break;
                     case FileEnum.CONFIG:
                         break;
+                    case FileEnum.CHANGELOG:
+                        if (CacheData.Changelogs.TryGetValue(guildId, out var serverChangelogs))
+                            json = JsonConvert.SerializeObject(serverChangelogs.Values.ToList(), Formatting.Indented);
+                        break;
                     default:
                         throw new UtilException($"JsonData.SaveFileAsync: Couldn't save \"{name}.json\"");
                 }
@@ -103,6 +107,9 @@ namespace DiscordBot.Utils {
                         case FileEnum.LOGS:
                             break;
                         case FileEnum.CONFIG:
+                            break;
+                        case FileEnum.CHANGELOG:
+                            json = JsonConvert.DeserializeObject<Dictionary<string, Changelog>>(data)!;
                             break;
                         default:
                             throw new UtilException($"JsonData.ReadFileAsync: Couldn't read \"{name}.json\"");

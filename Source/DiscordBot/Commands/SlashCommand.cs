@@ -77,6 +77,11 @@ namespace XironiteDiscordBot.Commands {
                             components.Add(item);
                         }
                         break;
+                    case EmbedType.CHANGELOG:
+                        foreach (var item in await ChangelogComponent(embedBuilder)) {
+                            components.Add(item);
+                        }
+                        break;
                     default:
                         break;
                 }
@@ -201,6 +206,35 @@ namespace XironiteDiscordBot.Commands {
                 new DiscordSelectComponent(Identity.SELECTION_PERMS, "Choose which permission you want to edit...", selectPermissionOption)};
 
             List<DiscordActionRowComponent> results = new() { 
+                new DiscordActionRowComponent(selectComponents),
+                new DiscordActionRowComponent(buttonComponents)};
+
+            return results;
+        }
+
+        private async Task<List<DiscordActionRowComponent>> ChangelogComponent(EmbedBuilder embed) {
+
+            var selectPermissionOption = new List<DiscordSelectComponentOption>();
+            var buttonEditOption = new List<DiscordActionRowComponent>();
+            var hideButtons = embed.CustomSaves.ContainsKey(Identity.SELECTION_PERMS);
+            var commandPermissions = Enum.GetValues(typeof(CommandEnum)).Cast<CommandEnum>().ToList();
+
+            foreach (var cmd in commandPermissions) {
+                string title = cmd.ToString().ToUpper();
+                string id = $"{Identity.SELECTION_PERMS}.{cmd.ToString().ToLower()}";
+                string desc = $"Edit permissions for command /{cmd.ToString().ToLower()}";
+                selectPermissionOption.Add(new DiscordSelectComponentOption(title, id, desc));
+            }
+
+            List<DiscordComponent> buttonComponents = new() {
+                new DiscordButtonComponent(ButtonStyle.Success, Identity.BUTTON_CHANGELOG_CREATE, "Create"),
+                new DiscordButtonComponent(ButtonStyle.Danger, Identity.BUTTON_CHANGELOG_REMOVE, "Delete"),
+                new DiscordButtonComponent(ButtonStyle.Secondary, Identity.BUTTON_CANCEL, "Cancel")};
+
+            List<DiscordComponent> selectComponents = new() {
+                new DiscordSelectComponent(Identity.SELECTION_PERMS, "Select from existing changelogs...", selectPermissionOption)};
+
+            List<DiscordActionRowComponent> results = new() {
                 new DiscordActionRowComponent(selectComponents),
                 new DiscordActionRowComponent(buttonComponents)};
 

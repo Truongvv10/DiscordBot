@@ -25,6 +25,7 @@ namespace DiscordBot.Utils
         private static Dictionary<ulong, Dictionary<ulong, EmbedBuilder>> embeds = new();
         private static Dictionary<ulong, Dictionary<string, EmbedBuilder>> templates = new();
         private static Dictionary<ulong, Dictionary<CommandEnum, Permission>> permissions = new();
+        private static Dictionary<ulong, Dictionary<string, Changelog>> changelogs = new();
         private static Dictionary<ulong, List<string>> activities = new();
         private static Dictionary<ulong, BotConfig> configs = new();
         private static List<string> timeZones = new();
@@ -39,6 +40,9 @@ namespace DiscordBot.Utils
         }
         public static IReadOnlyDictionary<ulong, Dictionary<CommandEnum, Permission>> Permissions {
             get => permissions;
+        }
+        public static IReadOnlyDictionary<ulong, Dictionary<string, Changelog>> Changelogs {
+            get => changelogs;
         }
         public static IReadOnlyList<string> Timezones {
             get => timeZones;
@@ -82,6 +86,7 @@ namespace DiscordBot.Utils
             List<Permission> permissions = Enum.GetValues<CommandEnum>().Select(cmd => new Permission(cmd)).ToList();
             string pathSaves = $"{folder}/Servers/{guildId}";
             string pathPermission = $"{pathSaves}/{FileEnum.PERMISSION.ToString().ToLower()}.json";
+            string pathChangelog= $"{pathSaves}/{FileEnum.CHANGELOG.ToString().ToLower()}.json";
             string pathConfig = $"{pathSaves}/{FileEnum.CONFIG.ToString().ToLower()}.json";
             string pathEmbed = $"{pathSaves}/{FileEnum.EMBED.ToString().ToLower()}.json";
             string pathTemplate = $"{pathSaves}/{FileEnum.TEMPLATES.ToString().ToLower()}.json";
@@ -101,6 +106,10 @@ namespace DiscordBot.Utils
             if (!File.Exists(pathTemplate)) {
                 string embed = JsonConvert.SerializeObject(new Dictionary<string, EmbedBuilder>(), Formatting.Indented);
                 await File.WriteAllTextAsync(pathTemplate, embed);
+            }
+            if (!File.Exists(pathChangelog)) {
+                string changelog = JsonConvert.SerializeObject(new Dictionary<string, Changelog>(), Formatting.Indented);
+                await File.WriteAllTextAsync(pathChangelog, changelog);
             }
             if (!File.Exists(pathPermission)) {
                 string permission = JsonConvert.SerializeObject(permissions, Formatting.Indented);
@@ -138,7 +147,7 @@ namespace DiscordBot.Utils
                     guildEmbeds.Add(embed.Id, embed);
                 }
 
-                // Read embed data
+                // Read template data
                 Dictionary<string, EmbedBuilder> serverTemplates = (await JsonData.ReadFileAsync(guildId, FileEnum.TEMPLATES) as Dictionary<string, EmbedBuilder>)!;
 
                 if (!templates.TryGetValue(guildId, out var guildTemplates)) {
@@ -148,6 +157,18 @@ namespace DiscordBot.Utils
 
                 foreach (var embed in serverTemplates) {
                     guildTemplates.Add(embed.Key, embed.Value);
+                }
+
+                // Read changelog data
+                Dictionary<string, Changelog> serverChangelogs = (await JsonData.ReadFileAsync(guildId, FileEnum.CHANGELOG) as Dictionary<string, Changelog>)!;
+
+                if (!changelogs.TryGetValue(guildId, out var guildChangelogs)) {
+                    guildChangelogs = new Dictionary<string, Changelog>();
+                    changelogs[guildId] = guildChangelogs;
+                }
+
+                foreach (var embed in serverChangelogs) {
+                    guildChangelogs.Add(embed.Key, embed.Value);
                 }
 
                 // Read permisison data

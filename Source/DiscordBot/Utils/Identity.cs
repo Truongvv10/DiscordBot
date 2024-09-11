@@ -23,6 +23,11 @@ namespace DiscordBot.Utils {
         public const string BUTTON_PERMISSION_SETTINGS = PREFIX + "button.permission.settings";
         public const string BUTTON_PERMISSION_RESET = PREFIX + "button.permission.reset";
 
+        // Button Component Changelog
+        public const string BUTTON_CHANGELOG_CREATE = PREFIX + "button.changelog.create";
+        public const string BUTTON_CHANGELOG_REMOVE = PREFIX + "button.changelog.remove";
+        public const string BUTTON_CHANGELOG_CANCEL = PREFIX + "button.changelog.cancel";
+
         // Selection Component
         public const string SELECTION_TITLE = PREFIX + "selection.title";
         public const string SELECTION_DESCRIPTION = PREFIX + "selection.description";

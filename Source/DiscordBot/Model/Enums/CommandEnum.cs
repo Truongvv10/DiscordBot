@@ -32,6 +32,10 @@ namespace DiscordBot.Model.Enums {
 
 
         [ChoiceName("/notion")]
-        NOTION = 500
+        NOTION = 500,
+
+
+        [ChoiceName("/changelog")]
+        CHANGELOG = 600
     }
 }

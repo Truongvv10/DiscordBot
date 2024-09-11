@@ -12,5 +12,6 @@ namespace DiscordBot.Model.Enums {
         PERMISSION,
         LOGS,
         CONFIG,
+        CHANGELOG,
     }
 }
