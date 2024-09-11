@@ -94,22 +94,22 @@ namespace DiscordBot.Utils {
                     // check which file to read
                     switch (save) {
                         case FileEnum.EMBED:
-                            json = JsonConvert.DeserializeObject<List<EmbedBuilder>>(data)!;
+                            json = JsonConvert.DeserializeObject<List<EmbedBuilder>>(data) ?? new List<EmbedBuilder>();
                             break;
                         case FileEnum.TEMPLATES:
-                            json = JsonConvert.DeserializeObject<Dictionary<string, EmbedBuilder>>(data)!;
+                            json = JsonConvert.DeserializeObject<Dictionary<string, EmbedBuilder>>(data) ?? new Dictionary<string, EmbedBuilder>();
                             break;
                         case FileEnum.ACTIVITIES:
                             break;
                         case FileEnum.PERMISSION:
-                            json = JsonConvert.DeserializeObject<List<Permission>>(data)!;
+                            json = JsonConvert.DeserializeObject<List<Permission>>(data) ?? new List<Permission>();
                             break;
                         case FileEnum.LOGS:
                             break;
                         case FileEnum.CONFIG:
                             break;
                         case FileEnum.CHANGELOG:
-                            json = JsonConvert.DeserializeObject<Dictionary<string, Changelog>>(data)!;
+                            json = JsonConvert.DeserializeObject<Dictionary<string, Changelog>>(data) ?? new Dictionary<string, Changelog>();
                             break;
                         default:
                             throw new UtilException($"JsonData.ReadFileAsync: Couldn't read \"{name}.json\"");

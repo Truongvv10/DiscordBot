@@ -83,45 +83,35 @@ namespace DiscordBot.Utils
         }
 
         private static async Task CheckFilesAsync(ulong guildId) {
-            List<Permission> permissions = Enum.GetValues<CommandEnum>().Select(cmd => new Permission(cmd)).ToList();
-            string pathSaves = $"{folder}/Servers/{guildId}";
-            string pathPermission = $"{pathSaves}/{FileEnum.PERMISSION.ToString().ToLower()}.json";
-            string pathChangelog= $"{pathSaves}/{FileEnum.CHANGELOG.ToString().ToLower()}.json";
-            string pathConfig = $"{pathSaves}/{FileEnum.CONFIG.ToString().ToLower()}.json";
-            string pathEmbed = $"{pathSaves}/{FileEnum.EMBED.ToString().ToLower()}.json";
-            string pathTemplate = $"{pathSaves}/{FileEnum.TEMPLATES.ToString().ToLower()}.json";
-            string pathActivity = $"{pathSaves}/{FileEnum.ACTIVITIES.ToString().ToLower()}.json";
-            string pathLogs = $"{pathSaves}/{FileEnum.LOGS.ToString().ToLower()}.json";
-            if (!Directory.Exists(pathSaves)) {
-                Directory.CreateDirectory(pathSaves);
+
+            // Create a dynamic dictionary mapping FileEnum values to their respective file paths
+            string dataFolder = $"{folder}/Servers/{guildId}";
+            var dataFiles = Enum.GetValues(typeof(FileEnum))
+                                .Cast<FileEnum>()
+                                .Select(fileEnum => $"{dataFolder}/{fileEnum.ToString().ToLower()}.json")
+                                .ToList();
+
+            // Ensure the directory data exists
+            if (!Directory.Exists(dataFolder)) {
+                Directory.CreateDirectory(dataFolder);
             }
-            if (!File.Exists(pathConfig)) {
-                string json = JsonConvert.SerializeObject(new BotConfig(), Formatting.Indented);
-                await File.WriteAllTextAsync(pathConfig, json);
+
+            // List to store all the file checking and creation tasks
+            var tasks = new List<Task>();
+
+            // Check each file and create it if it doesn't exist
+            foreach (var filePath in dataFiles) {
+                tasks.Add(EnsureFileExistsAsync(filePath));
             }
-            if (!File.Exists(pathEmbed)) {
-                string embed = JsonConvert.SerializeObject(new List<EmbedBuilder>(), Formatting.Indented);
-                await File.WriteAllTextAsync(pathEmbed, embed);
-            }
-            if (!File.Exists(pathTemplate)) {
-                string embed = JsonConvert.SerializeObject(new Dictionary<string, EmbedBuilder>(), Formatting.Indented);
-                await File.WriteAllTextAsync(pathTemplate, embed);
-            }
-            if (!File.Exists(pathChangelog)) {
-                string changelog = JsonConvert.SerializeObject(new Dictionary<string, Changelog>(), Formatting.Indented);
-                await File.WriteAllTextAsync(pathChangelog, changelog);
-            }
-            if (!File.Exists(pathPermission)) {
-                string permission = JsonConvert.SerializeObject(permissions, Formatting.Indented);
-                await File.WriteAllTextAsync(pathPermission, permission);
-            } else {
-                string json = File.ReadAllText(pathPermission);
-                permissions = JsonConvert.DeserializeObject<List<Permission>>(json) ?? new List<Permission>();
-                foreach (var cmd in Enum.GetValues<CommandEnum>()) {
-                    if (!permissions.Any(x => x.Cmd == cmd.ToString())) permissions.Add(new Permission(cmd));
-                }
-                string jsonString = JsonConvert.SerializeObject(permissions, Formatting.Indented);
-                await File.WriteAllTextAsync(pathPermission, jsonString);
+
+            // Await all tasks concurrently
+            await Task.WhenAll(tasks);
+        }
+
+        private static async Task EnsureFileExistsAsync(string filePath) {
+            if (!File.Exists(filePath)) {
+                // Create an empty file asynchronously
+                await File.WriteAllTextAsync(filePath, string.Empty);
             }
         }
 
