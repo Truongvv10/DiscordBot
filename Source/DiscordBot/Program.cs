@@ -71,6 +71,7 @@ namespace DiscordBot {
             var slashCommandConfiguration = Client.UseSlashCommands();
             slashCommandConfiguration.RegisterCommands<EmbedCmd>();
             slashCommandConfiguration.RegisterCommands<EventCmd>();
+            slashCommandConfiguration.RegisterCommands<ChangelogCmd>();
             slashCommandConfiguration.RegisterCommands<BroadcastCmd>();
             slashCommandConfiguration.RegisterCommands<PermissionCmd>();
             slashCommandConfiguration.RegisterCommands<TimestampCmd>();

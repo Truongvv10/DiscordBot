@@ -178,6 +178,7 @@ namespace DiscordBot.Utils
                 throw;
             }
         }
+
         public static Task<Permission> GetPermissionAsync(ulong guildId, CommandEnum cmd) {
             try {
                 if (permissions.TryGetValue(guildId, out var commandPermissions)) {
@@ -190,6 +191,7 @@ namespace DiscordBot.Utils
                 throw new UtilException($"{AnsiColor.BRIGHT_RED}[Error] {AnsiColor.RESET}Permission for guild {guildId} using command {cmd} can not be found", ex);
             }
         }
+
         public static async Task SaveTemplateAsync(ulong guildId, string name, EmbedBuilder embed) {
             try {
                 if (templates.TryGetValue(guildId, out var serverTemplates)) {
@@ -201,6 +203,7 @@ namespace DiscordBot.Utils
                 throw new UtilException($"{AnsiColor.BRIGHT_RED}[Error] {AnsiColor.RESET}Embeded message for guild {guildId} with template {name} could not be added.", ex);
             }
         }
+
         public static async Task AddEmbedAsync(ulong guildId, ulong messageId, EmbedBuilder embed) {
             try {
                 if (embeds.TryGetValue(guildId, out var embededMessage)) {
@@ -211,6 +214,7 @@ namespace DiscordBot.Utils
                 throw new UtilException($"{AnsiColor.BRIGHT_RED}[Error] {AnsiColor.RESET}Embeded message for guild {guildId} with message id {messageId} could not be added.", ex);
             }
         }
+
         public static async Task RemoveEmbedAsync(ulong guildId, ulong messageId) {
             try {
                 if (embeds.TryGetValue(guildId, out var embededMessage)) {
@@ -221,6 +225,7 @@ namespace DiscordBot.Utils
                 throw new UtilException($"{AnsiColor.BRIGHT_RED}[Error] {AnsiColor.RESET}Embeded message for guild {guildId} with message id {messageId} could not be added.", ex);
             }
         }
+
         public static Task<EmbedBuilder> GetEmbedAsync(ulong guildId, ulong messageId) {
             try {
                 if (embeds.TryGetValue(guildId, out var embededMessage)) {

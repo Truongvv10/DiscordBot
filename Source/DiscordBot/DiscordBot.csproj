@@ -19,8 +19,6 @@
 
   <ItemGroup>
     <Folder Include="Saves\Servers\" />
-    <Folder Include="Saves\Servers\1135258525573062736\" />
-    <Folder Include="Saves\Servers\1155851008732315709\" />
   </ItemGroup>
 
 </Project>

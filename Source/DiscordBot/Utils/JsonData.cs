@@ -102,7 +102,7 @@ namespace DiscordBot.Utils {
                         case FileEnum.ACTIVITIES:
                             break;
                         case FileEnum.PERMISSION:
-                            json = JsonConvert.DeserializeObject<List<Permission>>(data) ?? new List<Permission>();
+                            json = JsonConvert.DeserializeObject<List<Permission>>(data) ?? Enum.GetValues<CommandEnum>().Select(cmd => new Permission(cmd)).ToList();
                             break;
                         case FileEnum.LOGS:
                             break;

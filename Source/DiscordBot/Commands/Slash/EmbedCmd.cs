@@ -48,6 +48,7 @@ namespace XironiteDiscordBot.Commands.Slash {
                 await CreateEmbedMessageAsync(ctx, embed, EmbedType.DEFAULT, channel.Id, hidden);
 
             } catch (Exception ex) {
+                Console.WriteLine(ex);
                 throw new CommandException($"Embed.UseEmbedCommand: {ex}");
             }
         }

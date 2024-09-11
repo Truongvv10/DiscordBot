@@ -28,6 +28,7 @@ namespace DiscordBot.Model {
         private string _authorLink;
         private string _authorUrl;
         private string _image;
+        private string _attachment;
         private string _thumbnail;
         private string _color;
         private bool _hasTimeStamp;
@@ -57,108 +58,139 @@ namespace DiscordBot.Model {
         #endregion
 
         #region Getter & Setter
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        [JsonProperty("type", NullValueHandling = NullValueHandling.Ignore)]
         public EmbedType Type {
             get => _type;
             set => _type = value;
         }
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+
+        [JsonProperty("title", NullValueHandling = NullValueHandling.Ignore)]
         public string Title {
             get => _title;
             set => _title = value;
         }
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+
+        [JsonProperty("title_link", NullValueHandling = NullValueHandling.Ignore)]
         public string TitleUrl {
             get => _titleLink;
             set => _titleLink = value;
         }
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+
+        [JsonProperty("description", NullValueHandling = NullValueHandling.Ignore)]
         public string Description {
             get => _description;
             set => _description = value;
         }
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+
+        [JsonProperty("content", NullValueHandling = NullValueHandling.Ignore)]
         public string Content {
             get => _content;
             set => _content = value;
         }
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+
+        [JsonProperty("footer", NullValueHandling = NullValueHandling.Ignore)]
         public string Footer {
             get => _footer;
             set => _footer = value;
         }
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+
+        [JsonProperty("footer_url", NullValueHandling = NullValueHandling.Ignore)]
         public string FooterUrl {
             get => _footerUrl;
             set => _footerUrl = value;
         }
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+
+        [JsonProperty("author", NullValueHandling = NullValueHandling.Ignore)]
         public string Author {
             get => _author;
             set => _author = value;
         }
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+
+        [JsonProperty("author_link", NullValueHandling = NullValueHandling.Ignore)]
         public string AuthorLink {
             get => _authorLink;
             set => _authorLink = value;
         }
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+
+        [JsonProperty("author_url", NullValueHandling = NullValueHandling.Ignore)]
         public string AuthorUrl {
             get => _authorUrl;
             set => _authorUrl = value;
         }
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+
+        [JsonProperty("image", NullValueHandling = NullValueHandling.Ignore)]
         public string Image {
             get => _image;
             set => _image = value;
         }
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+
+        [JsonProperty("attachment", NullValueHandling = NullValueHandling.Ignore)]
+        public string Attachment {
+            get => _attachment;
+            set => _attachment = value;
+        }
+
+        [JsonProperty("thumbnail", NullValueHandling = NullValueHandling.Ignore)]
         public string Thumbnail {
             get => _thumbnail;
             set => _thumbnail = value;
         }
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+
+        [JsonProperty("color", NullValueHandling = NullValueHandling.Ignore)]
         public string Color {
             get => _color;
             set { if (Regex.IsMatch(value, @"#[a-fA-F0-9]{6}")) _color = value; }
         }
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+
+        [JsonProperty("timestamp", NullValueHandling = NullValueHandling.Ignore)]
         public bool HasTimeStamp {
             get => _hasTimeStamp;
             set => _hasTimeStamp = value;
         }
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+
+        [JsonProperty("creation_date", NullValueHandling = NullValueHandling.Ignore)]
         public long Time {
             get => _time;
             set => _time = value;
         }
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+
+        [JsonProperty("sender", NullValueHandling = NullValueHandling.Ignore)]
         public ulong Owner {
             get => _owner;
             set => _owner = value;
         }
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+
+        [JsonProperty("channel_id", NullValueHandling = NullValueHandling.Ignore)]
         public ulong ChannelId {
             get => _channelId;
             set => _channelId = value;
         }
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+
+        [JsonProperty("message_id", NullValueHandling = NullValueHandling.Ignore)]
         public ulong Id {
             get => _messageId;
             set => _messageId = value;
         }
+
+        [JsonProperty("data", NullValueHandling = NullValueHandling.Ignore)]
         public IReadOnlyDictionary<string, object> CustomSaves {
             get => _customSaves;
             set { foreach (var item in value) { AddCustomSaveMessage(item.Key, item.Value); } }
         }
+
+        [JsonProperty("childs", NullValueHandling = NullValueHandling.Ignore)]
         public IReadOnlyDictionary<ulong, ulong> ChildEmbeds {
             get => _childEmbeds;
             set { foreach (var item in value) { AddCopiedMessage(item.Key, item.Value); } }
         }
+
+        [JsonProperty("roles", NullValueHandling = NullValueHandling.Ignore)]
         public List<ulong> PingRoles {
             get => _pingRoles;
             set => _pingRoles = value ?? new List<ulong>();
         }
+
+        [JsonProperty("fields", NullValueHandling = NullValueHandling.Ignore)]
         public IReadOnlyList<(string, string, bool)> Fields {
             get => _fields;
             set { foreach (var item in value) { AddField(item.Item1, item.Item2, item.Item3); } }
@@ -212,6 +244,10 @@ namespace DiscordBot.Model {
             return this;
         }
         public EmbedBuilder WithImage(string image) {
+            _image = image;
+            return this;
+        }
+        public EmbedBuilder WithAttachment(string image) {
             _image = image;
             return this;
         }
@@ -350,6 +386,7 @@ namespace DiscordBot.Model {
                 _authorLink = _authorLink,
                 _authorUrl = _authorUrl,
                 _image = _image,
+                _attachment = _attachment,
                 _thumbnail = _thumbnail,
                 _color = _color,
                 _hasTimeStamp = _hasTimeStamp,
