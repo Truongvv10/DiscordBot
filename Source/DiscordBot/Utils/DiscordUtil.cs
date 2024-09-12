@@ -14,7 +14,6 @@ using System.Threading.Channels;
 namespace DiscordBot.Utils {
     public static class DiscordUtil {
 
-
         public static async Task SendImageEmbedAsync(DiscordChannel channel, string imagePath, string title = "Here is your image!", string description = "This image was uploaded as an attachment.") {
             // Check if the file exists
             if (!File.Exists(imagePath)) {
@@ -34,6 +33,7 @@ namespace DiscordBot.Utils {
 
                 // Send the embed with the image attached
                 await channel.SendMessageAsync(message);
+                Console.WriteLine($"attachment://{Path.GetFileName(imagePath)}");
             }
         }
 

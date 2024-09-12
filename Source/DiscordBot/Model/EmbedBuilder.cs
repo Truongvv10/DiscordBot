@@ -28,7 +28,6 @@ namespace DiscordBot.Model {
         private string _authorLink;
         private string _authorUrl;
         private string _image;
-        private string _attachment;
         private string _thumbnail;
         private string _color;
         private bool _hasTimeStamp;
@@ -122,12 +121,6 @@ namespace DiscordBot.Model {
         public string Image {
             get => _image;
             set => _image = value;
-        }
-
-        [JsonProperty("attachment", NullValueHandling = NullValueHandling.Ignore)]
-        public string Attachment {
-            get => _attachment;
-            set => _attachment = value;
         }
 
         [JsonProperty("thumbnail", NullValueHandling = NullValueHandling.Ignore)]
@@ -386,7 +379,6 @@ namespace DiscordBot.Model {
                 _authorLink = _authorLink,
                 _authorUrl = _authorUrl,
                 _image = _image,
-                _attachment = _attachment,
                 _thumbnail = _thumbnail,
                 _color = _color,
                 _hasTimeStamp = _hasTimeStamp,

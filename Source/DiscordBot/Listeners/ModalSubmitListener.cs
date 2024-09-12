@@ -28,7 +28,6 @@ namespace DiscordBot.Listeners {
                 var guildId = e.Interaction.Guild.Id;
                 var embed = await CacheData.GetEmbedAsync(guildId, messageId);
                 var message = await DiscordUtil.GetMessageByIdAsync(e.Interaction.Channel, messageId);
-                var components = message.Components;
 
                 switch (selection) {
 
@@ -144,9 +143,26 @@ namespace DiscordBot.Listeners {
                         break;
                 }
 
+                // Create a list of action rows (as you may have multiple rows of components)
+                var actionRows = new List<DiscordActionRowComponent>();
+
+                // Ensure you're working with the correct component type
+                foreach (var row in message.Components) {
+                    // Ensure it's an action row
+                    if (row is DiscordActionRowComponent actionRow) {
+                        actionRows.Add(actionRow); // Add the entire action row
+                    } else {
+                        // Handle the case where the component is not in an action row (optional)
+                        throw new InvalidOperationException("Component is not an action row.");
+                    }
+                }
+
+                // If you have multiple action rows, pass them all to the response
                 var response = new DiscordInteractionResponseBuilder()
                     .AddEmbed(embed.Build())
-                    .AddComponents(components);
+                    .AddComponents(actionRows);  // Add all action rows to the response
+
+                // Send the response
                 await e.Interaction.CreateResponseAsync(InteractionResponseType.UpdateMessage, response);
                 await JsonData.SaveEmbedsAsync(guildId);
 

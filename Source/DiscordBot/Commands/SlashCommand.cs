@@ -18,6 +18,7 @@ using System.Threading.Channels;
 namespace XironiteDiscordBot.Commands {
     public abstract class SlashCommand : ApplicationCommandModule {
 
+        private string folder = Directory.GetParent(Directory.GetParent(Directory.GetParent(Environment.CurrentDirectory)!.FullName)!.FullName)!.FullName;
 
         protected async Task CreateEmbedMessageAsync(InteractionContext ctx, EmbedBuilder embedBuilder, EmbedType type, ulong channelId, bool hidden) {
             try {
@@ -122,6 +123,14 @@ namespace XironiteDiscordBot.Commands {
                 Console.Error.WriteLine($"Error in CreateEmbedAsync: {ex}");
                 throw new CommandException($"Embed.UseEmbedCommand: {ex.Message}", ex);
             }
+        }
+
+        private async Task<object> CheckIfLocalImage(string? imagePath) {
+            if (imagePath != null) {
+                using (var fs = new FileStream(imagePath, FileMode.Open, FileAccess.Read)) {
+                    return (Path.GetFileName(imagePath), fs);
+                }
+            } else throw new CommandException($"test");
         }
 
         protected virtual async Task<bool> CheckPermission(InteractionContext ctx, CommandEnum cmd) {
