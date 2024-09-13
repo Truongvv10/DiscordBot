@@ -111,7 +111,7 @@ namespace XironiteDiscordBot.Commands {
                 embedBuilder.WithMessageId(message.Id);
 
                 // Store the embed data
-                await CacheData.AddEmbedAsync(ctx.Guild.Id, message.Id, embedBuilder);
+                await CacheData.AddEmbed(ctx.Guild.Id, message.Id, embedBuilder);
 
                 // Stop the stopwatch and log the elapsed time
                 stopwatch.Stop();
@@ -137,7 +137,7 @@ namespace XironiteDiscordBot.Commands {
 
             var userId = ctx.User.Id;
             var user = await ctx.Guild.GetMemberAsync(userId);
-            var permission = await CacheData.GetPermissionAsync(ctx.Guild.Id, cmd);
+            var permission = await CacheData.GetPermission(ctx.Guild.Id, cmd);
             var roles = user.Roles;
 
             if (permission.AllowEveryone) {

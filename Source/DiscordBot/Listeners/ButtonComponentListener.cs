@@ -19,7 +19,7 @@ namespace DiscordBot.Listeners {
 
             var messageId = e.Message.Id;
             var guildId = e.Guild.Id;
-            var embed = await CacheData.GetEmbedAsync(e.Guild.Id, messageId);
+            var embed = await CacheData.GetEmbed(e.Guild.Id, messageId);
 
             try {
 
@@ -58,7 +58,7 @@ namespace DiscordBot.Listeners {
                     copy.Id = sentMessage.Id;
                     copy.ChannelId = sentMessage.ChannelId;
                     copy.Time = DateTime.Now.Ticks;
-                    await CacheData.AddEmbedAsync(guildId, sentMessage.Id, copy);
+                    await CacheData.AddEmbed(guildId, sentMessage.Id, copy);
                 }
                 if (e.Id == ("embedButtonCurrent")) {
                     await e.Interaction.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, message.AsEphemeral(false).WithContent(pingRoles));
@@ -85,7 +85,7 @@ namespace DiscordBot.Listeners {
                     await e.Interaction.CreateResponseAsync(InteractionResponseType.DeferredMessageUpdate);
                     var sentMessage = await e.Interaction.GetOriginalResponseAsync().ConfigureAwait(false);
                     await sentMessage.DeleteAsync();
-                    await CacheData.RemoveEmbedAsync(guildId, sentMessage.Id);
+                    await CacheData.RemoveEmbed(guildId, sentMessage.Id);
                 }
                 await JsonData.SaveEmbedsAsync(guildId);
             } catch (Exception ex) {
@@ -96,7 +96,7 @@ namespace DiscordBot.Listeners {
 
         private async Task<bool> CheckPermission(ComponentInteractionCreateEventArgs e, CommandEnum cmd, ulong ownerid) {
 
-            var permission = await CacheData.GetPermissionAsync(e.Guild.Id, cmd);
+            var permission = await CacheData.GetPermission(e.Guild.Id, cmd);
             var userid = e.User.Id;
             var user = await e.Guild.GetMemberAsync(userid);
             var roles = user.Roles;

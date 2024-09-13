@@ -14,6 +14,9 @@ namespace DiscordBot.Model {
         private int? _id;
         private string _name;
         private string _version;
+        private ulong? channelPostId;
+        private ulong? channelSetupId;
+        private HashSet<ulong> messageIds = new();
         private Dictionary<string, List<string>> _changes = new();
         private Dictionary<string, Changelog> _logs = new();
         #endregion
@@ -34,7 +37,7 @@ namespace DiscordBot.Model {
         public int Id { get; set; }
         public string Name {
             get => _name;
-            set { if (string.IsNullOrWhiteSpace(value)) throw new DomainException($"Changelog.Name: \"{value}\" can not be empty or null"); else _name = value; }
+            set { if (string.IsNullOrWhiteSpace(value)) throw new DomainException($"Changelog.Name: \"{value}\" can not be empty or null"); else _name = value.ToUpper().Trim(); }
         }
         public string Version {
             get => _version;

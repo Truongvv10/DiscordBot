@@ -26,7 +26,7 @@ namespace DiscordBot.Listeners {
                 var selection = e.Interaction.Data.CustomId.Split(";")[1];
                 var messageId = ulong.Parse(e.Interaction.Data.CustomId.Split(";")[2]);
                 var guildId = e.Interaction.Guild.Id;
-                var embed = await CacheData.GetEmbedAsync(guildId, messageId);
+                var embed = await CacheData.GetEmbed(guildId, messageId);
                 var message = await DiscordUtil.GetMessageByIdAsync(e.Interaction.Channel, messageId);
 
                 switch (selection) {
@@ -105,7 +105,7 @@ namespace DiscordBot.Listeners {
                         string name = e.Values[Identity.MODAL_TEMPLATE_ADD];
                         if (!string.IsNullOrWhiteSpace(name)) {
                             var clone = embed.DeepClone();
-                            await CacheData.SaveTemplateAsync(guildId, name.ToUpper().Replace(" ", "_"), clone);
+                            await CacheData.SaveTemplate(guildId, name.ToUpper().Replace(" ", "_"), clone);
                         } else throw new ListenerException($"Template \"{name}\" can not be empty or null!");
                         break;
 

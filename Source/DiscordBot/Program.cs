@@ -122,7 +122,7 @@ namespace DiscordBot {
             Client.UpdateStatusAsync(activity, UserStatus.Online).ConfigureAwait(false);
 
             // Load Data
-            Task.Run(() => CacheData.LoadDataAsync(sender));
+            Task.Run(() => CacheData.LoadAllData(sender));
 
 
             // Using Big Money-ne ASCII art

@@ -17,7 +17,7 @@ namespace DiscordBot.Listeners {
 
             var messageId = e.Message.Id;
             var guildId = e.Guild.Id;
-            var embed = await CacheData.GetEmbedAsync(guildId, messageId);
+            var embed = await CacheData.GetEmbed(guildId, messageId);
 
             try {
                 const string text = "Write something...";
@@ -128,7 +128,7 @@ namespace DiscordBot.Listeners {
 
         private async Task<bool> CheckPermission(ComponentInteractionCreateEventArgs e, CommandEnum cmd, ulong ownerid) {
 
-            var permission = await CacheData.GetPermissionAsync(e.Guild.Id, cmd);
+            var permission = await CacheData.GetPermission(e.Guild.Id, cmd);
             var userid = e.User.Id;
             var user = await e.Guild.GetMemberAsync(userid);
             var roles = user.Roles;

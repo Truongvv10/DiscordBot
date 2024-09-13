@@ -50,12 +50,12 @@ namespace DiscordBot.Utils
         #endregion
 
         #region Methods
-        public static async Task LoadDataAsync(DiscordClient client) {
+        private static async Task LoadAllData(DiscordClient client) {
             var stopwatch = Stopwatch.StartNew();
 
             // Ensure files exist for all guilds
             foreach (var guild in client.Guilds) {
-                await CheckFilesAsync(guild.Key);
+                await CheckFiles(guild.Key);
             }
             stopwatch.Stop();
             Console.WriteLine($"{AnsiColor.RESET}[{DateTime.Now}] {AnsiColor.CYAN}Successfully checked and updated files {AnsiColor.YELLOW}({stopwatch.ElapsedMilliseconds}ms)");
@@ -65,7 +65,7 @@ namespace DiscordBot.Utils
 
             // Load files for all guilds
             foreach (var guild in client.Guilds) {
-                await LoadFileAsync(guild.Key);
+                await LoadDataToCache(guild.Key);
             }
             stopwatch.Stop();
             Console.WriteLine($"{AnsiColor.RESET}[{DateTime.Now}] {AnsiColor.CYAN}Successfully loaded all files to storage {AnsiColor.YELLOW}({stopwatch.ElapsedMilliseconds}ms){AnsiColor.RESET}");
@@ -82,7 +82,7 @@ namespace DiscordBot.Utils
             Console.WriteLine($"{AnsiColor.RESET}[{DateTime.Now}] {AnsiColor.CYAN}Successfully loaded available timezones {AnsiColor.YELLOW}({stopwatch.ElapsedMilliseconds}ms){AnsiColor.RESET}");
         }
 
-        private static async Task CheckFilesAsync(ulong guildId) {
+        private static async Task CheckFiles(ulong guildId) {
 
             // Create a dynamic dictionary mapping FileEnum values to their respective file paths
             string dataFolder = $"{folder}/Servers/{guildId}";
@@ -101,21 +101,21 @@ namespace DiscordBot.Utils
 
             // Check each file and create it if it doesn't exist
             foreach (var filePath in dataFiles) {
-                tasks.Add(EnsureFileExistsAsync(filePath));
+                tasks.Add(EnsureFileExists(filePath));
             }
 
             // Await all tasks concurrently
             await Task.WhenAll(tasks);
         }
 
-        private static async Task EnsureFileExistsAsync(string filePath) {
+        private static async Task EnsureFileExists(string filePath) {
             if (!File.Exists(filePath)) {
                 // Create an empty file asynchronously
                 await File.WriteAllTextAsync(filePath, string.Empty);
             }
         }
 
-        private static async Task LoadFileAsync(ulong guildId) {
+        private static async Task LoadDataToCache(ulong guildId) {
             try {
                 string pathSaves = $"{folder}/Servers/{guildId}";
                 string pathPermission = $"{pathSaves}/{FileEnum.PERMISSION.ToString().ToLower()}.json";
@@ -178,8 +178,10 @@ namespace DiscordBot.Utils
                 throw;
             }
         }
+        #endregion
 
-        public static Task<Permission> GetPermissionAsync(ulong guildId, CommandEnum cmd) {
+        #region Retrieving & Receiving Data
+        public static Task<Permission> GetPermission(ulong guildId, CommandEnum cmd) {
             try {
                 if (permissions.TryGetValue(guildId, out var commandPermissions)) {
                     if (commandPermissions.TryGetValue(cmd, out var permission)) {
@@ -192,7 +194,7 @@ namespace DiscordBot.Utils
             }
         }
 
-        public static async Task SaveTemplateAsync(ulong guildId, string name, EmbedBuilder embed) {
+        public static async Task SaveTemplate(ulong guildId, string name, EmbedBuilder embed) {
             try {
                 if (templates.TryGetValue(guildId, out var serverTemplates)) {
                     if (templates[guildId].TryAdd(name, embed)) {
@@ -204,7 +206,20 @@ namespace DiscordBot.Utils
             }
         }
 
-        public static async Task AddEmbedAsync(ulong guildId, ulong messageId, EmbedBuilder embed) {
+        public static EmbedBuilder GetEmbed(ulong guildId, ulong messageId) {
+            try {
+                if (embeds.TryGetValue(guildId, out var embededMessage)) {
+                    if (embededMessage.TryGetValue(messageId, out var embedBuilder)) {
+                        return embeds[guildId][messageId];
+                    }
+                }
+                throw new UtilException($"{AnsiColor.BRIGHT_RED}[Error] {AnsiColor.RESET}Embeded message for guild {guildId} with message id {messageId} could not be found.");
+            } catch (Exception ex) {
+                throw new UtilException($"{AnsiColor.BRIGHT_RED}[Error] {AnsiColor.RESET}Embeded message for guild {guildId} with message id {messageId} could not be found.", ex);
+            }
+        }
+
+        public static async Task AddEmbed(ulong guildId, ulong messageId, EmbedBuilder embed) {
             try {
                 if (embeds.TryGetValue(guildId, out var embededMessage)) {
                     embeds[guildId].Add(messageId, embed);
@@ -215,7 +230,7 @@ namespace DiscordBot.Utils
             }
         }
 
-        public static async Task RemoveEmbedAsync(ulong guildId, ulong messageId) {
+        public static async Task RemoveEmbed(ulong guildId, ulong messageId) {
             try {
                 if (embeds.TryGetValue(guildId, out var embededMessage)) {
                     embeds[guildId].Remove(messageId);
@@ -223,19 +238,6 @@ namespace DiscordBot.Utils
                 }
             } catch (Exception ex) {
                 throw new UtilException($"{AnsiColor.BRIGHT_RED}[Error] {AnsiColor.RESET}Embeded message for guild {guildId} with message id {messageId} could not be added.", ex);
-            }
-        }
-
-        public static Task<EmbedBuilder> GetEmbedAsync(ulong guildId, ulong messageId) {
-            try {
-                if (embeds.TryGetValue(guildId, out var embededMessage)) {
-                    if (embededMessage.TryGetValue(messageId, out var embedBuilder)) {
-                        return Task.FromResult(embeds[guildId][messageId]);
-                    }
-                }
-                throw new UtilException($"{AnsiColor.BRIGHT_RED}[Error] {AnsiColor.RESET}Embeded message for guild {guildId} with message id {messageId} could not be found.");
-            } catch (Exception ex) {
-                throw new UtilException($"{AnsiColor.BRIGHT_RED}[Error] {AnsiColor.RESET}Embeded message for guild {guildId} with message id {messageId} could not be found.", ex);
             }
         }
         #endregion
