@@ -55,9 +55,9 @@ namespace XironiteDiscordBot.Commands {
                     new DiscordButtonComponent(ButtonStyle.Danger, "embedButtonCancel", "Cancel", hidden)};
 
                 List<DiscordComponent> selectComponentDefault = new() {
-                new DiscordSelectComponent("embedSelect", "Select which module you want to edit...", selectOptionDefault)};
+                new DiscordSelectComponent(Identity.COMPONENT_SELECT, "Select which module you want to edit...", selectOptionDefault)};
                 List<DiscordComponent> selectComponentTemplate = new() {
-                new DiscordSelectComponent("embedSelectTemplate", "Select from a template or save template...", selectOptionsTemplate)};
+                new DiscordSelectComponent(Identity.COMPONENT_TEMPLATE, "Select from a template or save template...", selectOptionsTemplate)};
 
                 switch (type) {
                     case EmbedType.DEFAULT:

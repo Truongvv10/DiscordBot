@@ -28,6 +28,7 @@ namespace DiscordBot.Commands.Slash {
             });
 
             try {
+                List<Task> tasks = new List<Task>();
                 var databasesQueryParameters = new DatabasesQueryParameters();
                 var queryResult = await client.Databases.QueryAsync(databaseId, databasesQueryParameters);
                 foreach (var result in queryResult.Results) {
