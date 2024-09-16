@@ -64,7 +64,7 @@ namespace XironiteDiscordBot.Commands.Slash {
             LogCommand(ctx, CommandEnum.EMBED_EDIT);
             try {
                 if (ulong.TryParse(id, out ulong messageid)) {
-                    var embed = await CacheData.GetEmbed(ctx.Guild.Id, messageid);
+                    var embed = CacheData.GetEmbed(ctx.Guild.Id, messageid);
                     await CreateEmbedMessageAsync(ctx, embed, embed.Type, embed.ChannelId, true);
                 }
             } catch (Exception ex) {

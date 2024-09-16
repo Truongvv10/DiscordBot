@@ -19,7 +19,7 @@ namespace DiscordBot.Listeners {
 
             var messageId = e.Message.Id;
             var guildId = e.Guild.Id;
-            var embed = await CacheData.GetEmbed(e.Guild.Id, messageId);
+            var embed = CacheData.GetEmbed(e.Guild.Id, messageId);
 
             try {
 

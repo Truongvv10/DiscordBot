@@ -26,7 +26,7 @@ namespace DiscordBot.Listeners {
                 var selection = e.Interaction.Data.CustomId.Split(";")[1];
                 var messageId = ulong.Parse(e.Interaction.Data.CustomId.Split(";")[2]);
                 var guildId = e.Interaction.Guild.Id;
-                var embed = await CacheData.GetEmbed(guildId, messageId);
+                var embed = CacheData.GetEmbed(guildId, messageId);
                 var message = await DiscordUtil.GetMessageByIdAsync(e.Interaction.Channel, messageId);
 
                 switch (selection) {

@@ -17,7 +17,7 @@ namespace DiscordBot.Listeners {
 
             var messageId = e.Message.Id;
             var guildId = e.Guild.Id;
-            var embed = await CacheData.GetEmbed(guildId, messageId);
+            var embed = CacheData.GetEmbed(guildId, messageId);
 
             try {
                 const string text = "Write something...";

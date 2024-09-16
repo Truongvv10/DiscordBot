@@ -50,7 +50,7 @@ namespace DiscordBot.Utils
         #endregion
 
         #region Methods
-        private static async Task LoadAllData(DiscordClient client) {
+        public static async Task LoadAllData(DiscordClient client) {
             var stopwatch = Stopwatch.StartNew();
 
             // Ensure files exist for all guilds
