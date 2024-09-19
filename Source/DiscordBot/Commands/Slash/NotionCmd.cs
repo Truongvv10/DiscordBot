@@ -28,33 +28,45 @@ namespace DiscordBot.Commands.Slash {
             });
 
             try {
-                List<Task> tasks = new List<Task>();
+                List<Task<string>> tasks = new();
                 var databasesQueryParameters = new DatabasesQueryParameters();
                 var queryResult = await client.Databases.QueryAsync(databaseId, databasesQueryParameters);
+
                 foreach (var result in queryResult.Results) {
                     Console.WriteLine("Page Id: " + result.Id);
                     foreach (var property in result.Properties) {
                         var retrieveCommentsParameters = new RetrieveCommentsParameters() {
                             BlockId = result.Id
                         };
-                        var comments = await client.Comments.RetrieveAsync(retrieveCommentsParameters);
-                        Console.WriteLine(property.Key + ": " + GetValue(property.Value));
-                        foreach (var comment in comments.Results) {
-                            var commentText = string.Join(" ", comment.RichText.Select(t => t.PlainText));
-                            Console.WriteLine($"Comment: {commentText}");
-                        }
+                        tasks.Add(RetrieveValues(property));
+                        //var comments = await client.Comments.RetrieveAsync(retrieveCommentsParameters);
+                        //foreach (var comment in comments.Results) {
+                        //    var commentText = string.Join(" ", comment.RichText.Select(t => t.PlainText));
+                        //    Console.WriteLine($"Comment: {commentText}");
+                        //}
                     }
                 }
+
+                var results = await Task.WhenAll(tasks);
+
+                // Now you can process the results if needed
+                foreach (var result in results) {
+                    Console.WriteLine(result);
+                }
+
             } catch (Exception ex) {
                 Console.WriteLine(ex);
                 throw;
             }
         }
 
-        private object GetValue(PropertyValue p) {
+        private async Task<string> RetrieveValues(KeyValuePair<string, PropertyValue> value) {
+            return value.Key + ": " + await GetValue(value.Value);
+        }
+
+        private async Task<object> GetValue(PropertyValue p) {
             switch (p) {
                 case TitlePropertyValue titlePropertyValue:
-                    
                     return titlePropertyValue.Title.FirstOrDefault()?.PlainText;
                 case DatePropertyValue dateProperty:
                     if (dateProperty.Date != null) {
