@@ -13,10 +13,7 @@ namespace DiscordBot.Commands.Slash {
     public class EventCmd : SlashCommand {
         [SlashCommand("event-create", "Send an embeded message to the current channel")]
         public async Task UseEventCommand(InteractionContext ctx,
-            [Option("day", "The date of the event with format: ''dd/mm/yyyy''.")] double day,
-            [Option("month", "The time of the event with format: ''hh:mm''.")] YearMonth month,
-            [Option("date", "The date of the event with format: ''dd/mm/yyyy''.")] string date,
-            [Option("time", "The time of the event with format: ''hh:mm''.")] string time,
+            [Option("starting_in", "The total minutes remaining until the event begins.")] long starting,
             [Option("timezone", "The timezone of the date & time will be calculated to.")] string timeZone,
             [Option("channel", "The channel where your embeded message will be sent to.")] DiscordChannel channel,
             [Option("image", "The main image of your embeded message that will be added.")] DiscordAttachment? image = null,
@@ -33,16 +30,11 @@ namespace DiscordBot.Commands.Slash {
                 return;
             }
             try {
-                string dateTime = $"{date.Trim()} {time.Trim()}";
-                string startDate = string.Empty;
-                string endDate = string.Empty;
-                string startDateRelative = string.Empty;
 
-                if (DateTime.TryParseExact(dateTime, "d/M/yyyy H:m", null, System.Globalization.DateTimeStyles.None, out DateTime parsedDateTime)) {
-                    startDate = await DiscordUtil.TranslateTimestamp(parsedDateTime, timeZone, TimestampEnum.LONG_DATE_AND_SHORT_TIME);
-                    endDate = await DiscordUtil.TranslateTimestamp(parsedDateTime.AddHours(1.0), timeZone, TimestampEnum.LONG_DATE_AND_SHORT_TIME);
-                    startDateRelative = await DiscordUtil.TranslateTimestamp(parsedDateTime, timeZone, TimestampEnum.RELATIVE);
-                }
+                DateTime date = DateTime.Now.AddMinutes(starting);
+                string startDate = await DiscordUtil.TranslateTimestamp(date, timeZone, TimestampEnum.LONG_DATE_AND_SHORT_TIME);
+                string endDate = await DiscordUtil.TranslateTimestamp(date.AddHours(1.0), timeZone, TimestampEnum.LONG_DATE_AND_SHORT_TIME);
+                string startDateRelative = await DiscordUtil.TranslateTimestamp(date, timeZone, TimestampEnum.RELATIVE);
 
                 EmbedBuilder embed = new EmbedBuilder() {
                     Description =
@@ -77,8 +69,8 @@ namespace DiscordBot.Commands.Slash {
                 if (pingrole is not null) embed.AddPingRole(pingrole.Id);
                 embed.AddCustomSaveMessage("Event", "N/A");
                 embed.AddCustomSaveMessage(Identity.EVENT_TIMEZONE, timeZone);
-                embed.AddCustomSaveMessage(Identity.EVENT_START, parsedDateTime.ToString("dd/MM/yyyy HH:mm"));
-                embed.AddCustomSaveMessage(Identity.EVENT_END, parsedDateTime.AddHours(1).ToString("dd/MM/yyyy HH:mm"));
+                embed.AddCustomSaveMessage(Identity.EVENT_START, date.ToString("dd/MM/yyyy HH:mm"));
+                embed.AddCustomSaveMessage(Identity.EVENT_END, date.AddHours(1).ToString("dd/MM/yyyy HH:mm"));
                 await CreateEmbedMessageAsync(ctx, embed, EmbedType.EVENT, channel.Id, false);
             } catch (Exception ex) {
                 throw new CommandException($"Embed.UseEmbedCommand: {ex}");
@@ -86,3 +78,25 @@ namespace DiscordBot.Commands.Slash {
         }
     }
 }
+
+internal class HoursCP : IChoiceProvider {
+    public async Task<IEnumerable<DiscordApplicationCommandOptionChoice>> Provider() {
+        var choices = new List<DiscordApplicationCommandOptionChoice>();
+        for (int i = 0; i < 24; i++) {
+            choices.Add(new DiscordApplicationCommandOptionChoice(i.ToString(), i.ToString()));
+        }
+        return choices;
+    }
+}
+
+internal class MinutesCP : IChoiceProvider {
+    public async Task<IEnumerable<DiscordApplicationCommandOptionChoice>> Provider() {
+        var choices = new List<DiscordApplicationCommandOptionChoice>();
+        for (int i = 0; i <= 55; i += 5) {
+            choices.Add(new DiscordApplicationCommandOptionChoice(i.ToString(), $"{i.ToString()}m"));
+        }
+        return choices;
+    }
+}
+
+
