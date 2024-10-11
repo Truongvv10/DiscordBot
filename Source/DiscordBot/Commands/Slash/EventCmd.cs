@@ -7,11 +7,14 @@ using XironiteDiscordBot.Commands;
 using DiscordBot.Utils;
 using DSharpPlus;
 using System.Diagnostics;
+using NodaTime;
 
 namespace DiscordBot.Commands.Slash {
     public class EventCmd : SlashCommand {
         [SlashCommand("event-create", "Send an embeded message to the current channel")]
         public async Task UseEventCommand(InteractionContext ctx,
+            [Option("day", "The date of the event with format: ''dd/mm/yyyy''.")] double day,
+            [Option("month", "The time of the event with format: ''hh:mm''.")] YearMonth month,
             [Option("date", "The date of the event with format: ''dd/mm/yyyy''.")] string date,
             [Option("time", "The time of the event with format: ''hh:mm''.")] string time,
             [Option("timezone", "The timezone of the date & time will be calculated to.")] string timeZone,

@@ -26,20 +26,20 @@ namespace DiscordBot.Utils {
         /// 
         /// </summary>
         /// <param name="guildId">The discord server ID</param>
-        /// <param name="save">The file to be saved</param>
+        /// <param name="fileName">The file to be saved</param>
         /// <returns>Task</returns>
         /// <exception cref="UtilException"></exception>
-        public static async Task SaveFileAsync(ulong guildId, FileEnum save) {
+        public static async Task SaveFileAsync(ulong guildId, FileEnum fileName) {
             try {
 
                 // general file
                 var stopwatch = Stopwatch.StartNew();
-                var name = save.ToString().ToLower();
+                var name = fileName.ToString().ToLower();
                 var file = $@"{folder}\{guildId}\{name}.json";
                 var json = string.Empty;
 
                 // check which file
-                switch (save) {
+                switch (fileName) {
                     case FileEnum.EMBED:
                         if (CacheData.Embeds.TryGetValue(guildId, out var serverEmbeds))
                             json = JsonConvert.SerializeObject(serverEmbeds.Values.ToList(), Formatting.Indented);
@@ -74,16 +74,16 @@ namespace DiscordBot.Utils {
                 await Console.Out.WriteLineAsync($"{AnsiColor.RESET}[{DateTime.Now}] {AnsiColor.CYAN}Saved file {AnsiColor.RESET}{name}.json {AnsiColor.CYAN}for guild {guildId} {AnsiColor.YELLOW}({stopwatch.ElapsedMilliseconds}ms){AnsiColor.RESET}");
 
             } catch (Exception ex) {
-                throw new UtilException($"JsonData.SaveFileAsync: Couldn't save \"{save.ToString().ToLower()}.json\"", ex);
+                throw new UtilException($"JsonData.SaveFileAsync: Couldn't save \"{fileName.ToString().ToLower()}.json\"", ex);
             }
         }
 
-        public static async Task<object> ReadFileAsync(ulong guildId, FileEnum save) {
+        public static async Task<object> ReadFileAsync(ulong guildId, FileEnum fileName) {
             try {
 
                 // general file
                 var stopwatch = Stopwatch.StartNew();
-                var name = save.ToString().ToLower();
+                var name = fileName.ToString().ToLower();
                 var file = $@"{folder}\{guildId}\{name}.json";
                 var json = new object();
 
@@ -92,7 +92,7 @@ namespace DiscordBot.Utils {
                     var data = await sr.ReadToEndAsync();
 
                     // check which file to read
-                    switch (save) {
+                    switch (fileName) {
                         case FileEnum.EMBED:
                             json = JsonConvert.DeserializeObject<List<EmbedBuilder>>(data) ?? new List<EmbedBuilder>();
                             break;
@@ -124,7 +124,7 @@ namespace DiscordBot.Utils {
 
                 }
             } catch (Exception ex) {
-                throw new UtilException($"JsonData.ReadFileAsync: Couldn't read \"{save.ToString().ToLower()}.json\"", ex);
+                throw new UtilException($"JsonData.ReadFileAsync: Couldn't read \"{fileName.ToString().ToLower()}.json\"", ex);
             }
         }
 

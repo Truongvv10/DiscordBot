@@ -15,10 +15,10 @@ namespace DiscordBot.Commands.Slash {
 
             try {
                 // Check if user has permission to use command
-                if (!await CheckPermission(ctx, CommandEnum.PERMISSIONS)) {
-                    await showNoPermissionMessage(ctx);
-                    return;
-                }
+                //if (!await CheckPermission(ctx, CommandEnum.PERMISSIONS)) {
+                //    await showNoPermissionMessage(ctx);
+                //    return;
+                //}
 
                 // Build the embed message with default values
                 EmbedBuilder embed = new EmbedBuilder() {
