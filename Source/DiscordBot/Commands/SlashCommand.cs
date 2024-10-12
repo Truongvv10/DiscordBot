@@ -66,7 +66,7 @@ namespace XironiteDiscordBot.Commands {
                         components.Add(new DiscordActionRowComponent(buttonComponent));
                         break;
                     case EmbedType.EVENT:
-                        selectOptionDefault.Insert(0, new DiscordSelectComponentOption("Change Timestamp", Identity.SELECTION_TIMESTAMP_CHANGE, "Change timestamp of the event.", emoji: new DiscordComponentEmoji("⏰")));
+                        foreach (var item in EventComponent(embedBuilder)) { components.Add(item); }
                         components.Add(new DiscordActionRowComponent(selectComponentDefault));
                         components.Add(new DiscordActionRowComponent(selectComponentTemplate));
                         components.Add(new DiscordActionRowComponent(buttonComponent));
@@ -74,12 +74,12 @@ namespace XironiteDiscordBot.Commands {
                     case EmbedType.BROADCAST:
                         break;
                     case EmbedType.PERMISSION:
-                        foreach (var item in await PermissionComponent(embedBuilder)) {
+                        foreach (var item in PermissionComponent(embedBuilder)) {
                             components.Add(item);
                         }
                         break;
                     case EmbedType.CHANGELOG:
-                        foreach (var item in await ChangelogComponent(embedBuilder)) {
+                        foreach (var item in ChangelogComponent(embedBuilder)) {
                             components.Add(item);
                         }
                         break;
@@ -190,7 +190,7 @@ namespace XironiteDiscordBot.Commands {
 
         }
 
-        private async Task<List<DiscordActionRowComponent>> PermissionComponent(EmbedBuilder embed) {
+        private List<DiscordActionRowComponent> PermissionComponent(EmbedBuilder embed) {
 
             var selectPermissionOption = new List<DiscordSelectComponentOption>();
             var buttonEditOption = new List<DiscordActionRowComponent>();
@@ -221,7 +221,7 @@ namespace XironiteDiscordBot.Commands {
             return results;
         }
 
-        private async Task<List<DiscordActionRowComponent>> ChangelogComponent(EmbedBuilder embed) {
+        private List<DiscordActionRowComponent> ChangelogComponent(EmbedBuilder embed) {
 
             var selectPermissionOption = new List<DiscordSelectComponentOption>();
             var buttonEditOption = new List<DiscordActionRowComponent>();
@@ -246,6 +246,20 @@ namespace XironiteDiscordBot.Commands {
             List<DiscordActionRowComponent> results = new() {
                 new DiscordActionRowComponent(selectComponents),
                 new DiscordActionRowComponent(buttonComponents)};
+
+            return results;
+        }
+
+        private List<DiscordActionRowComponent> EventComponent(EmbedBuilder embed) {
+
+            var selectEventComponents = new List<DiscordSelectComponentOption>() {
+                new DiscordSelectComponentOption("Change timestamp", Identity.SELECTION_TIMESTAMP_CHANGE, "Change timestamp of the event.", emoji: new DiscordComponentEmoji("⏰"))};
+
+            List<DiscordComponent> selectComponents = new() {
+                new DiscordSelectComponent(Identity.COMPONENT_EVENT, "Select which component you want to edit...", selectEventComponents)};
+
+            List<DiscordActionRowComponent> results = new() {
+                new DiscordActionRowComponent(selectComponents)};
 
             return results;
         }

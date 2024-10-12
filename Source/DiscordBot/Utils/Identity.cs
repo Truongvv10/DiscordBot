@@ -11,8 +11,9 @@ namespace DiscordBot.Utils {
         private const string PREFIX = "";
 
         // Component
-        public const string COMPONENT_SELECT = PREFIX + PREFIX + "component.select";
+        public const string COMPONENT_SELECT = PREFIX + "component.select";
         public const string COMPONENT_TEMPLATE = PREFIX + "component.template";
+        public const string COMPONENT_EVENT = PREFIX + "component.event";
 
         // Button Component
         public const string BUTTON_CHANNEL = PREFIX + PREFIX + "button.channel";
