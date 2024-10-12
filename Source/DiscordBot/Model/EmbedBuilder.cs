@@ -326,6 +326,13 @@ namespace DiscordBot.Model {
             _pingRoles.Add(roleId);
             return this;
         }
+        public EmbedBuilder SetPingRoles(ulong[] roleIds) {
+            _pingRoles.Clear();
+            if (roleIds.Count() > 0) 
+                foreach (var roleid in roleIds) 
+                    _pingRoles.Add(roleid);
+            return this;
+        }
         public EmbedBuilder RemovePingRole(ulong roleId) {
             _pingRoles.Remove(roleId);
             return this;

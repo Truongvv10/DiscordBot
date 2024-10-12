@@ -78,13 +78,25 @@ namespace DiscordBot.Listeners {
 
                     // ####################################################### Ping
                     case Identity.SELECTION_PINGROLE:
-                        foreach (var item in e.Values) {
-                            if (ulong.TryParse(item.Value, out ulong roleid)) {
+                        List<ulong> pingIds = new();
+                        foreach (var item in e.Values.First().Value.Split(",")) {
+                            string trimmedItem = item.Trim();
+
+                            // Check if the input is "everyone"
+                            if (trimmedItem.Equals("everyone", StringComparison.OrdinalIgnoreCase)) {
+                                // Add the @everyone role ID, which is the same as the guild ID
+                                pingIds.Add(e.Interaction.Guild.Id);
+                            }
+                            // Check if the input is a valid ulong (role ID)
+                            else if (ulong.TryParse(trimmedItem, out ulong roleid)) {
                                 var role = await DiscordUtil.GetRolesByIdAsync(e.Interaction.Guild, roleid);
-                                embed.AddPingRole(role.Id);
+                                pingIds.Add(role.Id);
                             }
                         }
+
+                        embed.SetPingRoles(pingIds.ToArray());
                         break;
+
 
                     // ####################################################### Field Add
                     case Identity.SELECTION_FIELD_ADD:
@@ -193,7 +205,7 @@ namespace DiscordBot.Listeners {
                 foreach (var role in roles) {
                     if (role.Name == "@everyone") {
                         pingRoles += "@everyone";
-                    } else pingRoles += role.Mention;
+                    } else pingRoles += role.Mention + " ";
                 }
 
             }

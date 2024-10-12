@@ -71,17 +71,9 @@ namespace DiscordBot.Listeners {
                             await e.Interaction.CreateResponseAsync(InteractionResponseType.Modal, modal);
                             break;
                         case Identity.SELECTION_PINGROLE:
-                            int roleAmount= embed.PingRoles.Count();
-                            string roleId = "836964332595707955 (ID) or Everyone";
+                            string roleId = "836964332595707955, 1265749062183813242, everyone";
                             modal.WithTitle($"EDITING PINGED ROLES").WithCustomId($"embedModal;{option};{messageId}");
-                            for (int i = 0; i < 4; i++) {
-                                if (embed.PingRoles.Count >= i + 1) {
-                                    var pingRole = await DiscordUtil.GetRolesByIdAsync(e.Guild, embed.PingRoles[i]);
-                                    modal.AddComponents(new TextInputComponent($"ROLE ({pingRole.Name})", $"role{i+1}", roleId, embed.PingRoles[i].ToString(), false, TextInputStyle.Short));
-                                } else {
-                                    modal.AddComponents(new TextInputComponent($"ROLE (NONE)", Identity.MODAL_PINGROLE+(i+1), roleId, null, false, TextInputStyle.Short));
-                                }
-                            }
+                            modal.AddComponents(new TextInputComponent($"ROLES", Identity.MODAL_PINGROLE, roleId, string.Join(", ", embed.PingRoles), true, TextInputStyle.Paragraph));
                             await e.Interaction.CreateResponseAsync(InteractionResponseType.Modal, modal);
                             break;
                         case Identity.SELECTION_TIMESTAMP:
