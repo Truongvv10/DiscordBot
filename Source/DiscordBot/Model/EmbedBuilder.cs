@@ -282,7 +282,7 @@ namespace DiscordBot.Model {
         }
         public EmbedBuilder SetCustomSaveMessage(string id, object value) {
             if (_customSaves.TryGetValue(id, out object key)) {
-                _customSaves[id] = key;
+                _customSaves[id] = value;
             }
             return this;
         }
