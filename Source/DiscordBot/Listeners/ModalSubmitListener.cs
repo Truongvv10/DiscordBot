@@ -77,7 +77,7 @@ namespace DiscordBot.Listeners {
                         break;
 
                     // ####################################################### Ping
-                    case Identity.MODAL_PINGROLE:
+                    case Identity.SELECTION_PINGROLE:
                         foreach (var item in e.Values) {
                             if (ulong.TryParse(item.Value, out ulong roleid)) {
                                 var role = await DiscordUtil.GetRolesByIdAsync(e.Interaction.Guild, roleid);
@@ -159,6 +159,7 @@ namespace DiscordBot.Listeners {
 
                 // If you have multiple action rows, pass them all to the response
                 var response = new DiscordInteractionResponseBuilder()
+                    .WithContent(await CreatePingRoles(embed, e.Interaction.Guild))
                     .AddEmbed(embed.Build())
                     .AddComponents(actionRows);  // Add all action rows to the response
 
@@ -172,6 +173,32 @@ namespace DiscordBot.Listeners {
                 throw new ListenerException(ex.Message);
 			}
 
+        }
+
+        private async Task<string> CreatePingRoles(EmbedBuilder embed, DiscordGuild guild) {
+
+            string pingRoles = string.Empty;
+
+            if (embed.PingRoles.Count > 0) {
+
+                // List of roles to be kept
+                List<DiscordRole> roles = new();
+
+                // Translate each id in to roles
+                foreach (var roleId in embed.PingRoles) {
+                    roles.Add(await DiscordUtil.GetRolesByIdAsync(guild, roleId));
+                }
+
+                // Extract the mention property from each role.
+                foreach (var role in roles) {
+                    if (role.Name == "@everyone") {
+                        pingRoles += "@everyone";
+                    } else pingRoles += role.Mention;
+                }
+
+            }
+
+            return pingRoles;
         }
     }
 }
