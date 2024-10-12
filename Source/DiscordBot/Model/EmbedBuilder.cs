@@ -37,7 +37,7 @@ namespace DiscordBot.Model {
         private ulong _channelId;
         private Dictionary<string, object> _customSaves = new();
         private Dictionary<ulong, ulong> _childEmbeds = new();
-        private List<ulong> _pingRoles = new();
+        private HashSet<ulong> _pingRoles = new();
         private List<(string, string, bool)> _fields = new();
         #endregion
 
@@ -178,9 +178,9 @@ namespace DiscordBot.Model {
         }
 
         [JsonProperty("roles", NullValueHandling = NullValueHandling.Ignore)]
-        public List<ulong> PingRoles {
+        public HashSet<ulong> PingRoles {
             get => _pingRoles;
-            set => _pingRoles = value ?? new List<ulong>();
+            set => _pingRoles = value ?? new HashSet<ulong>();
         }
 
         [JsonProperty("fields", NullValueHandling = NullValueHandling.Ignore)]
