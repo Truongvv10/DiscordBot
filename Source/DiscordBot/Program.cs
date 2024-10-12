@@ -97,17 +97,22 @@ namespace DiscordBot {
 
         private static async Task ComponentInteractionHandler(DiscordClient sender, ComponentInteractionCreateEventArgs e) {
 
-            // Select components events
+            // Select components default
             if (e.Interaction.Data.ComponentType == ComponentType.StringSelect) {
                 if (e.Id == Identity.COMPONENT_SELECT) await new SelectComponentListener().HandleEmbedCommand(sender, e);
             }
 
-            // Select components events
+            // Select components template
             if (e.Interaction.Data.ComponentType == ComponentType.StringSelect) {
                 if (e.Id == Identity.COMPONENT_TEMPLATE) await new SelectComponentListener().HandleEmbedCommand(sender, e);
             }
 
-            // Button components events
+            // Select components events
+            if (e.Interaction.Data.ComponentType == ComponentType.StringSelect) {
+                if (e.Id == Identity.COMPONENT_EVENT) await new SelectComponentListener().HandleEmbedCommand(sender, e);
+            }
+
+            // Button components
             if (e.Interaction.Data.ComponentType == ComponentType.Button) {
                 if (e.Id.Contains("embedButton")) await new ButtonComponentListener().HandleEmbedCommand(sender, e);
             }

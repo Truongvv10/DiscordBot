@@ -110,27 +110,27 @@ namespace DiscordBot.Listeners {
                         break;
 
                     // ####################################################### Template Change
-                    case Identity.SELECTION_TIMESTAMP_CHANGE:
+                    case Identity.SELECTION_EVENT_TIMESTAMP:
 
                         string timezone = e.Values[Identity.EVENT_TIMEZONE];
                         string start = e.Values[Identity.EVENT_START];
                         string end = e.Values[Identity.EVENT_END];
 
                         if (CacheData.Timezones.Contains(timezone, StringComparer.OrdinalIgnoreCase)) {
-                            embed.SetCustomSaveMessage("TimeZone", timezone);
+                            embed.SetCustomSaveMessage(Identity.EVENT_TIMEZONE, timezone);
                         } else throw new ListenerException($"Time Zone \"{timezone}\" does not exist");
 
                         if (DateTime.TryParseExact(start, "d/M/yyyy H:m", null, System.Globalization.DateTimeStyles.None, out DateTime parsedStartDateTime)) {
-                            embed.SetCustomSaveMessage("StartDate", start);
+                            embed.SetCustomSaveMessage(Identity.EVENT_START, start);
                         } else throw new ListenerException($"Date \"{start}\" has incorrect format");
 
                         if (DateTime.TryParseExact(end, "d/M/yyyy H:m", null, System.Globalization.DateTimeStyles.None, out DateTime parsedEndDateTime)) {
-                            embed.SetCustomSaveMessage("EndDate", end);
+                            embed.SetCustomSaveMessage(Identity.EVENT_END, end);
                         } else throw new ListenerException($"Time \"{end}\" has incorrect format");
 
-                        string startDate = await DiscordUtil.TranslateTimestamp(parsedStartDateTime, embed.CustomSaves["TimeZone"] as string, TimestampEnum.LONG_DATE_AND_SHORT_TIME);
-                        string endDate = await DiscordUtil.TranslateTimestamp(parsedEndDateTime, embed.CustomSaves["TimeZone"] as string, TimestampEnum.LONG_DATE_AND_SHORT_TIME);
-                        string startDateRelative = await DiscordUtil.TranslateTimestamp(parsedStartDateTime, embed.CustomSaves["TimeZone"] as string, TimestampEnum.RELATIVE);
+                        string startDate = await DiscordUtil.TranslateTimestamp(parsedStartDateTime, (embed.CustomSaves[Identity.EVENT_TIMEZONE] as string)!, TimestampEnum.LONG_DATE_AND_SHORT_TIME);
+                        string endDate = await DiscordUtil.TranslateTimestamp(parsedEndDateTime, (embed.CustomSaves[Identity.EVENT_TIMEZONE] as string)!, TimestampEnum.LONG_DATE_AND_SHORT_TIME);
+                        string startDateRelative = await DiscordUtil.TranslateTimestamp(parsedStartDateTime, (embed.CustomSaves[Identity.EVENT_TIMEZONE] as string)!, TimestampEnum.RELATIVE);
 
                         embed.ClearFields();
                         embed.AddField("Start Date:", $"{startDate} ({startDateRelative})", false);

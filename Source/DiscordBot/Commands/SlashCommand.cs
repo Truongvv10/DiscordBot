@@ -60,29 +60,35 @@ namespace XironiteDiscordBot.Commands {
                 new DiscordSelectComponent(Identity.COMPONENT_TEMPLATE, "Select from a template or save template...", selectOptionsTemplate)};
 
                 switch (type) {
+
                     case EmbedType.DEFAULT:
                         components.Add(new DiscordActionRowComponent(selectComponentDefault));
                         components.Add(new DiscordActionRowComponent(selectComponentTemplate));
                         components.Add(new DiscordActionRowComponent(buttonComponent));
                         break;
+
                     case EmbedType.EVENT:
                         foreach (var item in EventComponent(embedBuilder)) { components.Add(item); }
                         components.Add(new DiscordActionRowComponent(selectComponentDefault));
                         components.Add(new DiscordActionRowComponent(selectComponentTemplate));
                         components.Add(new DiscordActionRowComponent(buttonComponent));
                         break;
+
                     case EmbedType.BROADCAST:
                         break;
+
                     case EmbedType.PERMISSION:
                         foreach (var item in PermissionComponent(embedBuilder)) {
                             components.Add(item);
                         }
                         break;
+
                     case EmbedType.CHANGELOG:
                         foreach (var item in ChangelogComponent(embedBuilder)) {
                             components.Add(item);
                         }
                         break;
+
                     default:
                         break;
                 }
@@ -253,10 +259,15 @@ namespace XironiteDiscordBot.Commands {
         private List<DiscordActionRowComponent> EventComponent(EmbedBuilder embed) {
 
             var selectEventComponents = new List<DiscordSelectComponentOption>() {
-                new DiscordSelectComponentOption("Change timestamp", Identity.SELECTION_TIMESTAMP_CHANGE, "Change timestamp of the event.", emoji: new DiscordComponentEmoji("⏰"))};
+                new DiscordSelectComponentOption("Change title", Identity.SELECTION_EVENT_TITLE, "Change title/name of the event.", emoji: new DiscordComponentEmoji("🔶")),
+                new DiscordSelectComponentOption("Change intro", Identity.SELECTION_EVENT_INTRO, "Change intro message of the event.", emoji: new DiscordComponentEmoji("📄")),
+                new DiscordSelectComponentOption("Change game info", Identity.SELECTION_EVENT_INFO, "Change game information of the event.", emoji: new DiscordComponentEmoji("ℹ️")),
+                new DiscordSelectComponentOption("Change top rewards", Identity.SELECTION_EVENT_TOPREWARDS, "Change top rewards of the event.", emoji: new DiscordComponentEmoji("🏆")),
+                new DiscordSelectComponentOption("Change timestamp", Identity.SELECTION_EVENT_TIMESTAMP, "Change timestamp of the event.", emoji: new DiscordComponentEmoji("⏰"))
+            };
 
             List<DiscordComponent> selectComponents = new() {
-                new DiscordSelectComponent(Identity.COMPONENT_EVENT, "Select which component you want to edit...", selectEventComponents)};
+                new DiscordSelectComponent(Identity.COMPONENT_EVENT, "Select an event component you want to edit...", selectEventComponents)};
 
             List<DiscordActionRowComponent> results = new() {
                 new DiscordActionRowComponent(selectComponents)};

@@ -60,6 +60,21 @@ namespace DiscordBot.Commands.Slash {
                     FooterUrl = ctx.User.AvatarUrl
                 };
 
+                string title = "# [replace] Event";
+                string intro = "Hey **everyone**! We'll be hosting **[replace]**!";
+                string info = "## 🔸 Game Info\n[replace]";
+                string reward =
+                    "## 🔸 Top 5 leaderboard rewards\n" +
+                    "**``1st``** 🥇 500 event points\n" +
+                    "**``2nd``** 🥈 350 event points \n" +
+                    "**``3rd``** 🥉 250 event points \n" +
+                    "**``4th``**    150 event points\n" +
+                    "**``5th``**    100 event points\n" +
+                    "**``All``**    5 event points per game\n" +
+                    "\n" +
+                    "Earn event points by participating in and winning events. Exchange them for in-game cosmetics, items, and perks using the **`/events`** command. Points are shared across all servers, but each server may have a different shop selection.\n" +
+                    "## 🔸 When will it start?";
+
                 embed.AddField("Start Date:", $"{startDate} ({startDateRelative})", false);
                 embed.AddField("End Date:", endDate, false);
                 embed.AddField("React with a `✅` if you're coming to the event!", "**React with a `❌` if you're going to miss out...**", false);
@@ -71,6 +86,10 @@ namespace DiscordBot.Commands.Slash {
                 embed.AddCustomSaveMessage(Identity.EVENT_TIMEZONE, timeZone);
                 embed.AddCustomSaveMessage(Identity.EVENT_START, date.ToString("dd/MM/yyyy HH:mm"));
                 embed.AddCustomSaveMessage(Identity.EVENT_END, date.AddHours(1).ToString("dd/MM/yyyy HH:mm"));
+                embed.AddCustomSaveMessage(Identity.EVENT_TITLE, title);
+                embed.AddCustomSaveMessage(Identity.EVENT_INTRO, intro);
+                embed.AddCustomSaveMessage(Identity.EVENT_INFO, info);
+                embed.AddCustomSaveMessage(Identity.EVENT_REWARD, reward);
                 await CreateEmbedMessageAsync(ctx, embed, EmbedType.EVENT, channel.Id, false);
             } catch (Exception ex) {
                 throw new CommandException($"Embed.UseEmbedCommand: {ex}");

@@ -16,7 +16,7 @@ namespace DiscordBot.Utils {
         public const string COMPONENT_EVENT = PREFIX + "component.event";
 
         // Button Component
-        public const string BUTTON_CHANNEL = PREFIX + PREFIX + "button.channel";
+        public const string BUTTON_CHANNEL = PREFIX + "button.channel";
         public const string BUTTON_CURRENT_CHANNEL = PREFIX + "button.current.channel";
         public const string BUTTON_UPDATE = PREFIX + "button.update";
         public const string BUTTON_CANCEL = PREFIX + "button.cancel";
@@ -33,7 +33,7 @@ namespace DiscordBot.Utils {
         public const string BUTTON_CHANGELOG_REMOVE = PREFIX + "button.changelog.remove";
         public const string BUTTON_CHANGELOG_CANCEL = PREFIX + "button.changelog.cancel";
 
-        // Selection Component
+        // Selection Component Default
         public const string SELECTION_TITLE = PREFIX + "selection.title";
         public const string SELECTION_DESCRIPTION = PREFIX + "selection.description";
         public const string SELECTION_FOOTER = PREFIX + "selection.footer";
@@ -49,6 +49,13 @@ namespace DiscordBot.Utils {
         public const string SELECTION_TEMPLATE_ADD = PREFIX + "selection.template.add";
         public const string SELECTION_TEMPLATE_USE = PREFIX + "selection.template.use";
         public const string SELECTION_TEMPLATE_REMOVE = PREFIX + "selection.template.remove";
+
+        // Selection Component Event
+        public const string SELECTION_EVENT_TITLE = PREFIX + "selection.event.title";
+        public const string SELECTION_EVENT_INTRO = PREFIX + "selection.event.intro";
+        public const string SELECTION_EVENT_INFO = PREFIX + "selection.event.info";
+        public const string SELECTION_EVENT_TOPREWARDS = PREFIX + "selection.event.toprewards";
+        public const string SELECTION_EVENT_TIMESTAMP = PREFIX + "selection.event.timestamp";
 
         // Selection Component Permission
         public const string SELECTION_PERMS = PREFIX + "selection.permission";
@@ -82,6 +89,10 @@ namespace DiscordBot.Utils {
         public const string MODAL_TEMPLATE_USE = PREFIX + "modal.template.use";
 
         // Event
+        public const string EVENT_TITLE = PREFIX + "event.title";
+        public const string EVENT_INTRO = PREFIX + "event.intro";
+        public const string EVENT_INFO = PREFIX + "event.info";
+        public const string EVENT_REWARD = PREFIX + "event.reward";
         public const string EVENT_TIMEZONE = PREFIX + "event.timezone";
         public const string EVENT_START = PREFIX + "event.start";
         public const string EVENT_END = PREFIX + "event.end";
