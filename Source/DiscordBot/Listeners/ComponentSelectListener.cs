@@ -171,32 +171,30 @@ namespace DiscordBot.Listeners {
                 foreach (var option in options) {
                     switch (option) {
 
-                        case Identity.SELECTION_EVENT_TITLE:
+                        case Identity.SELECTION_EVENT_INTRODUCTION:
                             modal.WithTitle("EVENT TITLE").WithCustomId($"embedModal;{option};{messageId}");
-                            modal.AddComponents(new TextInputComponent("EVENT TITLE", Identity.EVENT_TITLE, text, embed.CustomSaves[Identity.EVENT_TITLE] as string, true, TextInputStyle.Short, 0, 24));
+                            modal.AddComponents(new TextInputComponent("TITLE", Identity.EVENT_TITLE, text, embed.CustomSaves[Identity.EVENT_TITLE] as string, true, TextInputStyle.Short, 4, 32));
+                            modal.AddComponents(new TextInputComponent("INTRODUCTION", Identity.EVENT_INTRO, text, embed.CustomSaves[Identity.EVENT_INTRO] as string, true, TextInputStyle.Paragraph, 0, 500));
                             await e.Interaction.CreateResponseAsync(InteractionResponseType.Modal, modal);
                             break;
 
-                        case Identity.SELECTION_EVENT_INTRO:
+                        case Identity.SELECTION_EVENT_INFORMATION:
                             modal.WithTitle("EVENT TITLE").WithCustomId($"embedModal;{option};{messageId}");
-                            modal.AddComponents(new TextInputComponent("EVENT INTRODUCTION", Identity.EVENT_INTRO, text, embed.CustomSaves[Identity.EVENT_INTRO] as string, true, TextInputStyle.Paragraph, 0, 500));
+                            modal.AddComponents(new TextInputComponent("TITLE", Identity.EVENT_INFO_TITLE, text, embed.CustomSaves[Identity.EVENT_INFO_TITLE] as string, true, TextInputStyle.Short, 4, 32));
+                            modal.AddComponents(new TextInputComponent("INFORMATION", Identity.EVENT_INFO, text, embed.CustomSaves[Identity.EVENT_INFO] as string, true, TextInputStyle.Paragraph, 0, 2000));
                             await e.Interaction.CreateResponseAsync(InteractionResponseType.Modal, modal);
                             break;
 
-                        case Identity.SELECTION_EVENT_INFO:
+                        case Identity.SELECTION_EVENT_REWARDS:
                             modal.WithTitle("EVENT TITLE").WithCustomId($"embedModal;{option};{messageId}");
-                            modal.AddComponents(new TextInputComponent("EVENT INFORMATION", Identity.EVENT_INFO, text, embed.CustomSaves[Identity.EVENT_INFO] as string, true, TextInputStyle.Paragraph, 0, 2000));
-                            await e.Interaction.CreateResponseAsync(InteractionResponseType.Modal, modal);
-                            break;
-
-                        case Identity.SELECTION_EVENT_TOPREWARDS:
-                            modal.WithTitle("EVENT TITLE").WithCustomId($"embedModal;{option};{messageId}");
-                            modal.AddComponents(new TextInputComponent("EVENT TOP REWARDS", Identity.EVENT_REWARD, text, embed.CustomSaves[Identity.EVENT_REWARD] as string, true, TextInputStyle.Paragraph, 0, 2000));
+                            modal.AddComponents(new TextInputComponent("TITLE", Identity.EVENT_REWARD_TITLE, text, embed.CustomSaves[Identity.EVENT_REWARD_TITLE] as string, true, TextInputStyle.Short, 4, 32));
+                            modal.AddComponents(new TextInputComponent("TOP REWARDS", Identity.EVENT_REWARD, text, embed.CustomSaves[Identity.EVENT_REWARD] as string, true, TextInputStyle.Paragraph, 0, 2000));
                             await e.Interaction.CreateResponseAsync(InteractionResponseType.Modal, modal);
                             break;
 
                         case Identity.SELECTION_EVENT_TIMESTAMP:
                             modal.WithTitle("CHANGE EVENT TIMESTAMP").WithCustomId($"embedModal;{option};{messageId}");
+                            modal.AddComponents(new TextInputComponent("TITLE", Identity.EVENT_TIME_TITLE, text, embed.CustomSaves[Identity.EVENT_TIME_TITLE] as string, true, TextInputStyle.Short, 4, 32));
                             modal.AddComponents(new TextInputComponent("TIME ZONE", Identity.EVENT_TIMEZONE, "Europe/Brussels", embed.CustomSaves[Identity.EVENT_TIMEZONE] as string, true, TextInputStyle.Short));
                             modal.AddComponents(new TextInputComponent("START DATE", Identity.EVENT_START, "DD/MM/YYYY hh:mm", embed.CustomSaves[Identity.EVENT_START] as string, true, TextInputStyle.Short));
                             modal.AddComponents(new TextInputComponent("END DATE", Identity.EVENT_END, "DD/MM/YYYY hh:mm", embed.CustomSaves[Identity.EVENT_END] as string, true, TextInputStyle.Short));

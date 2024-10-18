@@ -19,10 +19,10 @@ using DSharpPlus.EventArgs;
 namespace DiscordBot.Services {
     public class DiscordService {
 
+        private readonly ConfigManager _configManager = new ConfigManager();
         private DiscordClient _client;
         private CommandsNextExtension _commands;
         private Timer _saveDataInterval;
-        private readonly ConfigManager _configManager = new ConfigManager();
 
         public async Task InitializeAsync() {
             // Load config

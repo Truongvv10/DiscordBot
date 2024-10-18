@@ -113,36 +113,36 @@ namespace DiscordBot.Listeners {
                         } else throw new ListenerException($"Template \"{name}\" can not be empty or null!");
                         break;
 
-                    case Identity.SELECTION_EVENT_TITLE:
+                    case Identity.SELECTION_EVENT_INTRODUCTION:
 
                         string title = e.Values[Identity.EVENT_TITLE];
+                        string intro = e.Values[Identity.EVENT_INTRO];
                         embed.SetCustomSaveMessage(Identity.EVENT_TITLE, title);
+                        embed.SetCustomSaveMessage(Identity.EVENT_INTRO, intro);
                         embed.Description = BuildEventDesciption(embed);
                         break;
 
-                    case Identity.SELECTION_EVENT_INTRO:
+                    case Identity.SELECTION_EVENT_INFORMATION:
 
-                        string introduction = e.Values[Identity.EVENT_INTRO];
-                        embed.SetCustomSaveMessage(Identity.EVENT_INTRO, introduction);
+                        string infoTitle = e.Values[Identity.EVENT_INFO_TITLE];
+                        string info = e.Values[Identity.EVENT_INFO];
+                        embed.SetCustomSaveMessage(Identity.EVENT_INFO_TITLE, infoTitle);
+                        embed.SetCustomSaveMessage(Identity.EVENT_INFO, info);
                         embed.Description = BuildEventDesciption(embed);
                         break;
 
-                    case Identity.SELECTION_EVENT_INFO:
+                    case Identity.SELECTION_EVENT_REWARDS:
 
-                        string information = e.Values[Identity.EVENT_INFO];
-                        embed.SetCustomSaveMessage(Identity.EVENT_INFO, information);
-                        embed.Description = BuildEventDesciption(embed);
-                        break;
-
-                    case Identity.SELECTION_EVENT_TOPREWARDS:
-
-                        string rewards = e.Values[Identity.EVENT_REWARD];
-                        embed.SetCustomSaveMessage(Identity.EVENT_REWARD, rewards);
+                        string rewardTitle = e.Values[Identity.EVENT_REWARD_TITLE];
+                        string reward = e.Values[Identity.EVENT_REWARD];
+                        embed.SetCustomSaveMessage(Identity.EVENT_REWARD_TITLE, rewardTitle);
+                        embed.SetCustomSaveMessage(Identity.EVENT_REWARD, reward);
                         embed.Description = BuildEventDesciption(embed);
                         break;
 
                     case Identity.SELECTION_EVENT_TIMESTAMP:
 
+                        string timeTitle = e.Values[Identity.EVENT_TIME_TITLE];
                         string timezone = e.Values[Identity.EVENT_TIMEZONE];
                         string start = e.Values[Identity.EVENT_START];
                         string end = e.Values[Identity.EVENT_END];
@@ -209,10 +209,20 @@ namespace DiscordBot.Listeners {
 
             string title = (string)embed.CustomSaves[Identity.EVENT_TITLE];
             string intro = (string)embed.CustomSaves[Identity.EVENT_INTRO];
+            string infoTitle = (string)embed.CustomSaves[Identity.EVENT_INFO_TITLE];
             string info = (string)embed.CustomSaves[Identity.EVENT_INFO];
+            string rewardTitle = (string)embed.CustomSaves[Identity.EVENT_REWARD_TITLE];
             string reward = (string)embed.CustomSaves[Identity.EVENT_REWARD];
+            string timeTitle = (string)embed.CustomSaves[Identity.EVENT_TIME_TITLE];
 
-            return title + "\n" + intro + "\n" + info + "\n" + reward + "\n";
+            return 
+                title + "\n" + 
+                intro + "\n" + 
+                infoTitle + "\n" + 
+                info + "\n" + 
+                rewardTitle + "\n" + 
+                reward + "\n" + 
+                timeTitle + "\n";
 
         }
 
