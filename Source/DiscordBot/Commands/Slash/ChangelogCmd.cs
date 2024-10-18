@@ -20,7 +20,7 @@ namespace DiscordBot.Commands.Slash {
 
                 // Check if user has permission to use command
                 if (!await CheckPermission(ctx, CommandEnum.CHANGELOG)) {
-                    await showNoPermissionMessage(ctx);
+                    await ShowNoPermissionMessage(ctx);
                     return;
                 }
 

@@ -16,7 +16,7 @@ namespace DiscordBot.Commands.Slash {
             [Option("time-zone", "The time zone you live in.")] string timeZone) {
 
             if (!await CheckPermission(ctx, CommandEnum.TIMESTAMP)) {
-                await showNoPermissionMessage(ctx);
+                await ShowNoPermissionMessage(ctx);
                 return;
             }
             LogCommand(ctx, CommandEnum.TIMESTAMP);

@@ -21,7 +21,7 @@ namespace DiscordBot.Commands.Slash {
             [Option("ping", "The role that will get pinged on sending message.")] DiscordRole? pingrole = null) {
 
             if (!await CheckPermission(ctx, CommandEnum.EVENTS)) {
-                await showNoPermissionMessage(ctx);
+                await ShowNoPermissionMessage(ctx);
                 return;
             }
             LogCommand(ctx, CommandEnum.EVENTS);

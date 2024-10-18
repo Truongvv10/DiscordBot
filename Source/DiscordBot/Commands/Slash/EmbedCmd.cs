@@ -22,7 +22,7 @@ namespace XironiteDiscordBot.Commands.Slash {
             try {
                 // Check if user has permission to use command
                 if (!await CheckPermission(ctx, CommandEnum.EMBED)) {
-                    await showNoPermissionMessage(ctx);
+                    await ShowNoPermissionMessage(ctx);
                     return;
                 }
 
@@ -58,7 +58,7 @@ namespace XironiteDiscordBot.Commands.Slash {
             [Option("message-id", "The id of the embeded message you want to edit.")] string id) {
 
             if (!await CheckPermission(ctx, CommandEnum.EMBED_EDIT)) {
-                await showNoPermissionMessage(ctx);
+                await ShowNoPermissionMessage(ctx);
                 return;
             }
             LogCommand(ctx, CommandEnum.EMBED_EDIT);

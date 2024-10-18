@@ -140,7 +140,7 @@ namespace XironiteDiscordBot.Commands {
             }
         }
 
-        protected virtual async Task showNoPermissionMessage(InteractionContext ctx) {
+        protected virtual async Task ShowNoPermissionMessage(InteractionContext ctx) {
             var embed = new DiscordEmbedBuilder();
             embed.WithAuthor("You don't have permission!", null, ctx.User.AvatarUrl);
             embed.WithColor(new DiscordColor("#e83b3b"));
@@ -151,14 +151,14 @@ namespace XironiteDiscordBot.Commands {
             await ctx.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, ephemeral);
         }
 
-        protected virtual async void LogCommand(InteractionContext ctx, CommandEnum command) {
+        protected virtual async void LogCommand(InteractionContext ctx, CommandEnum cmd) {
             try {
-                var cmd = command.ToString().ToLower().Replace("_", "-");
+                var command = cmd.ToString().ToLower().Replace("_", "-");
                 var embedBuilder = new EmbedBuilder() {
                     Author = ctx.User.Username,
                     AuthorLink = ctx.User.AvatarUrl,
                     AuthorUrl = ctx.User.AvatarUrl,
-                    Description = $"**Command**\nUsed **`/{cmd}`**",
+                    Description = $"**Command**\nUsed **`/{command}`**",
                     Footer = $"User: {ctx.User.Id}",
                     HasTimeStamp = true,
                 };

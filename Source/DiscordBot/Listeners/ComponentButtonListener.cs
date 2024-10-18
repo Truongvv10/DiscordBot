@@ -52,7 +52,7 @@ namespace DiscordBot.Listeners {
                 if (e.Id == ("embedButtonChannel")) {
                     await e.Interaction.CreateResponseAsync(InteractionResponseType.DeferredMessageUpdate);
                     var channel = await DiscordUtil.GetChannelByIdAsync(e.Guild, embed.ChannelId);
-                    var sentMessage = await channel.SendMessageAsync(content: pingRoles, embed: embed.Build());
+                    var sentMessage = await channel.SendMessageAsync(content: pingRoles + " " + embed.Content, embed: embed.Build());
                     embed.AddCopiedMessage(sentMessage.Id, sentMessage.Channel.Id);
                     var copy = embed.DeepClone();
                     copy.Id = sentMessage.Id;
@@ -61,7 +61,7 @@ namespace DiscordBot.Listeners {
                     await CacheData.AddEmbed(guildId, sentMessage.Id, copy);
                 }
                 if (e.Id == ("embedButtonCurrent")) {
-                    await e.Interaction.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, message.AsEphemeral(false).WithContent(pingRoles));
+                    await e.Interaction.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, message.AsEphemeral(false).WithContent(pingRoles + " " + embed.Content));
                     var sentMessage = await e.Interaction.GetOriginalResponseAsync().ConfigureAwait(false);
                     embed.AddCopiedMessage(sentMessage.Id, sentMessage.Channel.Id);
                 }
