@@ -99,14 +99,14 @@ namespace DiscordBot {
 
             // Select components
             if (e.Interaction.Data.ComponentType == ComponentType.StringSelect) {
-                if (e.Id == Identity.COMPONENT_SELECT) await new SelectComponentListener().HandleEmbedInteraction(sender, e);
-                if (e.Id == Identity.COMPONENT_TEMPLATE) await new SelectComponentListener().HandleTemplateInteraction(sender, e);
-                if (e.Id == Identity.COMPONENT_EVENT) await new SelectComponentListener().HandleEventInteraction(sender, e);
+                if (e.Id == Identity.COMPONENT_SELECT) await new ComponentSelectListener().HandleEmbedInteraction(sender, e);
+                if (e.Id == Identity.COMPONENT_TEMPLATE) await new ComponentSelectListener().HandleTemplateInteraction(sender, e);
+                if (e.Id == Identity.COMPONENT_EVENT) await new ComponentSelectListener().HandleEventInteraction(sender, e);
             }
 
             // Button components
             if (e.Interaction.Data.ComponentType == ComponentType.Button) {
-                if (e.Id.Contains("embedButton")) await new ButtonComponentListener().HandleEmbedCommand(sender, e);
+                if (e.Id.Contains("embedButton")) await new ComponentButtonListener().HandleEmbedCommand(sender, e);
             }
         }
 

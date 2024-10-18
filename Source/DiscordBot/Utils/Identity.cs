@@ -56,6 +56,7 @@ namespace DiscordBot.Utils {
         public const string SELECTION_EVENT_INFO = PREFIX + "selection.event.info";
         public const string SELECTION_EVENT_TOPREWARDS = PREFIX + "selection.event.toprewards";
         public const string SELECTION_EVENT_TIMESTAMP = PREFIX + "selection.event.timestamp";
+        public const string SELECTION_EVENT_TIME_TITLE = PREFIX + "selection.event.time.title";
 
         // Selection Component Permission
         public const string SELECTION_PERMS = PREFIX + "selection.permission";
@@ -87,6 +88,14 @@ namespace DiscordBot.Utils {
         public const string MODAL_TEMPLATE_ADD = PREFIX + "modal.template.add";
         public const string MODAL_TEMPLATE_REMOVE = PREFIX + "modal.template.remove";
         public const string MODAL_TEMPLATE_USE = PREFIX + "modal.template.use";
+        public const string MODAL_EVENT_TITLE = PREFIX + "modal.event.title";
+        public const string MODAL_EVENT_INTRO = PREFIX + "modal.event.intro";
+        public const string MODAL_EVENT_INFO = PREFIX + "modal.event.info";
+        public const string MODAL_EVENT_REWARD = PREFIX + "modal.event.reward";
+        public const string MODAL_EVENT_TIMEZONE = PREFIX + "modal.event.timezone";
+        public const string MODAL_EVENT_TIME_TITLE = PREFIX + "modal.event.time.title";
+        public const string MODAL_EVENT_START = PREFIX + "modal.event.start";
+        public const string MODAL_EVENT_END = PREFIX + "modal.event.end";
 
         // Event
         public const string EVENT_TITLE = PREFIX + "event.title";
@@ -94,6 +103,7 @@ namespace DiscordBot.Utils {
         public const string EVENT_INFO = PREFIX + "event.info";
         public const string EVENT_REWARD = PREFIX + "event.reward";
         public const string EVENT_TIMEZONE = PREFIX + "event.timezone";
+        public const string EVENT_TIME_TITLE = PREFIX + "event.time.title";
         public const string EVENT_START = PREFIX + "event.start";
         public const string EVENT_END = PREFIX + "event.end";
     }

@@ -11,7 +11,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace DiscordBot.Listeners {
-    public class SelectComponentListener {
+    public class ComponentSelectListener {
 
         public async Task HandleEmbedInteraction(DiscordClient discordClient, ComponentInteractionCreateEventArgs e) {
 
@@ -124,13 +124,15 @@ namespace DiscordBot.Listeners {
 
                 foreach (var option in options) {
                     switch (option) {
+
                         case Identity.SELECTION_TEMPLATE_ADD:
-                            modal.WithTitle($"SAVE TEMPLATE").WithCustomId($"embedModal;{option};{messageId}");
+                            modal.WithTitle("SAVE TEMPLATE").WithCustomId($"embedModal;{option};{messageId}");
                             modal.AddComponents(new TextInputComponent("SAVE TEMPLATE", Identity.MODAL_TEMPLATE_ADD, text, null, true, TextInputStyle.Short, 3, 24));
                             await e.Interaction.CreateResponseAsync(InteractionResponseType.Modal, modal);
                             break;
+
                         case Identity.SELECTION_EVENT_TIMESTAMP:
-                            modal.WithTitle($"CHANGE EVENT TIMESTAMP").WithCustomId($"embedModal;{option};{messageId}");
+                            modal.WithTitle("CHANGE EVENT TIMESTAMP").WithCustomId($"embedModal;{option};{messageId}");
                             modal.AddComponents(new TextInputComponent("TIME ZONE", Identity.EVENT_TIMEZONE, "Europe/Brussels", embed.CustomSaves[Identity.EVENT_TIMEZONE] as string, true, TextInputStyle.Short));
                             modal.AddComponents(new TextInputComponent("START DATE", Identity.EVENT_START, "DD/MM/YYYY hh:mm", embed.CustomSaves[Identity.EVENT_START] as string, true, TextInputStyle.Short));
                             modal.AddComponents(new TextInputComponent("END DATE", Identity.EVENT_END, "DD/MM/YYYY hh:mm", embed.CustomSaves[Identity.EVENT_END] as string, true, TextInputStyle.Short));
@@ -149,12 +151,12 @@ namespace DiscordBot.Listeners {
         public async Task HandleEventInteraction(DiscordClient discordClient, ComponentInteractionCreateEventArgs e) {
 
             var messageId = e.Message.Id;
+            var options = e.Values;
             var embed = CacheData.GetEmbed(e.Guild.Id, messageId);
 
             try {
                 const string text = "Write something...";
                 var exampleUrl = @"https://example.com/";
-                var options = e.Values;
                 var components = e.Message.Components;
                 var modal = new DiscordInteractionResponseBuilder();
                 var message = new DiscordInteractionResponseBuilder()
@@ -163,20 +165,46 @@ namespace DiscordBot.Listeners {
 
                 foreach (var option in options) {
                     switch (option) {
+
+                        case Identity.SELECTION_EVENT_TITLE:
+                            modal.WithTitle("EVENT TITLE").WithCustomId($"embedModal;{option};{messageId}");
+                            modal.AddComponents(new TextInputComponent("EVENT TITLE", Identity.EVENT_TITLE, text, embed.CustomSaves[Identity.EVENT_TITLE] as string, true, TextInputStyle.Short, 0, 24));
+                            await e.Interaction.CreateResponseAsync(InteractionResponseType.Modal, modal);
+                            break;
+
+                        case Identity.SELECTION_EVENT_INTRO:
+                            modal.WithTitle("EVENT TITLE").WithCustomId($"embedModal;{option};{messageId}");
+                            modal.AddComponents(new TextInputComponent("EVENT INTRODUCTION", Identity.EVENT_INTRO, text, embed.CustomSaves[Identity.EVENT_INTRO] as string, true, TextInputStyle.Paragraph, 0, 500));
+                            await e.Interaction.CreateResponseAsync(InteractionResponseType.Modal, modal);
+                            break;
+
+                        case Identity.SELECTION_EVENT_INFO:
+                            modal.WithTitle("EVENT TITLE").WithCustomId($"embedModal;{option};{messageId}");
+                            modal.AddComponents(new TextInputComponent("EVENT INFORMATION", Identity.EVENT_INFO, text, embed.CustomSaves[Identity.EVENT_INFO] as string, true, TextInputStyle.Paragraph, 0, 2000));
+                            await e.Interaction.CreateResponseAsync(InteractionResponseType.Modal, modal);
+                            break;
+
+                        case Identity.SELECTION_EVENT_TOPREWARDS:
+                            modal.WithTitle("EVENT TITLE").WithCustomId($"embedModal;{option};{messageId}");
+                            modal.AddComponents(new TextInputComponent("EVENT TOP REWARDS", Identity.EVENT_REWARD, text, embed.CustomSaves[Identity.EVENT_REWARD] as string, true, TextInputStyle.Paragraph, 0, 2000));
+                            await e.Interaction.CreateResponseAsync(InteractionResponseType.Modal, modal);
+                            break;
+
                         case Identity.SELECTION_EVENT_TIMESTAMP:
-                            modal.WithTitle($"CHANGE EVENT TIMESTAMP").WithCustomId($"embedModal;{option};{messageId}");
+                            modal.WithTitle("CHANGE EVENT TIMESTAMP").WithCustomId($"embedModal;{option};{messageId}");
                             modal.AddComponents(new TextInputComponent("TIME ZONE", Identity.EVENT_TIMEZONE, "Europe/Brussels", embed.CustomSaves[Identity.EVENT_TIMEZONE] as string, true, TextInputStyle.Short));
                             modal.AddComponents(new TextInputComponent("START DATE", Identity.EVENT_START, "DD/MM/YYYY hh:mm", embed.CustomSaves[Identity.EVENT_START] as string, true, TextInputStyle.Short));
                             modal.AddComponents(new TextInputComponent("END DATE", Identity.EVENT_END, "DD/MM/YYYY hh:mm", embed.CustomSaves[Identity.EVENT_END] as string, true, TextInputStyle.Short));
                             await e.Interaction.CreateResponseAsync(InteractionResponseType.Modal, modal);
                             break;
+
                         default:
                             await SendNotAFeatureYet(e.Interaction);
                             break;
                     }
                 }
             } catch (Exception ex) {
-                Console.WriteLine(ex.Message);
+                Console.WriteLine(ex.Message + string.Join(", ", options));
             }
         }
 

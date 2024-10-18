@@ -31,24 +31,20 @@ namespace DiscordBot.Listeners {
 
                 switch (selection) {
 
-                    // ####################################################### Title
                     case Identity.SELECTION_TITLE:
                         embed.Title = e.Values[Identity.MODAL_TITLE];
                         embed.TitleUrl = e.Values[Identity.MODAL_TITLE_LINK];
                         break;
 
-                    // ####################################################### Description
                     case Identity.SELECTION_DESCRIPTION:
                         embed.Description = e.Values[Identity.MODAL_DESCRIPTION];
                         break;
 
-                    // ####################################################### Footer
                     case Identity.SELECTION_FOOTER:
                         embed.Footer = e.Values[Identity.MODAL_FOOTER];
                         embed.FooterUrl = e.Values[Identity.MODAL_FOOTER_URL];
                         break;
 
-                    // ####################################################### Author
                     case Identity.SELECTION_AUTHOR:
                         if (e.Values.First().Value.Contains("self", StringComparison.OrdinalIgnoreCase)) {
                             embed.Author = e.Interaction.User.Username;
@@ -61,22 +57,18 @@ namespace DiscordBot.Listeners {
                         }
                         break;
 
-                    // ####################################################### Color
                     case Identity.SELECTION_COLOR:
                         embed.Color = e.Values[Identity.MODAL_COLOR];
                         break;
 
-                    // ####################################################### Image
                     case Identity.SELECTION_IMAGE:
                         embed.Image = e.Values[Identity.MODAL_IMAGE];
                         break;
 
-                    // ####################################################### Thumbnail
                     case Identity.SELECTION_THUMBNAIL:
                         embed.Thumbnail = e.Values[Identity.MODAL_THUMBNAIL];
                         break;
 
-                    // ####################################################### Ping
                     case Identity.SELECTION_PINGROLE:
                         List<ulong> pingIds = new();
                         foreach (var item in e.Values.First().Value.Split(",")) {
@@ -97,13 +89,10 @@ namespace DiscordBot.Listeners {
                         embed.SetPingRoles(pingIds.ToArray());
                         break;
 
-
-                    // ####################################################### Field Add
                     case Identity.SELECTION_FIELD_ADD:
                         embed.AddField(e.Values[Identity.MODAL_FIELD_TITLE], e.Values[Identity.MODAL_FIELD_TEXT], bool.Parse(e.Values[Identity.MODAL_FIELD_INLINE]));
                         break;
 
-                    // ####################################################### Field Remove
                     case Identity.SELECTION_FIELD_REMOVE:
                         if (int.TryParse(e.Values[Identity.MODAL_FIELD_INDEX], out int index)) {
                             if (e.Values.Count() - 1 >= index) {
@@ -112,7 +101,6 @@ namespace DiscordBot.Listeners {
                         }
                         break;
 
-                    // ####################################################### Template Add
                     case Identity.SELECTION_TEMPLATE_ADD:
                         string name = e.Values[Identity.MODAL_TEMPLATE_ADD];
                         if (!string.IsNullOrWhiteSpace(name)) {
@@ -121,7 +109,34 @@ namespace DiscordBot.Listeners {
                         } else throw new ListenerException($"Template \"{name}\" can not be empty or null!");
                         break;
 
-                    // ####################################################### Template Change
+                    case Identity.SELECTION_EVENT_TITLE:
+
+                        string title = e.Values[Identity.EVENT_TITLE];
+                        embed.SetCustomSaveMessage(Identity.EVENT_TITLE, title);
+                        embed.Description = BuildEventDesciption(embed);
+                        break;
+
+                    case Identity.SELECTION_EVENT_INTRO:
+
+                        string introduction = e.Values[Identity.EVENT_INTRO];
+                        embed.SetCustomSaveMessage(Identity.EVENT_INTRO, introduction);
+                        embed.Description = BuildEventDesciption(embed);
+                        break;
+
+                    case Identity.SELECTION_EVENT_INFO:
+
+                        string information = e.Values[Identity.EVENT_INFO];
+                        embed.SetCustomSaveMessage(Identity.EVENT_INFO, information);
+                        embed.Description = BuildEventDesciption(embed);
+                        break;
+
+                    case Identity.SELECTION_EVENT_TOPREWARDS:
+
+                        string rewards = e.Values[Identity.EVENT_REWARD];
+                        embed.SetCustomSaveMessage(Identity.EVENT_REWARD, rewards);
+                        embed.Description = BuildEventDesciption(embed);
+                        break;
+
                     case Identity.SELECTION_EVENT_TIMESTAMP:
 
                         string timezone = e.Values[Identity.EVENT_TIMEZONE];
@@ -150,7 +165,6 @@ namespace DiscordBot.Listeners {
                         embed.AddField("React with a `✅` if you're coming to the event!", "**React with a `❌` if you're going to miss out...**", false);
                         break;
 
-                    // ####################################################### Default
                     default:
                         break;
                 }
@@ -184,6 +198,17 @@ namespace DiscordBot.Listeners {
             } catch (Exception ex) {
                 throw new ListenerException(ex.Message);
 			}
+
+        }
+
+        private string BuildEventDesciption(EmbedBuilder embed) {
+
+            string title = (string)embed.CustomSaves[Identity.EVENT_TITLE];
+            string intro = (string)embed.CustomSaves[Identity.EVENT_INTRO];
+            string info = (string)embed.CustomSaves[Identity.EVENT_INFO];
+            string reward = (string)embed.CustomSaves[Identity.EVENT_REWARD];
+
+            return title + "\n" + intro + "\n" + info + "\n" + reward + "\n";
 
         }
 
