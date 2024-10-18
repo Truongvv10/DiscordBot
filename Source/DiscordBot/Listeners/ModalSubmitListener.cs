@@ -40,6 +40,10 @@ namespace DiscordBot.Listeners {
                         embed.Description = e.Values[Identity.MODAL_DESCRIPTION];
                         break;
 
+                    case Identity.SELECTION_CONTENT:
+                        embed.Content = e.Values[Identity.MODAL_CONTENT];
+                        break;
+
                     case Identity.SELECTION_FOOTER:
                         embed.Footer = e.Values[Identity.MODAL_FOOTER];
                         embed.FooterUrl = e.Values[Identity.MODAL_FOOTER_URL];
@@ -185,7 +189,7 @@ namespace DiscordBot.Listeners {
 
                 // If you have multiple action rows, pass them all to the response
                 var response = new DiscordInteractionResponseBuilder()
-                    .WithContent(await CreatePingRoles(embed, e.Interaction.Guild))
+                    .WithContent(await CreatePingRoles(embed, e.Interaction.Guild) + " " + embed.Content)
                     .AddEmbed(embed.Build())
                     .AddComponents(actionRows);  // Add all action rows to the response
 

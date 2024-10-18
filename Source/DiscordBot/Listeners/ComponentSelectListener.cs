@@ -41,6 +41,11 @@ namespace DiscordBot.Listeners {
                             modal.AddComponents(new TextInputComponent(option, Identity.MODAL_DESCRIPTION, text, embed.Description, false, TextInputStyle.Paragraph));
                             await e.Interaction.CreateResponseAsync(InteractionResponseType.Modal, modal);
                             break;
+                        case Identity.SELECTION_CONTENT:
+                            modal.WithTitle($"EDITING PLAIN CONTENT").WithCustomId($"embedModal;{option};{messageId}");
+                            modal.AddComponents(new TextInputComponent(option, Identity.MODAL_CONTENT, text, embed.Content, false, TextInputStyle.Paragraph));
+                            await e.Interaction.CreateResponseAsync(InteractionResponseType.Modal, modal);
+                            break;
                         case Identity.SELECTION_FOOTER:
                             modal.WithTitle($"EDITING FOOTER").WithCustomId($"embedModal;{option};{messageId}");
                             modal.AddComponents(new TextInputComponent("FOOTER TEXT", Identity.MODAL_FOOTER, text, embed.Footer, false, TextInputStyle.Short));

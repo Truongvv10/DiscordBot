@@ -85,7 +85,7 @@ namespace XironiteDiscordBot.Commands {
                     var roles = await Task.WhenAll(tasks);
                     var content = string.Empty;
                     foreach (var role in roles) if (role.Name == "@everyone") content += "@everyone"; else content += role.Mention;
-                    response.WithContent(content);
+                    response.WithContent(content + embedBuilder.Content);
                 }
 
                 // Send the response
@@ -200,7 +200,8 @@ namespace XironiteDiscordBot.Commands {
                     new DiscordSelectComponentOption("Edit main image", Identity.SELECTION_IMAGE, "Edit your embed image.", emoji: new DiscordComponentEmoji("🪪")),
                     new DiscordSelectComponentOption("Edit thumbnail image", Identity.SELECTION_THUMBNAIL, "Edit your embed tumbnail.", emoji: new DiscordComponentEmoji("🖼")),
                     new DiscordSelectComponentOption("Edit color", Identity.SELECTION_COLOR, "Edit your embed color.", emoji: new DiscordComponentEmoji("🎨")),
-                    new DiscordSelectComponentOption("Edit roles to ping", Identity.SELECTION_PINGROLE, "Add roles to ping on message sent.", emoji: new DiscordComponentEmoji("🔔")),
+                    new DiscordSelectComponentOption("Edit roles to ping", Identity.SELECTION_PINGROLE, "Edit roles to ping on message sent.", emoji: new DiscordComponentEmoji("🔔")),
+                    new DiscordSelectComponentOption("Edit plain text", Identity.SELECTION_CONTENT, "Edit plain text to the message.", emoji: new DiscordComponentEmoji("💭")),
                     new DiscordSelectComponentOption("Toggle timestamp", Identity.SELECTION_TIMESTAMP, "Toggle embed timestamp.", emoji: new DiscordComponentEmoji("🕙")),
                     new DiscordSelectComponentOption("Add field message", Identity.SELECTION_FIELD_ADD, "Add field message.", emoji: new DiscordComponentEmoji("📕")),
                     new DiscordSelectComponentOption("Remove field message", Identity.SELECTION_FIELD_REMOVE, "Remove field message.", emoji: new DiscordComponentEmoji("❌"))};

@@ -36,6 +36,7 @@ namespace DiscordBot.Utils {
         // Selection Component Default
         public const string SELECTION_TITLE = PREFIX + "selection.title";
         public const string SELECTION_DESCRIPTION = PREFIX + "selection.description";
+        public const string SELECTION_CONTENT = PREFIX + "selection.content";
         public const string SELECTION_FOOTER = PREFIX + "selection.footer";
         public const string SELECTION_AUTHOR = PREFIX + "selection.author";
         public const string SELECTION_COLOR = PREFIX + "selection.color";
@@ -71,6 +72,7 @@ namespace DiscordBot.Utils {
         public const string MODAL_TITLE = PREFIX + "modal.title";
         public const string MODAL_TITLE_LINK = PREFIX + "modal.title.link";
         public const string MODAL_DESCRIPTION = PREFIX + "modal.description";
+        public const string MODAL_CONTENT = PREFIX + "modal.content";
         public const string MODAL_FOOTER = PREFIX + "modal.footer";
         public const string MODAL_FOOTER_URL = PREFIX + "modal.footer.url";
         public const string MODAL_AUTHOR = PREFIX + "modal.author";
