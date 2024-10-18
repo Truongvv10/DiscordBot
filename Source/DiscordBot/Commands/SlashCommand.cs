@@ -29,20 +29,6 @@ namespace XironiteDiscordBot.Commands {
                 // List of components
                 List<DiscordActionRowComponent> components = new();
 
-                // Define select menu options for editing the embed
-                var selectOptionDefault = new List<DiscordSelectComponentOption>() {
-                    new DiscordSelectComponentOption("Edit title", Identity.SELECTION_TITLE, "Edit your embed title & url.", emoji: new DiscordComponentEmoji("✏️")),
-                    new DiscordSelectComponentOption("Edit description", Identity.SELECTION_DESCRIPTION, "Edit your embed description.", emoji: new DiscordComponentEmoji("📄")),
-                    new DiscordSelectComponentOption("Edit footer", Identity.SELECTION_FOOTER, "Edit your embed footer & image.", emoji: new DiscordComponentEmoji("🧩")),
-                    new DiscordSelectComponentOption("Edit author", Identity.SELECTION_AUTHOR, "Edit your embed author text, link & url.", emoji: new DiscordComponentEmoji("👤")),
-                    new DiscordSelectComponentOption("Edit main image", Identity.SELECTION_IMAGE, "Edit your embed image.", emoji: new DiscordComponentEmoji("🪪")),
-                    new DiscordSelectComponentOption("Edit thumbnail image", Identity.SELECTION_THUMBNAIL, "Edit your embed tumbnail.", emoji: new DiscordComponentEmoji("🖼")),
-                    new DiscordSelectComponentOption("Edit color", Identity.SELECTION_COLOR, "Edit your embed color.", emoji: new DiscordComponentEmoji("🎨")),
-                    new DiscordSelectComponentOption("Edit roles to ping", Identity.SELECTION_PINGROLE, "Add roles to ping on message sent.", emoji: new DiscordComponentEmoji("🔔")),
-                    new DiscordSelectComponentOption("Toggle timestamp", Identity.SELECTION_TIMESTAMP, "Toggle embed timestamp.", emoji: new DiscordComponentEmoji("🕙")),
-                    new DiscordSelectComponentOption("Add field message", Identity.SELECTION_FIELD_ADD, "Add field message.", emoji: new DiscordComponentEmoji("📕")),
-                    new DiscordSelectComponentOption("Remove field message", Identity.SELECTION_FIELD_REMOVE, "Remove field message.", emoji: new DiscordComponentEmoji("❌"))};
-
                 var selectOptionsTemplate = new List<DiscordSelectComponentOption>() {
                     new DiscordSelectComponentOption("Use from template", Identity.SELECTION_TEMPLATE_USE, "Choose an existing template.", emoji: new DiscordComponentEmoji("🗂")),
                     new DiscordSelectComponentOption("Save to template", Identity.SELECTION_TEMPLATE_ADD, "Save this embed to be a template.", emoji: new DiscordComponentEmoji("🗃️"))};
@@ -54,22 +40,20 @@ namespace XironiteDiscordBot.Commands {
                     new DiscordButtonComponent(ButtonStyle.Primary, "embedButtonUpdate", $"Update"),
                     new DiscordButtonComponent(ButtonStyle.Danger, "embedButtonCancel", "Cancel", hidden)};
 
-                List<DiscordComponent> selectComponentDefault = new() {
-                new DiscordSelectComponent(Identity.COMPONENT_SELECT, "Select which module you want to edit...", selectOptionDefault)};
                 List<DiscordComponent> selectComponentTemplate = new() {
                 new DiscordSelectComponent(Identity.COMPONENT_TEMPLATE, "Select from a template or save template...", selectOptionsTemplate)};
 
                 switch (type) {
 
                     case EmbedType.DEFAULT:
-                        components.Add(new DiscordActionRowComponent(selectComponentDefault));
+                        foreach (var item in DefaultComponent(embedBuilder)) { components.Add(item); }
                         components.Add(new DiscordActionRowComponent(selectComponentTemplate));
                         components.Add(new DiscordActionRowComponent(buttonComponent));
                         break;
 
                     case EmbedType.EVENT:
                         foreach (var item in EventComponent(embedBuilder)) { components.Add(item); }
-                        components.Add(new DiscordActionRowComponent(selectComponentDefault));
+                        foreach (var item in DefaultComponent(embedBuilder)) { components.Add(item); }
                         components.Add(new DiscordActionRowComponent(selectComponentTemplate));
                         components.Add(new DiscordActionRowComponent(buttonComponent));
                         break;
@@ -194,6 +178,30 @@ namespace XironiteDiscordBot.Commands {
                 throw;
             }
 
+        }
+
+        private List<DiscordActionRowComponent> DefaultComponent(EmbedBuilder embed) {
+
+            var selectOptions = new List<DiscordSelectComponentOption>() {
+                    new DiscordSelectComponentOption("Edit title", Identity.SELECTION_TITLE, "Edit your embed title & url.", emoji: new DiscordComponentEmoji("✏️")),
+                    new DiscordSelectComponentOption("Edit description", Identity.SELECTION_DESCRIPTION, "Edit your embed description.", emoji: new DiscordComponentEmoji("📄")),
+                    new DiscordSelectComponentOption("Edit footer", Identity.SELECTION_FOOTER, "Edit your embed footer & image.", emoji: new DiscordComponentEmoji("🧩")),
+                    new DiscordSelectComponentOption("Edit author", Identity.SELECTION_AUTHOR, "Edit your embed author text, link & url.", emoji: new DiscordComponentEmoji("👤")),
+                    new DiscordSelectComponentOption("Edit main image", Identity.SELECTION_IMAGE, "Edit your embed image.", emoji: new DiscordComponentEmoji("🪪")),
+                    new DiscordSelectComponentOption("Edit thumbnail image", Identity.SELECTION_THUMBNAIL, "Edit your embed tumbnail.", emoji: new DiscordComponentEmoji("🖼")),
+                    new DiscordSelectComponentOption("Edit color", Identity.SELECTION_COLOR, "Edit your embed color.", emoji: new DiscordComponentEmoji("🎨")),
+                    new DiscordSelectComponentOption("Edit roles to ping", Identity.SELECTION_PINGROLE, "Add roles to ping on message sent.", emoji: new DiscordComponentEmoji("🔔")),
+                    new DiscordSelectComponentOption("Toggle timestamp", Identity.SELECTION_TIMESTAMP, "Toggle embed timestamp.", emoji: new DiscordComponentEmoji("🕙")),
+                    new DiscordSelectComponentOption("Add field message", Identity.SELECTION_FIELD_ADD, "Add field message.", emoji: new DiscordComponentEmoji("📕")),
+                    new DiscordSelectComponentOption("Remove field message", Identity.SELECTION_FIELD_REMOVE, "Remove field message.", emoji: new DiscordComponentEmoji("❌"))};
+
+            List<DiscordComponent> selectComponents = new() {
+                new DiscordSelectComponent(Identity.COMPONENT_SELECT, "Select which module you want to edit...", selectOptions)};
+
+            List<DiscordActionRowComponent> results = new() {
+                new DiscordActionRowComponent(selectComponents)};
+
+            return results;
         }
 
         private List<DiscordActionRowComponent> PermissionComponent(EmbedBuilder embed) {
