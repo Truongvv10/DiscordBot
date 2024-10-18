@@ -41,15 +41,15 @@ namespace XironiteDiscordBot.Commands {
                 switch (type) {
 
                     case EmbedType.DEFAULT:
-                        foreach (var item in DefaultComponent(embedBuilder)) { components.Add(item); }
-                        foreach (var item in TemplateComponent(embedBuilder)) { components.Add(item); }
+                        components.Add(DefaultComponent(embedBuilder).First());
+                        components.Add(TemplateComponent(embedBuilder).First());
                         components.Add(new DiscordActionRowComponent(buttonComponent));
                         break;
 
                     case EmbedType.EVENT:
-                        foreach (var item in EventComponent(embedBuilder)) { components.Add(item); }
-                        foreach (var item in DefaultComponent(embedBuilder)) { components.Add(item); }
-                        foreach (var item in TemplateComponent(embedBuilder)) { components.Add(item); }
+                        components.Add(EventComponent(embedBuilder).First());
+                        components.Add(DefaultComponent(embedBuilder).First());
+                        components.Add(TemplateComponent(embedBuilder).First());
                         components.Add(new DiscordActionRowComponent(buttonComponent));
                         break;
 

@@ -110,6 +110,18 @@ namespace DiscordBot.Listeners {
                             modal.AddComponents(new TextInputComponent("END DATE", Identity.EVENT_END, "DD/MM/YYYY hh:mm", embed.CustomSaves[Identity.EVENT_END] as string, true, TextInputStyle.Short));
                             await e.Interaction.CreateResponseAsync(InteractionResponseType.Modal, modal);
                             break;
+                        default:
+                            // Build the embed for feature unavailability
+                            var embedMessage = new DiscordEmbedBuilder()
+                                .WithAuthor("Feature doesn't work yet!", null, "https://cdn-icons-png.flaticon.com/512/2581/2581801.png")
+                                .WithColor(new DiscordColor("#d82b40"));
+
+                            await e.Interaction.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, new DiscordInteractionResponseBuilder()
+                                .AddEmbed(embedMessage)
+                                .AsEphemeral(true));
+
+                            break;
+
                     }
                 }
             } catch (Exception ex) {
