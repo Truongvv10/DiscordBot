@@ -29,9 +29,7 @@ namespace XironiteDiscordBot.Commands {
                 // List of components
                 List<DiscordActionRowComponent> components = new();
 
-                var selectOptionsTemplate = new List<DiscordSelectComponentOption>() {
-                    new DiscordSelectComponentOption("Use from template", Identity.SELECTION_TEMPLATE_USE, "Choose an existing template.", emoji: new DiscordComponentEmoji("🗂")),
-                    new DiscordSelectComponentOption("Save to template", Identity.SELECTION_TEMPLATE_ADD, "Save this embed to be a template.", emoji: new DiscordComponentEmoji("🗃️"))};
+
 
                 // Define button components with corresponding actions
                 var buttonComponent = new List<DiscordComponent> {
@@ -40,21 +38,18 @@ namespace XironiteDiscordBot.Commands {
                     new DiscordButtonComponent(ButtonStyle.Primary, "embedButtonUpdate", $"Update"),
                     new DiscordButtonComponent(ButtonStyle.Danger, "embedButtonCancel", "Cancel", hidden)};
 
-                List<DiscordComponent> selectComponentTemplate = new() {
-                new DiscordSelectComponent(Identity.COMPONENT_TEMPLATE, "Select from a template or save template...", selectOptionsTemplate)};
-
                 switch (type) {
 
                     case EmbedType.DEFAULT:
                         foreach (var item in DefaultComponent(embedBuilder)) { components.Add(item); }
-                        components.Add(new DiscordActionRowComponent(selectComponentTemplate));
+                        foreach (var item in TemplateComponent(embedBuilder)) { components.Add(item); }
                         components.Add(new DiscordActionRowComponent(buttonComponent));
                         break;
 
                     case EmbedType.EVENT:
                         foreach (var item in EventComponent(embedBuilder)) { components.Add(item); }
                         foreach (var item in DefaultComponent(embedBuilder)) { components.Add(item); }
-                        components.Add(new DiscordActionRowComponent(selectComponentTemplate));
+                        foreach (var item in TemplateComponent(embedBuilder)) { components.Add(item); }
                         components.Add(new DiscordActionRowComponent(buttonComponent));
                         break;
 
@@ -178,6 +173,21 @@ namespace XironiteDiscordBot.Commands {
                 throw;
             }
 
+        }
+
+        private List<DiscordActionRowComponent> TemplateComponent(EmbedBuilder embed) {
+
+            var selectOptions = new List<DiscordSelectComponentOption>() {
+                    new DiscordSelectComponentOption("Use from template", Identity.SELECTION_TEMPLATE_USE, "Choose an existing template.", emoji: new DiscordComponentEmoji("🗂")),
+                    new DiscordSelectComponentOption("Save to template", Identity.SELECTION_TEMPLATE_ADD, "Save this embed to be a template.", emoji: new DiscordComponentEmoji("🗃️"))};
+
+            List<DiscordComponent> selectComponents = new() {
+                new DiscordSelectComponent(Identity.COMPONENT_TEMPLATE, "Select from a template or save template...", selectOptions)};
+
+            List<DiscordActionRowComponent> results = new() {
+                new DiscordActionRowComponent(selectComponents)};
+
+            return results;
         }
 
         private List<DiscordActionRowComponent> DefaultComponent(EmbedBuilder embed) {
