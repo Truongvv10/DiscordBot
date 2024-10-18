@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 namespace DiscordBot.Listeners {
     public class SelectComponentListener {
 
-        public async Task HandleEmbedCommand(DiscordClient discordClient, ComponentInteractionCreateEventArgs e) {
+        public async Task HandleEmbedInteraction(DiscordClient discordClient, ComponentInteractionCreateEventArgs e) {
 
             var messageId = e.Message.Id;
             var guildId = e.Guild.Id;
