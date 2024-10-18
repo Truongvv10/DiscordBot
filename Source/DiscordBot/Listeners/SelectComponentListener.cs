@@ -97,6 +97,33 @@ namespace DiscordBot.Listeners {
                                 await e.Interaction.CreateResponseAsync(InteractionResponseType.Modal, modal);
                             }
                             break;
+                        default:
+                            await SendNotAFeatureYet(e.Interaction);
+                            break;
+                    }
+                }
+            } catch (Exception ex) {
+                Console.WriteLine(ex.Message);
+			}
+        }
+
+        public async Task HandleTemplateInteraction(DiscordClient discordClient, ComponentInteractionCreateEventArgs e) {
+
+            var messageId = e.Message.Id;
+            var embed = CacheData.GetEmbed(e.Guild.Id, messageId);
+
+            try {
+                const string text = "Write something...";
+                var exampleUrl = @"https://example.com/";
+                var options = e.Values;
+                var components = e.Message.Components;
+                var modal = new DiscordInteractionResponseBuilder();
+                var message = new DiscordInteractionResponseBuilder()
+                    .AddEmbed(embed.Build())
+                    .AddComponents(components);
+
+                foreach (var option in options) {
+                    switch (option) {
                         case Identity.SELECTION_TEMPLATE_ADD:
                             modal.WithTitle($"SAVE TEMPLATE").WithCustomId($"embedModal;{option};{messageId}");
                             modal.AddComponents(new TextInputComponent("SAVE TEMPLATE", Identity.MODAL_TEMPLATE_ADD, text, null, true, TextInputStyle.Short, 3, 24));
@@ -116,7 +143,7 @@ namespace DiscordBot.Listeners {
                 }
             } catch (Exception ex) {
                 Console.WriteLine(ex.Message);
-			}
+            }
         }
 
         public async Task HandleEventInteraction(DiscordClient discordClient, ComponentInteractionCreateEventArgs e) {

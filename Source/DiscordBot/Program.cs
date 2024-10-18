@@ -104,7 +104,7 @@ namespace DiscordBot {
 
             // Select components template
             if (e.Interaction.Data.ComponentType == ComponentType.StringSelect) {
-                if (e.Id == Identity.COMPONENT_TEMPLATE) await new SelectComponentListener().HandleEmbedInteraction(sender, e);
+                if (e.Id == Identity.COMPONENT_TEMPLATE) await new SelectComponentListener().HandleTemplateInteraction(sender, e);
             }
 
             // Select components events
