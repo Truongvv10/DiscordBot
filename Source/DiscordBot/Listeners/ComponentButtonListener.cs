@@ -12,7 +12,7 @@ using DiscordBot.Model.Enums;
 using DiscordBot.Utils;
 
 namespace DiscordBot.Listeners {
-    public class ButtonComponentListener {
+    public class ComponentButtonListener {
 
 
         public async Task HandleEmbedCommand(DiscordClient discordClient, ComponentInteractionCreateEventArgs e) {
