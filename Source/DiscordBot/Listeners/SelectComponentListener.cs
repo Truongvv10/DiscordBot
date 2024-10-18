@@ -16,8 +16,7 @@ namespace DiscordBot.Listeners {
         public async Task HandleEmbedInteraction(DiscordClient discordClient, ComponentInteractionCreateEventArgs e) {
 
             var messageId = e.Message.Id;
-            var guildId = e.Guild.Id;
-            var embed = CacheData.GetEmbed(guildId, messageId);
+            var embed = CacheData.GetEmbed(e.Guild.Id, messageId);
 
             try {
                 const string text = "Write something...";
@@ -82,7 +81,7 @@ namespace DiscordBot.Listeners {
                                 .AddEmbed(embed.Build())
                                 .AddComponents(components);
                             await e.Interaction.CreateResponseAsync(InteractionResponseType.UpdateMessage, message);
-                            await JsonData.SaveEmbedsAsync(guildId);
+                            await JsonData.SaveEmbedsAsync(e.Guild.Id);
                             break;
                         case Identity.SELECTION_FIELD_ADD:
                             modal.WithTitle($"ADDING FIELD TEXT").WithCustomId($"embedModal;{option};{messageId}");
@@ -111,24 +110,49 @@ namespace DiscordBot.Listeners {
                             await e.Interaction.CreateResponseAsync(InteractionResponseType.Modal, modal);
                             break;
                         default:
-                            // Build the embed for feature unavailability
-                            var embedMessage = new DiscordEmbedBuilder()
-                                .WithAuthor("Feature doesn't work yet!", null, "https://cdn-icons-png.flaticon.com/512/2581/2581801.png")
-                                .WithColor(new DiscordColor("#d82b40"));
-
-                            await e.Interaction.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, new DiscordInteractionResponseBuilder()
-                                .AddEmbed(embedMessage)
-                                .AsEphemeral(true));
-
+                            await SendNotAFeatureYet(e.Interaction);
                             break;
-
                     }
                 }
             } catch (Exception ex) {
-                Console.WriteLine("Select");
-                throw;
+                Console.WriteLine(ex.Message);
 			}
         }
+
+        public async Task HandleEventInteraction(DiscordClient discordClient, ComponentInteractionCreateEventArgs e) {
+
+            var messageId = e.Message.Id;
+            var embed = CacheData.GetEmbed(e.Guild.Id, messageId);
+
+            try {
+                const string text = "Write something...";
+                var exampleUrl = @"https://example.com/";
+                var options = e.Values;
+                var components = e.Message.Components;
+                var modal = new DiscordInteractionResponseBuilder();
+                var message = new DiscordInteractionResponseBuilder()
+                    .AddEmbed(embed.Build())
+                    .AddComponents(components);
+
+                foreach (var option in options) {
+                    switch (option) {
+                        case Identity.SELECTION_EVENT_TIMESTAMP:
+                            modal.WithTitle($"CHANGE EVENT TIMESTAMP").WithCustomId($"embedModal;{option};{messageId}");
+                            modal.AddComponents(new TextInputComponent("TIME ZONE", Identity.EVENT_TIMEZONE, "Europe/Brussels", embed.CustomSaves[Identity.EVENT_TIMEZONE] as string, true, TextInputStyle.Short));
+                            modal.AddComponents(new TextInputComponent("START DATE", Identity.EVENT_START, "DD/MM/YYYY hh:mm", embed.CustomSaves[Identity.EVENT_START] as string, true, TextInputStyle.Short));
+                            modal.AddComponents(new TextInputComponent("END DATE", Identity.EVENT_END, "DD/MM/YYYY hh:mm", embed.CustomSaves[Identity.EVENT_END] as string, true, TextInputStyle.Short));
+                            await e.Interaction.CreateResponseAsync(InteractionResponseType.Modal, modal);
+                            break;
+                        default:
+                            await SendNotAFeatureYet(e.Interaction);
+                            break;
+                    }
+                }
+            } catch (Exception ex) {
+                Console.WriteLine(ex.Message);
+            }
+        }
+
 
         private async Task<bool> CheckPermission(ComponentInteractionCreateEventArgs e, CommandEnum cmd, ulong ownerid) {
 
@@ -146,6 +170,16 @@ namespace DiscordBot.Listeners {
             } else {
                 return false;
             }
+        }
+
+        private async Task SendNotAFeatureYet(DiscordInteraction interaction) {
+            var embedMessage = new DiscordEmbedBuilder()
+                .WithAuthor("Feature doesn't work yet!", null, "https://cdn-icons-png.flaticon.com/512/2581/2581801.png")
+                .WithColor(new DiscordColor("#d82b40"));
+
+            await interaction.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, new DiscordInteractionResponseBuilder()
+                .AddEmbed(embedMessage)
+                .AsEphemeral(true));
         }
 
         private async Task ShowNoPermissionMessage(ComponentInteractionCreateEventArgs e) {

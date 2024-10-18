@@ -109,7 +109,7 @@ namespace DiscordBot {
 
             // Select components events
             if (e.Interaction.Data.ComponentType == ComponentType.StringSelect) {
-                if (e.Id == Identity.COMPONENT_EVENT) await new SelectComponentListener().HandleEmbedInteraction(sender, e);
+                if (e.Id == Identity.COMPONENT_EVENT) await new SelectComponentListener().HandleEventInteraction(sender, e);
             }
 
             // Button components
