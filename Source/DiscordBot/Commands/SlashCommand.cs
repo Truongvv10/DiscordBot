@@ -182,7 +182,7 @@ namespace XironiteDiscordBot.Commands {
                     new DiscordSelectComponentOption("Save to template", Identity.SELECTION_TEMPLATE_ADD, "Save this embed to be a template.", emoji: new DiscordComponentEmoji("🗃️"))};
 
             List<DiscordComponent> selectComponents = new() {
-                new DiscordSelectComponent(Identity.COMPONENT_TEMPLATE, "Select from a template or save template...", selectOptions)};
+                new DiscordSelectComponent(Identity.COMPONENT_TEMPLATE, "Choose from template options", selectOptions)};
 
             List<DiscordActionRowComponent> results = new() {
                 new DiscordActionRowComponent(selectComponents)};
@@ -207,7 +207,7 @@ namespace XironiteDiscordBot.Commands {
                     new DiscordSelectComponentOption("Remove field message", Identity.SELECTION_FIELD_REMOVE, "Remove field message.", emoji: new DiscordComponentEmoji("❌"))};
 
             List<DiscordComponent> selectComponents = new() {
-                new DiscordSelectComponent(Identity.COMPONENT_SELECT, "Select which component you want to edit...", selectOptions)};
+                new DiscordSelectComponent(Identity.COMPONENT_SELECT, "Select default embed component", selectOptions)};
 
             List<DiscordActionRowComponent> results = new() {
                 new DiscordActionRowComponent(selectComponents)};
@@ -278,14 +278,14 @@ namespace XironiteDiscordBot.Commands {
         private List<DiscordActionRowComponent> EventComponent(EmbedBuilder embed) {
 
             var selectEventComponents = new List<DiscordSelectComponentOption>() {
-                new DiscordSelectComponentOption("Edit introduction", Identity.SELECTION_EVENT_INTRODUCTION, "Edit introduction of the event.", emoji: new DiscordComponentEmoji("🔶")),
-                new DiscordSelectComponentOption("Edit information", Identity.SELECTION_EVENT_INFORMATION, "Edit information of the event.", emoji: new DiscordComponentEmoji("ℹ️")),
-                new DiscordSelectComponentOption("Edit top rewards", Identity.SELECTION_EVENT_REWARDS, "Edit top rewards of the event.", emoji: new DiscordComponentEmoji("🏆")),
-                new DiscordSelectComponentOption("Edit timestamp", Identity.SELECTION_EVENT_TIMESTAMP, "Edit timestamp of the event.", emoji: new DiscordComponentEmoji("⏰"))
+                new DiscordSelectComponentOption("Introduction", Identity.SELECTION_EVENT_INTRODUCTION, "Edit introduction of the event.", emoji: new DiscordComponentEmoji("🔶")),
+                new DiscordSelectComponentOption("Information", Identity.SELECTION_EVENT_INFORMATION, "Edit information of the event.", emoji: new DiscordComponentEmoji("ℹ️")),
+                new DiscordSelectComponentOption("Top rewards", Identity.SELECTION_EVENT_REWARDS, "Edit top rewards of the event.", emoji: new DiscordComponentEmoji("🏆")),
+                new DiscordSelectComponentOption("Timestamps", Identity.SELECTION_EVENT_TIMESTAMP, "Edit timestamp of the event.", emoji: new DiscordComponentEmoji("⏰"))
             };
 
             List<DiscordComponent> selectComponents = new() {
-                new DiscordSelectComponent(Identity.COMPONENT_EVENT, "Select event specific component to edit...", selectEventComponents)};
+                new DiscordSelectComponent(Identity.COMPONENT_EVENT, "Select event specific component", selectEventComponents)};
 
             List<DiscordActionRowComponent> results = new() {
                 new DiscordActionRowComponent(selectComponents)};
