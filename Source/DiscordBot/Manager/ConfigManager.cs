@@ -12,7 +12,7 @@ namespace XironiteDiscordBot.Manager
     public class ConfigManager {
 
         #region Properties
-        private string configFolder = Directory.GetParent(Directory.GetParent(Directory.GetParent(Environment.CurrentDirectory)!.FullName)!.FullName)!.FullName + @"\Saves\Config.json";
+        private string configFolder = Path.Combine(Environment.CurrentDirectory, "Saves", "Config.json");
         #endregion
 
         #region Constructors
