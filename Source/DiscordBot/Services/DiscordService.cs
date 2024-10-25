@@ -87,8 +87,9 @@ namespace DiscordBot.Services {
                 var registeredSlashCommands = slashCommandConfiguration.RegisteredCommands;
 
                 Console.WriteLine("Registered Slash Commands:");
-                Console.WriteLine(registeredSlashCommands.Count());
-                Console.WriteLine(string.Join(", ", registeredSlashCommands.Select(cmd => cmd.Key)));
+                Console.WriteLine(_client.GetSlashCommands().RegisteredCommands.First().Key);
+                Console.WriteLine(_client.GetSlashCommands().RegisteredCommands.First().Value);
+                Console.WriteLine(string.Join(", ", registeredSlashCommands.Select(cmd => cmd.Value)));
 
 
                 // Start the bot
