@@ -93,7 +93,7 @@ namespace DiscordBot.Utils
             string dataFolder = Path.Combine(folder, "Servers", guildId.ToString());
             var dataFiles = Enum.GetValues(typeof(FileEnum))
                                 .Cast<FileEnum>()
-                                .Select(fileEnum => $"{dataFolder}/{fileEnum.ToString().ToLower()}.json")
+                                .Select(fileEnum => Path.Combine(dataFolder, $"{fileEnum.ToString().ToLower()}.json"))
                                 .ToList();
 
             // Ensure the directory data exists
