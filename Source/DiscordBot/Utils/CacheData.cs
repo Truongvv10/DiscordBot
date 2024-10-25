@@ -122,13 +122,13 @@ namespace DiscordBot.Utils
 
         private static async Task LoadDataToCache(ulong guildId) {
             try {
-                string pathSaves = $"{folder}/Servers/{guildId}";
-                string pathPermission = $"{pathSaves}/{FileEnum.PERMISSION.ToString().ToLower()}.json";
-                string pathConfig = $"{pathSaves}/{FileEnum.CONFIG.ToString().ToLower()}.json";
-                string pathEmbed = $"{pathSaves}/{FileEnum.EMBED.ToString().ToLower()}.json";
-                string pathTemplate = $"{pathSaves}/{FileEnum.TEMPLATES.ToString().ToLower()}.json";
-                string pathActivity = $"{pathSaves}/{FileEnum.ACTIVITIES.ToString().ToLower()}.json";
-                string pathLogs = $"{pathSaves}/{FileEnum.LOGS.ToString().ToLower()}.json";
+                string pathSaves = Path.Combine(folder, "Servers", guildId.ToString());
+                string pathPermission = Path.Combine(pathSaves, $"{FileEnum.PERMISSION.ToString().ToLower()}.json");
+                string pathConfig = Path.Combine(pathSaves, $"{FileEnum.CONFIG.ToString().ToLower()}.json");
+                string pathEmbed = Path.Combine(pathSaves, $"{FileEnum.EMBED.ToString().ToLower()}.json");
+                string pathTemplate = Path.Combine(pathSaves, $"{FileEnum.TEMPLATES.ToString().ToLower()}.json");
+                string pathActivity = Path.Combine(pathSaves, $"{FileEnum.ACTIVITIES.ToString().ToLower()}.json");
+                string pathLogs = Path.Combine(pathSaves, $"{FileEnum.LOGS.ToString().ToLower()}.json");
 
                 // Read embed data
                 List<EmbedBuilder> serverEmbeds = (await JsonData.ReadFileAsync(guildId, FileEnum.EMBED) as List<EmbedBuilder>)!;
