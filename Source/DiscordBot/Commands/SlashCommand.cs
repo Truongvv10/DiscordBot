@@ -18,8 +18,6 @@ using System.Threading.Channels;
 namespace XironiteDiscordBot.Commands {
     public abstract class SlashCommand : ApplicationCommandModule {
 
-        private string folder = Directory.GetParent(Directory.GetParent(Directory.GetParent(Environment.CurrentDirectory)!.FullName)!.FullName)!.FullName;
-
         protected async Task CreateEmbedMessageAsync(InteractionContext ctx, EmbedBuilder embedBuilder, EmbedType type, ulong channelId, bool hidden) {
             try {
                 // Get discord channel through channel id
