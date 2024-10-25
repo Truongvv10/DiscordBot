@@ -98,7 +98,7 @@ namespace DiscordBot.Services {
 
         private async Task OnSlashCommandErrored(SlashCommandsExtension sender, SlashCommandErrorEventArgs e) {
             // Log the error
-            Console.WriteLine($"Error executing command {e.Context}: {e.Exception.Message}");
+            Console.WriteLine($"Error executing command {e.Context}: {e.Exception}");
 
             // Optionally notify the user in the channel
             if (e.Context.Channel is DSharpPlus.Entities.DiscordChannel channel) {
