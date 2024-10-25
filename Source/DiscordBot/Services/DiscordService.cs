@@ -15,6 +15,7 @@ using DiscordBot.Listeners;
 using DiscordBot.Utils;
 using DSharpPlus.Entities;
 using DSharpPlus.EventArgs;
+using DSharpPlus.SlashCommands.EventArgs;
 
 namespace DiscordBot.Services {
     public class DiscordService {
@@ -81,14 +82,28 @@ namespace DiscordBot.Services {
                 slashCommandConfiguration.RegisterCommands<TimestampCmd>();
                 slashCommandConfiguration.RegisterCommands<NotionCmd>();
 
+                // Subscribe to the SlashCommandErrored event
+                slashCommandConfiguration.SlashCommandErrored += OnSlashCommandErrored;
+
+
                 // Start the bot
                 Console.WriteLine("[test] 9");
                 await _client.ConnectAsync();
             } catch (Exception ex) {
 
-                Console.WriteLine( ex); ;
+                Console.WriteLine( ex);
             }
 
+        }
+
+        private async Task OnSlashCommandErrored(SlashCommandsExtension sender, SlashCommandErrorEventArgs e) {
+            // Log the error
+            Console.WriteLine($"Error executing command {e.Context}: {e.Exception.Message}");
+
+            // Optionally notify the user in the channel
+            if (e.Context.Channel is DSharpPlus.Entities.DiscordChannel channel) {
+                await channel.SendMessageAsync($"An error occurred while executing the command: {e.Exception.Message}");
+            }
         }
 
         private static async Task ModalEventHandler(DiscordClient sender, ModalSubmitEventArgs e) {
