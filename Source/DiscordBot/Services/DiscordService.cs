@@ -25,64 +25,70 @@ namespace DiscordBot.Services {
         private Timer _saveDataInterval;
 
         public async Task InitializeAsync() {
-            // Load config
-            Console.WriteLine("[test] 1");
-            var config = await _configManager.GetDiscordBotConfig();
+            try {
+                // Load config
+                Console.WriteLine("[test] 1");
+                var config = await _configManager.GetDiscordBotConfig();
 
-            // Set up bot configuration
-            Console.WriteLine("[test] 2");
-            var discordConfig = new DiscordConfiguration {
-                Intents = DiscordIntents.All,
-                Token = config.Token,
-                TokenType = TokenType.Bot,
-                AutoReconnect = config.HasAutoReconnect
-            };
+                // Set up bot configuration
+                Console.WriteLine("[test] 2");
+                var discordConfig = new DiscordConfiguration {
+                    Intents = DiscordIntents.All,
+                    Token = config.Token,
+                    TokenType = TokenType.Bot,
+                    AutoReconnect = config.HasAutoReconnect
+                };
 
-            // Initialize Discord client
-            Console.WriteLine("[test] 3");
-            _client = new DiscordClient(discordConfig);
+                // Initialize Discord client
+                Console.WriteLine("[test] 3");
+                _client = new DiscordClient(discordConfig);
 
-            // Set up interactivity
-            Console.WriteLine("[test] 4");
-            _client.UseInteractivity(new InteractivityConfiguration {
-                Timeout = TimeSpan.FromMinutes(2)
-            });
+                // Set up interactivity
+                Console.WriteLine("[test] 4");
+                _client.UseInteractivity(new InteractivityConfiguration {
+                    Timeout = TimeSpan.FromMinutes(2)
+                });
 
-            // Register event handlers
-            Console.WriteLine("[test] 5");
-            _client.Ready += OnStartup;
-            _client.GuildMemberAdded += GuildMemberAddedHandler;
-            _client.ModalSubmitted += ModalEventHandler;
-            _client.MessageReactionAdded += MessageReactionHandler;
-            _client.ComponentInteractionCreated += ComponentInteractionHandler;
+                // Register event handlers
+                Console.WriteLine("[test] 5");
+                _client.Ready += OnStartup;
+                _client.GuildMemberAdded += GuildMemberAddedHandler;
+                _client.ModalSubmitted += ModalEventHandler;
+                _client.MessageReactionAdded += MessageReactionHandler;
+                _client.ComponentInteractionCreated += ComponentInteractionHandler;
 
-            // Set up command configuration
-            Console.WriteLine("[test] 6");
-            var commandsConfig = new CommandsNextConfiguration {
-                StringPrefixes = new string[] { config.Prefix },
-                EnableMentionPrefix = config.HasEnableMentionPrefix,
-                EnableDms = config.HasEnableDms,
-                EnableDefaultHelp = config.HasEnableDefaultHelp
-            };
+                // Set up command configuration
+                Console.WriteLine("[test] 6");
+                var commandsConfig = new CommandsNextConfiguration {
+                    StringPrefixes = new string[] { config.Prefix },
+                    EnableMentionPrefix = config.HasEnableMentionPrefix,
+                    EnableDms = config.HasEnableDms,
+                    EnableDefaultHelp = config.HasEnableDefaultHelp
+                };
 
-            // Initialize CommandsNext
-            Console.WriteLine("[test] 7");
-            _commands = _client.UseCommandsNext(commandsConfig);
+                // Initialize CommandsNext
+                Console.WriteLine("[test] 7");
+                _commands = _client.UseCommandsNext(commandsConfig);
 
-            // Register commands
-            Console.WriteLine("[test] 8");
-            var slashCommandConfiguration = _client.UseSlashCommands();
-            slashCommandConfiguration.RegisterCommands<EmbedCmd>();
-            slashCommandConfiguration.RegisterCommands<EventCmd>();
-            slashCommandConfiguration.RegisterCommands<ChangelogCmd>();
-            slashCommandConfiguration.RegisterCommands<BroadcastCmd>();
-            slashCommandConfiguration.RegisterCommands<PermissionCmd>();
-            slashCommandConfiguration.RegisterCommands<TimestampCmd>();
-            slashCommandConfiguration.RegisterCommands<NotionCmd>();
+                // Register commands
+                Console.WriteLine("[test] 8");
+                var slashCommandConfiguration = _client.UseSlashCommands();
+                slashCommandConfiguration.RegisterCommands<EmbedCmd>();
+                slashCommandConfiguration.RegisterCommands<EventCmd>();
+                slashCommandConfiguration.RegisterCommands<ChangelogCmd>();
+                slashCommandConfiguration.RegisterCommands<BroadcastCmd>();
+                slashCommandConfiguration.RegisterCommands<PermissionCmd>();
+                slashCommandConfiguration.RegisterCommands<TimestampCmd>();
+                slashCommandConfiguration.RegisterCommands<NotionCmd>();
 
-            // Start the bot
-            Console.WriteLine("[test] 9");
-            await _client.ConnectAsync();
+                // Start the bot
+                Console.WriteLine("[test] 9");
+                await _client.ConnectAsync();
+            } catch (Exception ex) {
+
+                Console.WriteLine( ex); ;
+            }
+
         }
 
         private static async Task ModalEventHandler(DiscordClient sender, ModalSubmitEventArgs e) {
