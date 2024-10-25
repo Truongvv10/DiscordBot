@@ -19,8 +19,6 @@ namespace XironiteDiscordBot.Commands.Slash {
             [Option("thumbnail", "The thumbnail of your embeded message that will be added.")] DiscordAttachment? thumbnail = null,
             [Option("ping", "The role that will get pinged on sending message.")] DiscordRole? pingrole = null) {
 
-            Console.WriteLine("test");
-
             try {
                 // Check if user has permission to use command
                 if (!await CheckPermission(ctx, CommandEnum.EMBED)) {

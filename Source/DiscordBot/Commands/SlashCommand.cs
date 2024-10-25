@@ -28,8 +28,6 @@ namespace XironiteDiscordBot.Commands {
                 // List of components
                 List<DiscordActionRowComponent> components = new();
 
-
-
                 // Define button components with corresponding actions
                 var buttonComponent = new List<DiscordComponent> {
                     new DiscordButtonComponent(ButtonStyle.Success, "embedButtonChannel", $"Send to {channel.Name}"),
@@ -99,7 +97,9 @@ namespace XironiteDiscordBot.Commands {
 
                 // Stop the stopwatch and log the elapsed time
                 stopwatch.Stop();
-                Console.WriteLine($"{AnsiColor.RESET}[{DateTime.Now}] {AnsiColor.GREEN}Embed creation took {stopwatch.ElapsedMilliseconds}ms");
+
+                // Logger
+                Console.WriteLine($"{AnsiColor.RESET}[{DateTime.Now}] {AnsiColor.GREEN}Embed creation took {AnsiColor.YELLOW}{stopwatch.ElapsedMilliseconds}ms {AnsiColor.GREEN}for guild {embedBuilder.ChannelId}{AnsiColor.RESET}");
 
             } catch (Exception ex) {
                 // Improved error handling with contextual information
