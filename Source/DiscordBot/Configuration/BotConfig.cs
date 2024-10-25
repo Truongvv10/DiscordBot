@@ -6,10 +6,8 @@ using System.Text;
 using System.Threading.Tasks;
 using XironiteDiscordBot.Exceptions;
 
-namespace DiscordBot.Configuration
-{
-    public class BotConfig
-    {
+namespace DiscordBot.Configuration {
+    public class BotConfig {
 
         #region Private Properties
         private string token;
@@ -18,78 +16,75 @@ namespace DiscordBot.Configuration
         private bool hasEnableMentionPrefix;
         private bool hasEnableDms;
         private bool hasEnableDefaultHelp;
+        private bool logUnknownEvents;
         private ulong? logChannel;
         #endregion
 
         #region Constructors
-        public BotConfig()
-        {
+        public BotConfig() {
             Token = "Your Discord Token";
             Prefix = "!";
             HasAutoReconnect = true;
             HasEnableMentionPrefix = true;
             HasEnableDms = true;
             HasEnableDefaultHelp = true;
+            LogUnknownEvents = false;
             logChannel = null;
         }
-        public BotConfig(string token, string prefix, bool autoReconnect, bool enableMentionPrefix, bool enableDms, bool enableDefaultHelp)
-        {
+        public BotConfig(string token, string prefix, bool autoReconnect, bool enableMentionPrefix, bool enableDms, bool enableDefaultHelp, bool logUnknownEvents) {
             Token = token;
             Prefix = prefix;
             HasAutoReconnect = autoReconnect;
             HasEnableMentionPrefix = enableMentionPrefix;
             HasEnableDms = enableDms;
+            LogUnknownEvents = logUnknownEvents;
             HasEnableDefaultHelp = enableDefaultHelp;
         }
         #endregion
 
         #region Getter & Setter
-        public string Token
-        {
+        public string Token {
             get => token;
-            set
-            {
+            set {
                 if (string.IsNullOrWhiteSpace(value)) throw new ConfigException($"Config.Token: \"{value}\" can not be null or empty.");
                 token = value;
             }
         }
 
-        public string Prefix
-        {
+        public string Prefix {
             get => prefix;
-            set
-            {
+            set {
                 if (string.IsNullOrWhiteSpace(value)) throw new ConfigException($"Config.Prefix: \"{value}\" can not be null or empty.");
                 prefix = value;
             }
         }
 
-        public bool HasAutoReconnect
-        {
+        public bool HasAutoReconnect {
             get => hasAutoReconnect;
             set => hasAutoReconnect = value;
         }
 
-        public bool HasEnableMentionPrefix
-        {
+        public bool HasEnableMentionPrefix {
             get => hasEnableMentionPrefix;
             set => hasEnableMentionPrefix = value;
         }
 
-        public bool HasEnableDms
-        {
+        public bool HasEnableDms {
             get => hasEnableDms;
             set => hasEnableDms = value;
         }
 
-        public bool HasEnableDefaultHelp
-        {
+        public bool HasEnableDefaultHelp {
             get => hasEnableDefaultHelp;
             set => hasEnableDefaultHelp = value;
         }
 
-        public ulong? LogChannel
-        {
+        public bool LogUnknownEvents {
+            get => logUnknownEvents;
+            set => logUnknownEvents = value;
+        }
+
+        public ulong? LogChannel {
             get => logChannel;
             set => logChannel = value;
         }

@@ -39,7 +39,7 @@ namespace DiscordBot.Services {
                     Token = config.Token,
                     TokenType = TokenType.Bot,
                     AutoReconnect = config.HasAutoReconnect,
-                    LogUnknownEvents = false
+                    LogUnknownEvents = config.LogUnknownEvents,
                 };
 
                 // Initialize Discord client
