@@ -16,6 +16,7 @@ using DiscordBot.Utils;
 using DSharpPlus.Entities;
 using DSharpPlus.EventArgs;
 using DSharpPlus.SlashCommands.EventArgs;
+using System.Reflection;
 
 namespace DiscordBot.Services {
     public class DiscordService {
@@ -28,30 +29,26 @@ namespace DiscordBot.Services {
         public async Task InitializeAsync() {
             try {
                 // Load config
-                Console.WriteLine("[test] 1");
                 var config = await _configManager.GetDiscordBotConfig();
 
                 // Set up bot configuration
-                Console.WriteLine("[test] 2");
                 var discordConfig = new DiscordConfiguration {
                     Intents = DiscordIntents.All,
                     Token = config.Token,
                     TokenType = TokenType.Bot,
-                    AutoReconnect = config.HasAutoReconnect
+                    AutoReconnect = config.HasAutoReconnect,
+                    LogUnknownEvents = false
                 };
 
                 // Initialize Discord client
-                Console.WriteLine("[test] 3");
                 _client = new DiscordClient(discordConfig);
 
                 // Set up interactivity
-                Console.WriteLine("[test] 4");
                 _client.UseInteractivity(new InteractivityConfiguration {
                     Timeout = TimeSpan.FromMinutes(2)
                 });
 
                 // Register event handlers
-                Console.WriteLine("[test] 5");
                 _client.Ready += OnStartup;
                 _client.GuildMemberAdded += GuildMemberAddedHandler;
                 _client.ModalSubmitted += ModalEventHandler;
@@ -59,7 +56,6 @@ namespace DiscordBot.Services {
                 _client.ComponentInteractionCreated += ComponentInteractionHandler;
 
                 // Set up command configuration
-                Console.WriteLine("[test] 6");
                 var commandsConfig = new CommandsNextConfiguration {
                     StringPrefixes = new string[] { config.Prefix },
                     EnableMentionPrefix = config.HasEnableMentionPrefix,
@@ -68,11 +64,9 @@ namespace DiscordBot.Services {
                 };
 
                 // Initialize CommandsNext
-                Console.WriteLine("[test] 7");
                 _commands = _client.UseCommandsNext(commandsConfig);
 
                 // Register commands
-                Console.WriteLine("[test] 8");
                 var slashCommandConfiguration = _client.UseSlashCommands();
                 slashCommandConfiguration.RegisterCommands<EmbedCmd>();
                 slashCommandConfiguration.RegisterCommands<EventCmd>();
@@ -87,10 +81,9 @@ namespace DiscordBot.Services {
 
 
                 // Start the bot
-                Console.WriteLine("[test] 9");
                 await _client.ConnectAsync();
+                Console.WriteLine($"{Utils.AnsiColor.RESET}[{DateTime.Now}] {Utils.AnsiColor.CYAN}Bot \"{_client.CurrentUser.Username}\" has succesfully started up");
             } catch (Exception ex) {
-
                 Console.WriteLine( ex);
             }
 
@@ -166,7 +159,6 @@ namespace DiscordBot.Services {
             Console.WriteLine();
 
             // Show config settings
-            Console.WriteLine($"{Utils.AnsiColor.RESET}[{DateTime.Now}] {Utils.AnsiColor.CYAN}Bot \"{sender.CurrentUser.Username}\" has succesfully started up");
             Console.WriteLine($"{Utils.AnsiColor.RESET}[{DateTime.Now}] {Utils.AnsiColor.CYAN}Bot used on ({sender.Guilds.Count}) different discord servers");
             Console.ForegroundColor = ConsoleColor.Gray;
             return Task.CompletedTask;
