@@ -83,8 +83,8 @@ namespace DiscordBot.Services {
                 // Start the bot
                 await _client.ConnectAsync();
                 Console.WriteLine($"{Utils.AnsiColor.RESET}[{DateTime.Now}] {Utils.AnsiColor.CYAN}Bot \"{_client.CurrentUser.Username}\" has succesfully started up");
-            } catch (Exception ex) {
-                Console.WriteLine( ex);
+            } catch (Exception) {
+                Console.WriteLine(ex);
             }
 
         }
