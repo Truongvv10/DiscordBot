@@ -51,35 +51,40 @@ namespace DiscordBot.Utils
 
         #region Methods
         public static async Task LoadAllData(DiscordClient client) {
-            var stopwatch = Stopwatch.StartNew();
+            try {
+                var stopwatch = Stopwatch.StartNew();
 
-            // Ensure files exist for all guilds
-            foreach (var guild in client.Guilds) {
-                await CheckFiles(guild.Key);
+                // Ensure files exist for all guilds
+                foreach (var guild in client.Guilds) {
+                    await CheckFiles(guild.Key);
+                }
+                stopwatch.Stop();
+                Console.WriteLine($"{AnsiColor.RESET}[{DateTime.Now}] {AnsiColor.CYAN}Successfully checked and updated files {AnsiColor.YELLOW}({stopwatch.ElapsedMilliseconds}ms)");
+
+                // Restart stopwatch for loading files
+                stopwatch.Restart();
+
+                // Load files for all guilds
+                foreach (var guild in client.Guilds) {
+                    await LoadDataToCache(guild.Key);
+                }
+                stopwatch.Stop();
+                Console.WriteLine($"{AnsiColor.RESET}[{DateTime.Now}] {AnsiColor.CYAN}Successfully loaded all files to storage {AnsiColor.YELLOW}({stopwatch.ElapsedMilliseconds}ms){AnsiColor.RESET}");
+
+
+                // Restart stopwatch for loading files
+                stopwatch.Restart();
+
+                // Print all time zone identifiers and display names
+                foreach (var zone in DateTimeZoneProviders.Tzdb.GetAllZones()) {
+                    timeZones.Add(zone.Id);
+                }
+                stopwatch.Stop();
+                Console.WriteLine($"{AnsiColor.RESET}[{DateTime.Now}] {AnsiColor.CYAN}Successfully loaded available timezones {AnsiColor.YELLOW}({stopwatch.ElapsedMilliseconds}ms){AnsiColor.RESET}");
+            } catch (Exception ex) {
+                Console.WriteLine(ex);
             }
-            stopwatch.Stop();
-            Console.WriteLine($"{AnsiColor.RESET}[{DateTime.Now}] {AnsiColor.CYAN}Successfully checked and updated files {AnsiColor.YELLOW}({stopwatch.ElapsedMilliseconds}ms)");
 
-            // Restart stopwatch for loading files
-            stopwatch.Restart();
-
-            // Load files for all guilds
-            foreach (var guild in client.Guilds) {
-                await LoadDataToCache(guild.Key);
-            }
-            stopwatch.Stop();
-            Console.WriteLine($"{AnsiColor.RESET}[{DateTime.Now}] {AnsiColor.CYAN}Successfully loaded all files to storage {AnsiColor.YELLOW}({stopwatch.ElapsedMilliseconds}ms){AnsiColor.RESET}");
-
-
-            // Restart stopwatch for loading files
-            stopwatch.Restart();
-
-            // Print all time zone identifiers and display names
-            foreach (var zone in DateTimeZoneProviders.Tzdb.GetAllZones()) {
-                timeZones.Add(zone.Id);
-            }
-            stopwatch.Stop();
-            Console.WriteLine($"{AnsiColor.RESET}[{DateTime.Now}] {AnsiColor.CYAN}Successfully loaded available timezones {AnsiColor.YELLOW}({stopwatch.ElapsedMilliseconds}ms){AnsiColor.RESET}");
         }
 
         private static async Task CheckFiles(ulong guildId) {
