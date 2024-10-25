@@ -90,7 +90,7 @@ namespace DiscordBot.Utils
         private static async Task CheckFiles(ulong guildId) {
 
             // Create a dynamic dictionary mapping FileEnum values to their respective file paths
-            string dataFolder = $"{folder}/Servers/{guildId}";
+            string dataFolder = Path.Combine(folder, "Servers", guildId.ToString());
             var dataFiles = Enum.GetValues(typeof(FileEnum))
                                 .Cast<FileEnum>()
                                 .Select(fileEnum => $"{dataFolder}/{fileEnum.ToString().ToLower()}.json")
