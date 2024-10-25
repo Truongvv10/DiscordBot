@@ -18,7 +18,7 @@ namespace DiscordBot.Utils {
     public static class JsonData {
 
         #region Private Properties
-        private static string folder = Directory.GetParent(Directory.GetParent(Directory.GetParent(Environment.CurrentDirectory)!.FullName)!.FullName)!.FullName + @"\Saves\Servers";
+        private static string folder = Path.Combine(Environment.CurrentDirectory, @"\Saves\Servers");
         #endregion
 
         #region Methods
