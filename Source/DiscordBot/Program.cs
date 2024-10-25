@@ -17,6 +17,8 @@ using System.Security;
 using DSharpPlus.Entities;
 using System.Runtime.CompilerServices;
 using DiscordBot.Services;
+using AnsiColor = DiscordBot.Utils.AnsiColor;
+using DiscordBot.Exceptions;
 
 namespace DiscordBot {
     internal class Program {
@@ -33,9 +35,10 @@ namespace DiscordBot {
                 // Keep the application running
                 await Task.Delay(-1);
 
+            } catch (ServiceException ex) {
+                Console.WriteLine($"{AnsiColor.RESET}[{DateTime.Now.TimeOfDay}] {AnsiColor.RED}[Error] Service error occurred: {ex.Message}");
             } catch (Exception ex) {
-                Console.WriteLine(ex);
-				throw;
+                Console.WriteLine($"{AnsiColor.RESET}[{DateTime.Now.TimeOfDay}] {AnsiColor.RED}[Error] An unexpected error occurred: {ex.Message}");
 			}
 
         }

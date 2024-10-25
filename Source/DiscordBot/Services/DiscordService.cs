@@ -17,6 +17,8 @@ using DSharpPlus.Entities;
 using DSharpPlus.EventArgs;
 using DSharpPlus.SlashCommands.EventArgs;
 using System.Reflection;
+using DiscordBot.Exceptions;
+using AnsiColor = DiscordBot.Utils.AnsiColor;
 
 namespace DiscordBot.Services {
     public class DiscordService {
@@ -82,9 +84,9 @@ namespace DiscordBot.Services {
 
                 // Start the bot
                 await _client.ConnectAsync();
-                Console.WriteLine($"{Utils.AnsiColor.RESET}[{DateTime.Now}] {Utils.AnsiColor.CYAN}Bot \"{_client.CurrentUser.Username}\" has succesfully started up");
-            } catch (Exception) {
-                Console.WriteLine(ex);
+                Console.WriteLine($"{AnsiColor.RESET}[{DateTime.Now}] {AnsiColor.CYAN}Bot \"{_client.CurrentUser.Username}\" has succesfully started up");
+            } catch (Exception ex) {
+                throw new ServiceException($"There has been an error starting up the bot.", ex);
             }
 
         }
