@@ -35,7 +35,7 @@ namespace DiscordBot.Utils {
                 // general file
                 var stopwatch = Stopwatch.StartNew();
                 var name = fileName.ToString().ToLower();
-                var file = $@"{folder}\{guildId}\{name}.json";
+                var file = Path.Combine(folder, guildId.ToString(), $"{name}.json");
                 var json = string.Empty;
 
                 // check which file
