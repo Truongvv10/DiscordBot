@@ -81,12 +81,14 @@ namespace DiscordBot.Services {
                 slashCommandConfiguration.RegisterCommands<TimestampCmd>();
                 slashCommandConfiguration.RegisterCommands<NotionCmd>();
 
-                Console.WriteLine("[test] 8.5"); // Debug point
-                var registeredCommands = _commands.RegisteredCommands;
-                Console.WriteLine("Registered Commands:");
-                foreach (var command in registeredCommands) {
-                    Console.WriteLine($"- {command.Key}");
-                }
+                // After you register your slash commands
+                Console.WriteLine("[test] 8.5");
+                var slashCommands = _client.GetSlashCommands();
+                var registeredSlashCommands = slashCommandConfiguration.RegisteredCommands;
+
+                Console.WriteLine("Registered Slash Commands:");
+                Console.WriteLine(string.Join(", ", registeredSlashCommands.Select(cmd => cmd.Key)));
+
 
                 // Start the bot
                 Console.WriteLine("[test] 9");
