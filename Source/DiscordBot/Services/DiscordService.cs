@@ -81,6 +81,13 @@ namespace DiscordBot.Services {
                 slashCommandConfiguration.RegisterCommands<TimestampCmd>();
                 slashCommandConfiguration.RegisterCommands<NotionCmd>();
 
+                Console.WriteLine("[test] 8.5"); // Debug point
+                var registeredCommands = _commands.RegisteredCommands;
+                Console.WriteLine("Registered Commands:");
+                foreach (var command in registeredCommands) {
+                    Console.WriteLine($"- {command.Key}");
+                }
+
                 // Start the bot
                 Console.WriteLine("[test] 9");
                 await _client.ConnectAsync();
