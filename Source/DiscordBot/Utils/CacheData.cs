@@ -88,29 +88,34 @@ namespace DiscordBot.Utils
         }
 
         private static async Task CheckFiles(ulong guildId) {
+            try {
+                // Create a dynamic dictionary mapping FileEnum values to their respective file paths
+                string dataFolder = Path.Combine(folder, "Servers", guildId.ToString());
+                var dataFiles = Enum.GetValues(typeof(FileEnum))
+                                    .Cast<FileEnum>()
+                                    .Select(fileEnum => Path.Combine(dataFolder, $"{fileEnum.ToString().ToLower()}.json"))
+                                    .ToList();
 
-            // Create a dynamic dictionary mapping FileEnum values to their respective file paths
-            string dataFolder = Path.Combine(folder, "Servers", guildId.ToString());
-            var dataFiles = Enum.GetValues(typeof(FileEnum))
-                                .Cast<FileEnum>()
-                                .Select(fileEnum => Path.Combine(dataFolder, $"{fileEnum.ToString().ToLower()}.json"))
-                                .ToList();
+                // Ensure the directory data exists
+                if (!Directory.Exists(dataFolder)) {
+                    Directory.CreateDirectory(dataFolder);
+                }
 
-            // Ensure the directory data exists
-            if (!Directory.Exists(dataFolder)) {
-                Directory.CreateDirectory(dataFolder);
+                // List to store all the file checking and creation tasks
+                var tasks = new List<Task>();
+
+                // Check each file and create it if it doesn't exist
+                foreach (var filePath in dataFiles) {
+                    tasks.Add(EnsureFileExists(filePath));
+                }
+
+                // Await all tasks concurrently
+                await Task.WhenAll(tasks);
+            } catch (Exception ex) {
+                Console.WriteLine(ex);
+                throw;
             }
 
-            // List to store all the file checking and creation tasks
-            var tasks = new List<Task>();
-
-            // Check each file and create it if it doesn't exist
-            foreach (var filePath in dataFiles) {
-                tasks.Add(EnsureFileExists(filePath));
-            }
-
-            // Await all tasks concurrently
-            await Task.WhenAll(tasks);
         }
 
         private static async Task EnsureFileExists(string filePath) {
