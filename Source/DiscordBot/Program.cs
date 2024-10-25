@@ -21,16 +21,22 @@ using DiscordBot.Services;
 namespace DiscordBot {
     internal class Program {
         static async Task Main(string[] args) {
-            var discordService = new DiscordService();
+			try {
+                var discordService = new DiscordService();
 
-            // Initialize the Discord bot
-            await discordService.InitializeAsync();
+                // Initialize the Discord bot
+                await discordService.InitializeAsync();
 
-            // Start data-saving interval
-            discordService.StartDataSavingInterval();
+                // Start data-saving interval
+                discordService.StartDataSavingInterval();
 
-            // Keep the application running
-            await Task.Delay(-1);
+                // Keep the application running
+                await Task.Delay(-1);
+
+            } catch (Exception ex) {
+                Console.WriteLine(ex);
+				throw;
+			}
 
         }
     }
