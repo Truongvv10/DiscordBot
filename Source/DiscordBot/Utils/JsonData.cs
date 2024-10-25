@@ -132,7 +132,7 @@ namespace DiscordBot.Utils {
 
         public static async Task SaveEmbedsAsync(ulong serverId) {
             try {
-                var file = $@"{folder}\{serverId}\{FileEnum.EMBED.ToString().ToLower()}.json";
+                var file = Path.Combine(folder, serverId.ToString(), $"{FileEnum.EMBED.ToString().ToLower()}.json");
                 if (CacheData.Embeds.TryGetValue(serverId, out var serverEmbeds)) {
                     var json = JsonConvert.SerializeObject(serverEmbeds.Values.ToList(), Formatting.Indented);
                     await File.WriteAllTextAsync(file, json);
@@ -144,7 +144,7 @@ namespace DiscordBot.Utils {
         public static async Task<List<EmbedBuilder>> ReadEmbedsAsync(ulong serverId) {
             try {
                 // Read file and convert to object
-                string file = $@"{folder}\{serverId}\{FileEnum.EMBED.ToString().ToLower()}.json";
+                string file = Path.Combine(folder, serverId.ToString(), $"{FileEnum.EMBED.ToString().ToLower()}.json");
                 using (StreamReader sr = new StreamReader(file)) {
                     var data = await sr.ReadToEndAsync();
                     var embeds = JsonConvert.DeserializeObject<List<EmbedBuilder>>(data)!;
@@ -156,7 +156,7 @@ namespace DiscordBot.Utils {
         }
         public static async Task SavePermissionsAsync(ulong serverId) {
             try {
-                var file = $@"{folder}\{serverId}\{FileEnum.PERMISSION.ToString().ToLower()}.json";
+                var file = Path.Combine(folder, serverId.ToString(), $"{FileEnum.PERMISSION.ToString().ToLower()}.json");
                 if (CacheData.Permissions.TryGetValue(serverId, out var serverPermissions)) {
                     var json = JsonConvert.SerializeObject(serverPermissions.Values.ToList(), Formatting.Indented);
                     await File.WriteAllTextAsync(file, json);
@@ -168,7 +168,7 @@ namespace DiscordBot.Utils {
         public static async Task<List<Permission>> ReadPermissionsAsync(ulong serverId) {
             try {
                 // Read file and convert to object
-                string file = $@"{folder}\{serverId}\{FileEnum.PERMISSION.ToString().ToLower()}.json";
+                string file = Path.Combine(folder, serverId.ToString(), $"{FileEnum.PERMISSION.ToString().ToLower()}.json");
                 using (StreamReader sr = new StreamReader(file)) {
                     var data = await sr.ReadToEndAsync();
                     var perms = JsonConvert.DeserializeObject<List<Permission>>(data)!;
