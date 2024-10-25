@@ -21,7 +21,7 @@ namespace DiscordBot.Utils
     public static class CacheData {
 
         #region Properties
-        private static string folder = Directory.GetParent(Directory.GetParent(Directory.GetParent(Environment.CurrentDirectory)!.FullName)!.FullName)!.FullName + @"\Saves";
+        private static string folder = Path.Combine(Environment.CurrentDirectory, "Saves");
         private static Dictionary<ulong, Dictionary<ulong, EmbedBuilder>> embeds = new();
         private static Dictionary<ulong, Dictionary<string, EmbedBuilder>> templates = new();
         private static Dictionary<ulong, Dictionary<CommandEnum, Permission>> permissions = new();
