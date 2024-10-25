@@ -14,6 +14,7 @@ using DiscordBot.Utils;
 using XironiteDiscordBot.Exceptions;
 using System.Diagnostics;
 using System.Threading.Channels;
+using AnsiColor = DiscordBot.Utils.AnsiColor;
 
 namespace XironiteDiscordBot.Commands {
     public abstract class SlashCommand : ApplicationCommandModule {
@@ -98,8 +99,7 @@ namespace XironiteDiscordBot.Commands {
 
                 // Stop the stopwatch and log the elapsed time
                 stopwatch.Stop();
-                Console.WriteLine($"Embed creation took {stopwatch.ElapsedMilliseconds} ms");
-                Console.WriteLine(string.Join(", ", CacheData.Embeds[ctx.Guild.Id]));
+                Console.WriteLine($"{AnsiColor.RESET}[{DateTime.Now}] {AnsiColor.GREEN}Embed creation took {stopwatch.ElapsedMilliseconds}ms");
 
             } catch (Exception ex) {
                 // Improved error handling with contextual information
