@@ -89,14 +89,14 @@ namespace XironiteDiscordBot.Commands {
                 await ctx.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, response);
                 var message = await ctx.GetOriginalResponseAsync().ConfigureAwait(false);
 
+                // Stop the stopwatch and log the elapsed time
+                stopwatch.Stop();
+
                 // Store the message ID and components for future reference
                 embedBuilder.WithMessageId(message.Id);
 
                 // Store the embed data
                 await CacheData.AddEmbed(ctx.Guild.Id, message.Id, embedBuilder);
-
-                // Stop the stopwatch and log the elapsed time
-                stopwatch.Stop();
 
                 // Logger
                 Console.WriteLine($"{AnsiColor.RESET}[{DateTime.Now}] {AnsiColor.GREEN}Embed creation took {AnsiColor.YELLOW}{stopwatch.ElapsedMilliseconds}ms {AnsiColor.GREEN}for guild {embedBuilder.ChannelId}{AnsiColor.RESET}");

@@ -61,7 +61,7 @@ namespace DiscordBot.Services {
                 $"{AnsiColor.RESET}[{DateTime.Now}] " +
                 $"{AnsiColor.GREEN}{user.Username} issued command: " +
                 $"{AnsiColor.YELLOW}/{command.ToString().ToLower()} " +
-                $"{AnsiColor.BRIGHT_BLACK} ({guild.Name})");
+                $"{AnsiColor.RESET}({guild.Name})");
         }
         #endregion
     }
