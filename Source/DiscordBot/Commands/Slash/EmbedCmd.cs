@@ -6,6 +6,7 @@ using DiscordBot.Utils;
 using DSharpPlus;
 using DSharpPlus.Entities;
 using DSharpPlus.SlashCommands;
+using System;
 using System.Diagnostics;
 using System.Threading.Channels;
 
@@ -68,5 +69,43 @@ namespace DiscordBot.Commands.Slash {
                 throw new CommandException($"Embed.UseEmbedEditCommand: {ex}");
             }
         }
+
+
+        [SlashCommand("embed2", "Send an embeded message to the current channel")]
+        [RequirePermission(CommandEnum.EMBED)]
+        public async Task Embed(InteractionContext ctx,
+            [Option("template", "Template that will be used to create your embeded message.")] EmbedType template,
+            [Option("sent_channel", "The channel where your embeded message will be sent to.")] DiscordChannel channel,
+            [Option("image", "The main image of your embeded message that will be added.")] DiscordAttachment? image = null,
+            [Option("thumbnail", "The thumbnail of your embeded message that will be added.")] DiscordAttachment? thumbnail = null,
+            [Option("ping", "The server role that will get pinged on sending message.")] DiscordRole? pingrole = null) {
+
+            try {
+
+                // Build the embed message with default values
+                EmbedBuilder embed = new EmbedBuilder() {
+                    Title = "This is an example title",
+                    Description = "This is the description text.",
+                    Image = @"https://i.imgur.com/07DVuUb.gif",
+                    Thumbnail = @"https://i.imgur.com/sHL1DQQ.gif",
+                    Footer = "Footer sample text",
+                    HasTimeStamp = true,
+                    ChannelId = channel.Id,
+                    Owner = ctx.User.Id
+                };
+
+                if (image is not null) embed.Image = image.Url;
+                if (thumbnail is not null) embed.Thumbnail = thumbnail.Url;
+                if (pingrole is not null) embed.AddPingRole(pingrole.Id);
+
+                // Create the embed message
+                await CreateEmbedMessageAsync(ctx, embed, EmbedId.DEFAULT, channel.Id, true);
+
+            } catch (Exception ex) {
+                Console.WriteLine(ex);
+                throw new CommandException($"Embed.UseEmbedCommand: {ex}");
+            }
+        }
+
     }
 }

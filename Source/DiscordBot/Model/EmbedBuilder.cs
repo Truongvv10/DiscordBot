@@ -16,21 +16,21 @@ namespace DiscordBot.Model {
     public class EmbedBuilder {
         #region Private Properties
         private EmbedId _type;
-        private string _title;
-        private string _titleLink;
-        private string _description;
-        private string _content;
-        private string _footer;
-        private string _footerUrl;
-        private string _author;
-        private string _authorLink;
-        private string _authorUrl;
-        private string _image;
-        private string _thumbnail;
-        private string _color;
+        private string? _title;
+        private string? _titleLink;
+        private string? _description;
+        private string? _content;
+        private string? _footer;
+        private string? _footerUrl;
+        private string? _author;
+        private string? _authorLink;
+        private string? _authorUrl;
+        private string? _image;
+        private string? _thumbnail;
+        private string? _color;
         private bool _hasTimeStamp;
-        private long _time;
-        private ulong _owner;
+        private long? _time;
+        private ulong? _owner;
         private ulong _messageId;
         private ulong _channelId;
         private Dictionary<string, object> _customSaves = new();
@@ -54,7 +54,7 @@ namespace DiscordBot.Model {
         }
         #endregion
 
-        #region Getter & Setter
+        #region Properties
         [JsonProperty("type", NullValueHandling = NullValueHandling.Ignore)]
         public EmbedId Type {
             get => _type;
@@ -62,75 +62,75 @@ namespace DiscordBot.Model {
         }
 
         [JsonProperty("title", NullValueHandling = NullValueHandling.Ignore)]
-        public string Title {
+        public string? Title {
             get => _title;
             set => _title = value;
         }
 
         [JsonProperty("title_link", NullValueHandling = NullValueHandling.Ignore)]
-        public string TitleUrl {
+        public string? TitleUrl {
             get => _titleLink;
             set => _titleLink = value;
         }
 
         [JsonProperty("description", NullValueHandling = NullValueHandling.Ignore)]
-        public string Description {
+        public string? Description {
             get => _description;
             set => _description = value;
         }
 
         [JsonProperty("content", NullValueHandling = NullValueHandling.Ignore)]
-        public string Content {
+        public string? Content {
             get => _content;
             set => _content = value;
         }
 
         [JsonProperty("footer", NullValueHandling = NullValueHandling.Ignore)]
-        public string Footer {
+        public string? Footer {
             get => _footer;
             set => _footer = value;
         }
 
         [JsonProperty("footer_url", NullValueHandling = NullValueHandling.Ignore)]
-        public string FooterUrl {
+        public string? FooterUrl {
             get => _footerUrl;
             set => _footerUrl = value;
         }
 
         [JsonProperty("author", NullValueHandling = NullValueHandling.Ignore)]
-        public string Author {
+        public string? Author {
             get => _author;
             set => _author = value;
         }
 
         [JsonProperty("author_link", NullValueHandling = NullValueHandling.Ignore)]
-        public string AuthorLink {
+        public string? AuthorLink {
             get => _authorLink;
             set => _authorLink = value;
         }
 
         [JsonProperty("author_url", NullValueHandling = NullValueHandling.Ignore)]
-        public string AuthorUrl {
+        public string? AuthorUrl {
             get => _authorUrl;
             set => _authorUrl = value;
         }
 
         [JsonProperty("image", NullValueHandling = NullValueHandling.Ignore)]
-        public string Image {
+        public string? Image {
             get => _image;
             set => _image = value;
         }
 
         [JsonProperty("thumbnail", NullValueHandling = NullValueHandling.Ignore)]
-        public string Thumbnail {
+        public string? Thumbnail {
             get => _thumbnail;
             set => _thumbnail = value;
         }
 
         [JsonProperty("color", NullValueHandling = NullValueHandling.Ignore)]
-        public string Color {
+        public string? Color {
             get => _color;
-            set { if (Regex.IsMatch(value, @"#[a-fA-F0-9]{6}")) _color = value; }
+            set { if (value != null && Regex.IsMatch(value, @"#[a-fA-F0-9]{6}")) _color = value; }
         }
 
         [JsonProperty("timestamp", NullValueHandling = NullValueHandling.Ignore)]
@@ -140,13 +140,13 @@ namespace DiscordBot.Model {
         }
 
         [JsonProperty("creation_date", NullValueHandling = NullValueHandling.Ignore)]
-        public long Time {
+        public long? Time {
             get => _time;
             set => _time = value;
         }
 
         [JsonProperty("sender", NullValueHandling = NullValueHandling.Ignore)]
-        public ulong Owner {
+        public ulong? Owner {
             get => _owner;
             set => _owner = value;
         }
@@ -279,7 +279,7 @@ namespace DiscordBot.Model {
             return this;
         }
         public EmbedBuilder SetCustomSaveMessage(string id, object value) {
-            if (_customSaves.TryGetValue(id, out object key)) {
+            if (_customSaves.TryGetValue(id, out _)) {
                 _customSaves[id] = value;
             }
             return this;
