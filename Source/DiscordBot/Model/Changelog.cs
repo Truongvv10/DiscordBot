@@ -6,7 +6,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using XironiteDiscordBot.Exceptions;
+using DiscordBot.Exceptions;
 
 namespace DiscordBot.Model {
     public class Changelog {

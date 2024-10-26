@@ -2,10 +2,10 @@
 using DSharpPlus.EventArgs;
 using DSharpPlus.Interactivity;
 using DSharpPlus;
-using XironiteDiscordBot.Manager;
+using DiscordBot.Manager;
 using DSharpPlus.Interactivity.Extensions;
 using DSharpPlus.SlashCommands;
-using XironiteDiscordBot.Commands.Slash;
+using DiscordBot.Commands.Slash;
 using DiscordBot.Listeners;
 using DiscordBot.Model;
 using Newtonsoft.Json;

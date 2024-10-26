@@ -13,7 +13,7 @@ using System.Security.Cryptography;
 using DiscordBot.Model.Enums;
 using DSharpPlus.SlashCommands;
 using DiscordBot.Utils;
-using XironiteDiscordBot.Exceptions;
+using DiscordBot.Exceptions;
 using DiscordBot.Model;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 

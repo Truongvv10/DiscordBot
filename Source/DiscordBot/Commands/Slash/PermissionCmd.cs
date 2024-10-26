@@ -5,7 +5,7 @@ using DiscordBot.Services;
 using DiscordBot.Utils;
 using DSharpPlus.SlashCommands;
 using System.Threading.Channels;
-using XironiteDiscordBot.Commands;
+using DiscordBot.Commands;
 using static System.Net.Mime.MediaTypeNames;
 
 namespace DiscordBot.Commands.Slash {

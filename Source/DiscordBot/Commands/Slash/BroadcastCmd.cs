@@ -11,7 +11,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using XironiteDiscordBot.Commands;
+using DiscordBot.Commands;
 using DiscordBot.Services;
 using DSharpPlus.SlashCommands.Attributes;
 

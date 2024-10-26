@@ -11,7 +11,7 @@ using System.Text;
 using System.Threading.Channels;
 using System.Threading.Tasks;
 using System.Xml.Linq;
-using XironiteDiscordBot.Exceptions;
+using DiscordBot.Exceptions;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace DiscordBot.Utils {

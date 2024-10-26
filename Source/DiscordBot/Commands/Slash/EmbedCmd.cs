@@ -9,7 +9,7 @@ using DSharpPlus.SlashCommands;
 using System.Diagnostics;
 using System.Threading.Channels;
 
-namespace XironiteDiscordBot.Commands.Slash {
+namespace DiscordBot.Commands.Slash {
     public class EmbedCmd : SlashCommand {
 
         [SlashCommand("embed", "Send an embeded message to the current channel")]

@@ -5,12 +5,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using XironiteDiscordBot.Manager;
+using DiscordBot.Manager;
 using DiscordBot.Commands.Slash;
 using DSharpPlus.Interactivity.Extensions;
 using DSharpPlus.Interactivity;
 using DSharpPlus.SlashCommands;
-using XironiteDiscordBot.Commands.Slash;
+using DiscordBot.Commands.Slash;
 using DiscordBot.Listeners;
 using DiscordBot.Utils;
 using DSharpPlus.Entities;
@@ -19,7 +19,7 @@ using DSharpPlus.SlashCommands.EventArgs;
 using System.Reflection;
 using DiscordBot.Exceptions;
 using AnsiColor = DiscordBot.Utils.AnsiColor;
-using XironiteDiscordBot.Exceptions;
+using DiscordBot.Exceptions;
 using DiscordBot.Model;
 
 namespace DiscordBot.Services {

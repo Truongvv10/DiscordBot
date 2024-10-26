@@ -5,7 +5,7 @@ using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace XironiteDiscordBot.Exceptions {
+namespace DiscordBot.Exceptions {
     public class ListenerException : Exception {
         public ListenerException(string message) : base(message) {
         }

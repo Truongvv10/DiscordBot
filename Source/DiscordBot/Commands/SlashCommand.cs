@@ -11,12 +11,12 @@ using System.Text;
 using System.Threading.Tasks;
 using DiscordBot.Model.Enums;
 using DiscordBot.Utils;
-using XironiteDiscordBot.Exceptions;
+using DiscordBot.Exceptions;
 using System.Diagnostics;
 using System.Threading.Channels;
 using AnsiColor = DiscordBot.Utils.AnsiColor;
 
-namespace XironiteDiscordBot.Commands {
+namespace DiscordBot.Commands {
     public abstract class SlashCommand : ApplicationCommandModule {
 
         protected async Task CreateEmbedMessageAsync(InteractionContext ctx, EmbedBuilder embedBuilder, EmbedType type, ulong channelId, bool hidden) {

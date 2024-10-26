@@ -5,7 +5,7 @@ using DiscordBot.Utils;
 using DSharpPlus;
 using DSharpPlus.Entities;
 using DSharpPlus.SlashCommands;
-using XironiteDiscordBot.Commands;
+using DiscordBot.Commands;
 
 namespace DiscordBot.Commands.Slash {
     public class TimestampCmd : SlashCommand {

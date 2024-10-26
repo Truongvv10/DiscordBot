@@ -3,7 +3,7 @@ using DiscordBot.Model.Enums;
 using DiscordBot.Model;
 using DSharpPlus.Entities;
 using DSharpPlus.SlashCommands;
-using XironiteDiscordBot.Commands;
+using DiscordBot.Commands;
 using DiscordBot.Utils;
 using DSharpPlus;
 using System.Diagnostics;

@@ -10,7 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Channels;
 using System.Threading.Tasks;
-using XironiteDiscordBot.Commands;
+using DiscordBot.Commands;
 using static System.Net.Mime.MediaTypeNames;
 
 namespace DiscordBot.Commands.Slash {

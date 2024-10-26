@@ -14,7 +14,7 @@ using System.Net;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
-using XironiteDiscordBot.Exceptions;
+using DiscordBot.Exceptions;
 
 namespace DiscordBot.Utils
 {
