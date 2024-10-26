@@ -36,9 +36,9 @@ namespace DiscordBot {
                 await Task.Delay(-1);
 
             } catch (ServiceException ex) {
-                Console.WriteLine($"{AnsiColor.RESET}[{DateTime.Now.TimeOfDay}] {AnsiColor.RED}[Error] Service error occurred: {ex.Message}");
+                Console.WriteLine($"{AnsiColor.RESET}[{DateTime.Now}] {AnsiColor.BRIGHT_RED}[Error] Service error occurred: {ex.Message}");
             } catch (Exception ex) {
-                Console.WriteLine($"{AnsiColor.RESET}[{DateTime.Now.TimeOfDay}] {AnsiColor.RED}[Error] An unexpected error occurred: {ex.Message}");
+                Console.WriteLine($"{AnsiColor.RESET}[{DateTime.Now}] {AnsiColor.BRIGHT_RED}[Error] An unexpected error occurred: {ex.Message}");
 			}
 
         }

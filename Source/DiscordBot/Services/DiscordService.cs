@@ -150,15 +150,18 @@ namespace DiscordBot.Services {
 
 
             // Using Big Money-ne ASCII art
-            Console.WriteLine(@"    ################################################");
-            Console.WriteLine(@"    # __  _____ ____   ___  _   _ ___ _____ _____  #");
-            Console.WriteLine(@"    # \ \/ |_ _|  _ \ / _ \| \ | |_ _|_   _| ____| #");
-            Console.WriteLine(@"    #  \  / | || |_) | | | |  \| || |  | | |  _|   #");
-            Console.WriteLine(@"    #  /  \ | ||  _ <| |_| | |\  || |  | | | |___  #");
-            Console.WriteLine(@"    # /_/\_|___|_| \_\\___/|_| \_|___| |_| |_____| #");
-            Console.WriteLine(@"    #                                              #");
-            Console.WriteLine(@"    ################################################");
-            Console.WriteLine();
+            using StreamReader sr = new StreamReader(Path.Combine(Environment.CurrentDirectory, "Saves", "Logo.txt"));
+            Console.WriteLine(sr.ReadToEnd());
+
+            //Console.WriteLine(@"    ################################################");
+            //Console.WriteLine(@"    # __  _____ ____   ___  _   _ ___ _____ _____  #");
+            //Console.WriteLine(@"    # \ \/ |_ _|  _ \ / _ \| \ | |_ _|_   _| ____| #");
+            //Console.WriteLine(@"    #  \  / | || |_) | | | |  \| || |  | | |  _|   #");
+            //Console.WriteLine(@"    #  /  \ | ||  _ <| |_| | |\  || |  | | | |___  #");
+            //Console.WriteLine(@"    # /_/\_|___|_| \_\\___/|_| \_|___| |_| |_____| #");
+            //Console.WriteLine(@"    #                                              #");
+            //Console.WriteLine(@"    ################################################");
+            //Console.WriteLine();
 
             // Show config settings
             Console.WriteLine($"{Utils.AnsiColor.RESET}[{DateTime.Now}] {Utils.AnsiColor.CYAN}Bot used on ({sender.Guilds.Count}) different discord servers");
