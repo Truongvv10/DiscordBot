@@ -81,8 +81,9 @@ namespace DiscordBot.Utils
                 }
                 stopwatch.Stop();
                 Console.WriteLine($"{AnsiColor.RESET}[{DateTime.Now}] {AnsiColor.CYAN}Successfully loaded available timezones {AnsiColor.YELLOW}({stopwatch.ElapsedMilliseconds}ms){AnsiColor.RESET}");
+
             } catch (Exception ex) {
-                Console.WriteLine(ex);
+                throw new UtilException($"There has been an error loading all data.", ex);
             }
 
         }
@@ -111,9 +112,9 @@ namespace DiscordBot.Utils
 
                 // Await all tasks concurrently
                 await Task.WhenAll(tasks);
+
             } catch (Exception ex) {
-                Console.WriteLine(ex);
-                throw;
+                throw new UtilException($"There has been an error checking files on startup.", ex);
             }
 
         }
@@ -184,8 +185,7 @@ namespace DiscordBot.Utils
                     guildPermissions[cmd] = permission;
                 }
             } catch (Exception ex) {
-                Console.WriteLine($"LoadFileAsync werkt niet {ex}");
-                throw;
+                throw new UtilException($"There has been an error reading all data.", ex);
             }
         }
         #endregion
@@ -200,7 +200,7 @@ namespace DiscordBot.Utils
                 }
                 throw new KeyNotFoundException("The specified guild or command permission was not found.");
             } catch (Exception ex) {
-                throw new UtilException($"{AnsiColor.BRIGHT_RED}[Error] {AnsiColor.RESET}Permission for guild {guildId} using command {cmd} can not be found", ex);
+                throw new UtilException($"Permission for guild {guildId} using command {cmd} can not be found", ex);
             }
         }
 
@@ -212,7 +212,7 @@ namespace DiscordBot.Utils
                     } else throw new UtilException($"{AnsiColor.BRIGHT_RED}[Error] {AnsiColor.RESET}Embeded message for guild {guildId} with template {name} could not be added.");
                 }
             } catch (Exception ex) {
-                throw new UtilException($"{AnsiColor.BRIGHT_RED}[Error] {AnsiColor.RESET}Embeded message for guild {guildId} with template {name} could not be added.", ex);
+                throw new UtilException($"Embeded message for guild {guildId} with template {name} could not be added.", ex);
             }
         }
 
