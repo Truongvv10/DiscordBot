@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 namespace DiscordBot.Model {
     public class EmbedBuilder {
         #region Private Properties
-        private EmbedType _type;
+        private EmbedId _type;
         private string _title;
         private string _titleLink;
         private string _description;
@@ -41,7 +41,7 @@ namespace DiscordBot.Model {
 
         #region Constructors
         public EmbedBuilder() {
-            _type = EmbedType.DEFAULT;
+            _type = EmbedId.DEFAULT;
             _color = "#0681cd";
             _hasTimeStamp = false;
             _time = DateTime.Now.Ticks;
@@ -56,7 +56,7 @@ namespace DiscordBot.Model {
 
         #region Getter & Setter
         [JsonProperty("type", NullValueHandling = NullValueHandling.Ignore)]
-        public EmbedType Type {
+        public EmbedId Type {
             get => _type;
             set => _type = value;
         }
@@ -189,7 +189,7 @@ namespace DiscordBot.Model {
         #endregion
 
         #region Methods
-        public EmbedBuilder WithType(EmbedType type) {
+        public EmbedBuilder WithType(EmbedId type) {
             _type = type;
             return this;
         }

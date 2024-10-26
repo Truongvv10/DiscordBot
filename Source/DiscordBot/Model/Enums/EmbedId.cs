@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace DiscordBot.Model.Enums {
-    public enum EmbedType {
+    public enum EmbedId {
         DEFAULT = 0,
         EVENT = 1,
         BROADCAST = 2,

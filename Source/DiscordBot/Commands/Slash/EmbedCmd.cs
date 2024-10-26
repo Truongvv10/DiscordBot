@@ -41,7 +41,7 @@ namespace DiscordBot.Commands.Slash {
                 if (pingrole is not null) embed.AddPingRole(pingrole.Id);
 
                 // Create the embed message
-                await CreateEmbedMessageAsync(ctx, embed, EmbedType.DEFAULT, channel.Id, hidden);
+                await CreateEmbedMessageAsync(ctx, embed, EmbedId.DEFAULT, channel.Id, hidden);
 
             } catch (Exception ex) {
                 Console.WriteLine(ex);

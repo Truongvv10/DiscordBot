@@ -37,7 +37,7 @@ namespace DiscordBot.Commands.Slash {
                 }
 
                 // Create the embed message
-                await CreateEmbedMessageAsync(ctx, embed, EmbedType.PERMISSION, ctx.Interaction.Channel.Id, false);
+                await CreateEmbedMessageAsync(ctx, embed, EmbedId.PERMISSION, ctx.Interaction.Channel.Id, false);
 
             } catch (Exception ex) {
                 throw new CommandException($"Embed.UseEmbedCommand: {ex}");

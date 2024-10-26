@@ -93,7 +93,7 @@ namespace DiscordBot.Commands.Slash {
                 embed.AddCustomSaveMessage(Identity.EVENT_TIMEZONE, timeZone);
                 embed.AddCustomSaveMessage(Identity.EVENT_START, date.ToString("dd/MM/yyyy HH:mm"));
                 embed.AddCustomSaveMessage(Identity.EVENT_END, date.AddHours(1).ToString("dd/MM/yyyy HH:mm"));
-                await CreateEmbedMessageAsync(ctx, embed, EmbedType.EVENT, channel.Id, false);
+                await CreateEmbedMessageAsync(ctx, embed, EmbedId.EVENT, channel.Id, false);
 
             } catch (Exception ex) {
                 throw new CommandException($"Embed.UseEmbedCommand: {ex}");

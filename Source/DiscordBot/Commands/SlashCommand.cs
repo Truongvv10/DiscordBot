@@ -19,7 +19,7 @@ using AnsiColor = DiscordBot.Utils.AnsiColor;
 namespace DiscordBot.Commands {
     public abstract class SlashCommand : ApplicationCommandModule {
 
-        protected async Task CreateEmbedMessageAsync(InteractionContext ctx, EmbedBuilder embedBuilder, EmbedType type, ulong channelId, bool hidden) {
+        protected async Task CreateEmbedMessageAsync(InteractionContext ctx, EmbedBuilder embedBuilder, EmbedId type, ulong channelId, bool hidden) {
             try {
                 // Get discord channel through channel id
                 Stopwatch stopwatch = Stopwatch.StartNew();
@@ -37,29 +37,29 @@ namespace DiscordBot.Commands {
 
                 switch (type) {
 
-                    case EmbedType.DEFAULT:
+                    case EmbedId.DEFAULT:
                         components.Add(DefaultComponent(embedBuilder).First());
                         components.Add(TemplateComponent(embedBuilder).First());
                         components.Add(new DiscordActionRowComponent(buttonComponent));
                         break;
 
-                    case EmbedType.EVENT:
+                    case EmbedId.EVENT:
                         components.Add(EventComponent(embedBuilder).First());
                         components.Add(DefaultComponent(embedBuilder).First());
                         components.Add(TemplateComponent(embedBuilder).First());
                         components.Add(new DiscordActionRowComponent(buttonComponent));
                         break;
 
-                    case EmbedType.BROADCAST:
+                    case EmbedId.BROADCAST:
                         break;
 
-                    case EmbedType.PERMISSION:
+                    case EmbedId.PERMISSION:
                         foreach (var item in PermissionComponent(embedBuilder)) {
                             components.Add(item);
                         }
                         break;
 
-                    case EmbedType.CHANGELOG:
+                    case EmbedId.CHANGELOG:
                         foreach (var item in ChangelogComponent(embedBuilder)) {
                             components.Add(item);
                         }

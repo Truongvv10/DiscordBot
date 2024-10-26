@@ -32,7 +32,7 @@ namespace DiscordBot.Commands.Slash {
                 };
 
                 // Create the embed message
-                await CreateEmbedMessageAsync(ctx, embed, EmbedType.CHANGELOG, ctx.Channel.Id, false);
+                await CreateEmbedMessageAsync(ctx, embed, EmbedId.CHANGELOG, ctx.Channel.Id, false);
 
             } catch (Exception ex) {
                 throw new CommandException($"Embed.UseChangelogCommand: {ex}");

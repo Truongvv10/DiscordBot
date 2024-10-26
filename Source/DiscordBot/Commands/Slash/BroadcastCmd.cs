@@ -42,7 +42,7 @@ namespace DiscordBot.Commands.Slash {
                 if (image is not null) embed.Image = image.Url;
                 if (thumbnail is not null) embed.Thumbnail = thumbnail.Url;
                 if (pingrole is not null) embed.AddPingRole(pingrole.Id);
-                await CreateEmbedMessageAsync(ctx, embed, EmbedType.BROADCAST, channel.Id, true);
+                await CreateEmbedMessageAsync(ctx, embed, EmbedId.BROADCAST, channel.Id, true);
             } catch (Exception ex) {
                 throw new CommandException($"Embed.UseEmbedCommand: {ex}");
             }
