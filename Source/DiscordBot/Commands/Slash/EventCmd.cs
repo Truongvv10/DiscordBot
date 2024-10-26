@@ -8,10 +8,12 @@ using DiscordBot.Utils;
 using DSharpPlus;
 using System.Diagnostics;
 using NodaTime;
+using DiscordBot.Services;
 
 namespace DiscordBot.Commands.Slash {
     public class EventCmd : SlashCommand {
         [SlashCommand("event-create", "Send an embeded message to the current channel")]
+        [RequirePermission(CommandEnum.EVENTS)]
         public async Task UseEventCommand(InteractionContext ctx,
             [Option("starting_in", "The total minutes remaining until the event begins.")] long starting,
             [Option("timezone", "The timezone of the date & time will be calculated to.")] string timeZone,
@@ -20,10 +22,6 @@ namespace DiscordBot.Commands.Slash {
             [Option("thumbnail", "The thumbnail of your embeded message that will be added.")] DiscordAttachment? thumbnail = null,
             [Option("ping", "The role that will get pinged on sending message.")] DiscordRole? pingrole = null) {
 
-            if (!await CheckPermission(ctx, CommandEnum.EVENTS)) {
-                await ShowNoPermissionMessage(ctx);
-                return;
-            }
             LogCommand(ctx, CommandEnum.EVENTS);
 
             if (!CacheData.Timezones.Contains(timeZone, StringComparer.OrdinalIgnoreCase)) {

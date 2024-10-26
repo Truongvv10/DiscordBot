@@ -1,5 +1,6 @@
 ﻿using DiscordBot.Model;
 using DiscordBot.Model.Enums;
+using DiscordBot.Services;
 using DiscordBot.Utils;
 using DSharpPlus;
 using DSharpPlus.Entities;
@@ -10,15 +11,12 @@ namespace DiscordBot.Commands.Slash {
     public class TimestampCmd : SlashCommand {
 
         [SlashCommand("timestamp", "Generate dynamic discord timestamp")]
+        [RequirePermission(CommandEnum.TIMESTAMP)]
         public async Task UseTimestampCommand(InteractionContext ctx,
             [Option("date", "The date with format: \"dd/mm/yyyy\".")] string date,
             [Option("time", "The time with format: \"hh/mm\". (24 hour clock)")] string time,
             [Option("time-zone", "The time zone you live in.")] string timeZone) {
 
-            if (!await CheckPermission(ctx, CommandEnum.TIMESTAMP)) {
-                await ShowNoPermissionMessage(ctx);
-                return;
-            }
             LogCommand(ctx, CommandEnum.TIMESTAMP);
 
             try {

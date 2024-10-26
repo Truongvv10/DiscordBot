@@ -1,6 +1,7 @@
 ﻿using DiscordBot.Exceptions;
 using DiscordBot.Model;
 using DiscordBot.Model.Enums;
+using DiscordBot.Services;
 using DiscordBot.Utils;
 using DSharpPlus;
 using DSharpPlus.Entities;
@@ -12,6 +13,7 @@ namespace XironiteDiscordBot.Commands.Slash {
     public class EmbedCmd : SlashCommand {
 
         [SlashCommand("embed", "Send an embeded message to the current channel")]
+        [RequirePermission(CommandEnum.EMBED)]
         public async Task UseEmbedCommand(InteractionContext ctx,
             [Option("channel", "The channel where your embeded message will be sent to.")] DiscordChannel channel,
             [Option("hidden", "If only you can see the embeded message being edited.")] bool hidden = false,
@@ -20,12 +22,6 @@ namespace XironiteDiscordBot.Commands.Slash {
             [Option("ping", "The role that will get pinged on sending message.")] DiscordRole? pingrole = null) {
 
             try {
-                // Check if user has permission to use command
-                if (!await CheckPermission(ctx, CommandEnum.EMBED)) {
-                    await ShowNoPermissionMessage(ctx);
-                    return;
-                }
-
                 // Log the command the user is using
                 LogCommand(ctx, CommandEnum.EMBED);
 
@@ -54,6 +50,7 @@ namespace XironiteDiscordBot.Commands.Slash {
         }
 
         [SlashCommand("embed-edit", "Edit an existing embeded message from the bot")]
+        [RequirePermission(CommandEnum.EMBED_EDIT)]
         public async Task UseEmbedEditCommand(InteractionContext ctx,
             [Option("message-id", "The id of the embeded message you want to edit.")] string id) {
 

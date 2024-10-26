@@ -12,22 +12,21 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using XironiteDiscordBot.Commands;
+using DiscordBot.Services;
+using DSharpPlus.SlashCommands.Attributes;
 
 namespace DiscordBot.Commands.Slash {
     public class BroadcastCmd : SlashCommand {
 
 
         [SlashCommand("broadcast", "Send an embeded message to the current channel")]
+        [RequirePermission(CommandEnum.BROADCAST)]
         public async Task UseBroadcastCommand(InteractionContext ctx,
             [Option("channel", "The channel where your embeded message will be sent to.")] DiscordChannel channel,
             [Option("image", "The main image of your embeded message that will be added.")] DiscordAttachment? image = null,
             [Option("thumbnail", "The thumbnail of your embeded message that will be added.")] DiscordAttachment? thumbnail = null,
             [Option("ping", "The role that will get pinged on sending message.")] DiscordRole? pingrole = null) {
 
-            if (!await CheckPermission(ctx, CommandEnum.BROADCAST)) {
-                await ShowNoPermissionMessage(ctx);
-                return;
-            }
             LogCommand(ctx, CommandEnum.BROADCAST);
 
             try {

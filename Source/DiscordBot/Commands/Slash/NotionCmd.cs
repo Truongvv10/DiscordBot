@@ -13,6 +13,7 @@ using Notion.Client;
 using DiscordBot.Utils;
 using DSharpPlus;
 using DSharpPlus.Interactivity;
+using DiscordBot.Services;
 
 namespace DiscordBot.Commands.Slash {
     internal class NotionCmd : SlashCommand {
@@ -22,6 +23,7 @@ namespace DiscordBot.Commands.Slash {
         private const string databaseId = "ae8ebac78dfe4407ba11e6c7ff77be03";
 
         [SlashCommand("notion", "Notion editor")]
+        [RequirePermission(CommandEnum.NOTION)]
         public async Task UseNotionCommand(InteractionContext ctx) {
             var client = NotionClientFactory.Create(new ClientOptions {
                 AuthToken = token

@@ -1,6 +1,7 @@
 ﻿using DiscordBot.Exceptions;
 using DiscordBot.Model;
 using DiscordBot.Model.Enums;
+using DiscordBot.Services;
 using DiscordBot.Utils;
 using DSharpPlus.SlashCommands;
 using System.Threading.Channels;
@@ -11,14 +12,10 @@ namespace DiscordBot.Commands.Slash {
     public class PermissionCmd : SlashCommand {
 
         [SlashCommand("permissions", "Show an overview of permissions")]
+        [RequirePermission(CommandEnum.PERMISSIONS)]
         public async Task UsePermissionEditCommand(InteractionContext ctx) {
 
             try {
-                // Check if user has permission to use command
-                //if (!await CheckPermission(ctx, CommandEnum.PERMISSIONS)) {
-                //    await showNoPermissionMessage(ctx);
-                //    return;
-                //}
 
                 // Build the embed message with default values
                 EmbedBuilder embed = new EmbedBuilder() {

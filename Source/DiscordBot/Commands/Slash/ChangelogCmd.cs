@@ -1,6 +1,7 @@
 ﻿using DiscordBot.Exceptions;
 using DiscordBot.Model;
 using DiscordBot.Model.Enums;
+using DiscordBot.Services;
 using DiscordBot.Utils;
 using DSharpPlus.SlashCommands;
 using System;
@@ -15,14 +16,9 @@ using static System.Net.Mime.MediaTypeNames;
 namespace DiscordBot.Commands.Slash {
     public class ChangelogCmd : SlashCommand {
         [SlashCommand("changelog", "Setup/Edit/Create changelogs for your server.")]
+        [RequirePermission(CommandEnum.CHANGELOG)]
         public async Task UseChangelogCommand(InteractionContext ctx) {
             try {
-
-                // Check if user has permission to use command
-                if (!await CheckPermission(ctx, CommandEnum.CHANGELOG)) {
-                    await ShowNoPermissionMessage(ctx);
-                    return;
-                }
 
                 // Log the command the user is using
                 LogCommand(ctx, CommandEnum.CHANGELOG);
