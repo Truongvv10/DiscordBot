@@ -82,7 +82,6 @@ namespace DiscordBot.Utils {
             try {
 
                 // general file
-                var stopwatch = Stopwatch.StartNew();
                 var name = fileName.ToString().ToLower();
                 var file = Path.Combine(folder, guildId.ToString(), $"{name}.json");
                 var json = new object();
@@ -114,10 +113,6 @@ namespace DiscordBot.Utils {
                         default:
                             throw new UtilException($"JsonData.ReadFileAsync: Couldn't read \"{name}.json\"");
                     }
-
-                    // Print feedback
-                    stopwatch.Stop();
-                    await Console.Out.WriteLineAsync($"{AnsiColor.RESET}[{DateTime.Now}] {AnsiColor.CYAN}Loading file {AnsiColor.RESET}{name}.json {AnsiColor.CYAN}for guild {guildId} {AnsiColor.YELLOW}({stopwatch.ElapsedMilliseconds}ms){AnsiColor.RESET}");
 
                     // return object
                     return json;
