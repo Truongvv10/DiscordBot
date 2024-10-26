@@ -19,6 +19,7 @@ using DSharpPlus.SlashCommands.EventArgs;
 using System.Reflection;
 using DiscordBot.Exceptions;
 using AnsiColor = DiscordBot.Utils.AnsiColor;
+using XironiteDiscordBot.Exceptions;
 
 namespace DiscordBot.Services {
     public class DiscordService {
@@ -81,10 +82,8 @@ namespace DiscordBot.Services {
                 // Subscribe to the SlashCommandErrored event
                 slashCommandConfiguration.SlashCommandErrored += OnSlashCommandErrored;
 
-
                 // Start the bot
                 await _client.ConnectAsync();
-                Console.WriteLine($"{AnsiColor.RESET}[{DateTime.Now}] {AnsiColor.CYAN}Bot \"{_client.CurrentUser.Username}\" has succesfully started up");
             } catch (Exception ex) {
                 throw new ServiceException($"There has been an error starting up the bot.", ex);
             }
@@ -139,34 +138,30 @@ namespace DiscordBot.Services {
             throw new NotImplementedException();
         }
 
-        private static Task OnStartup(DiscordClient sender, ReadyEventArgs args) {
+        private static async Task OnStartup(DiscordClient sender, ReadyEventArgs args) {
+            try {
 
-            // Set activity
-            var activity = new DiscordActivity("mc.xironite.com", ActivityType.Playing);
-            sender.UpdateStatusAsync(activity, UserStatus.Online).ConfigureAwait(false);
+                // Set activity
+                var activity = new DiscordActivity("mc.xironite.com", ActivityType.Playing);
+                await sender.UpdateStatusAsync(activity, UserStatus.Online).ConfigureAwait(false);
 
-            // Load Data
-            Task.Run(() => CacheData.LoadAllData(sender));
+                // Using ASCII art to display in console
+                using StreamReader sr = new StreamReader(Path.Combine(Environment.CurrentDirectory, "Saves", "Logo.txt"));
+                Console.WriteLine(sr.ReadToEnd());
 
+                // Load Data
+                await CacheData.LoadAllData(sender);
 
-            // Using Big Money-ne ASCII art
-            using StreamReader sr = new StreamReader(Path.Combine(Environment.CurrentDirectory, "Saves", "Logo.txt"));
-            Console.WriteLine(sr.ReadToEnd());
+                // Show config settings
+                Console.WriteLine($"{AnsiColor.RESET}[{DateTime.Now}] {AnsiColor.CYAN}Bot used on ({sender.Guilds.Count}) different discord servers");
+                Console.WriteLine($"{AnsiColor.RESET}[{DateTime.Now}] {AnsiColor.CYAN}Bot \"{sender.CurrentUser.Username}\" has succesfully started up");
+                Console.ForegroundColor = ConsoleColor.Gray;
 
-            //Console.WriteLine(@"    ################################################");
-            //Console.WriteLine(@"    # __  _____ ____   ___  _   _ ___ _____ _____  #");
-            //Console.WriteLine(@"    # \ \/ |_ _|  _ \ / _ \| \ | |_ _|_   _| ____| #");
-            //Console.WriteLine(@"    #  \  / | || |_) | | | |  \| || |  | | |  _|   #");
-            //Console.WriteLine(@"    #  /  \ | ||  _ <| |_| | |\  || |  | | | |___  #");
-            //Console.WriteLine(@"    # /_/\_|___|_| \_\\___/|_| \_|___| |_| |_____| #");
-            //Console.WriteLine(@"    #                                              #");
-            //Console.WriteLine(@"    ################################################");
-            //Console.WriteLine();
-
-            // Show config settings
-            Console.WriteLine($"{Utils.AnsiColor.RESET}[{DateTime.Now}] {Utils.AnsiColor.CYAN}Bot used on ({sender.Guilds.Count}) different discord servers");
-            Console.ForegroundColor = ConsoleColor.Gray;
-            return Task.CompletedTask;
+            } catch (UtilException ex) {
+                throw new ServiceException("There has been an error starting up the bot due to a utility error.", ex);
+            } catch (Exception ex) {
+                throw new ServiceException("There has been an error starting up the bot.", ex);
+            }
         }
 
     }
