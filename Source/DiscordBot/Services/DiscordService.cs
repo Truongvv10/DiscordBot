@@ -20,6 +20,7 @@ using System.Reflection;
 using DiscordBot.Exceptions;
 using AnsiColor = DiscordBot.Utils.AnsiColor;
 using XironiteDiscordBot.Exceptions;
+using DiscordBot.Model;
 
 namespace DiscordBot.Services {
     public class DiscordService {
@@ -91,12 +92,28 @@ namespace DiscordBot.Services {
         }
 
         private async Task OnSlashCommandErrored(SlashCommandsExtension sender, SlashCommandErrorEventArgs e) {
-            // Log the error
-            Console.WriteLine($"Error executing command {e.Context}: {e.Exception}");
+            if (e.Exception is SlashExecutionChecksFailedException slex) {
+                foreach (var check in slex.FailedChecks) {
 
-            // Optionally notify the user in the channel
-            if (e.Context.Channel is DSharpPlus.Entities.DiscordChannel channel) {
-                await channel.SendMessageAsync($"An error occurred while executing the command: {e.Exception.Message}");
+                    // Check if the failed check is a RequirePermissionAttribute
+                    if (check is RequirePermissionAttribute att) {
+                        var embed = new DiscordEmbedBuilder()
+                            .WithAuthor("Feature doesn't work yet!", null, "https://cdn-icons-png.flaticon.com/512/2581/2581801.png")
+                            .WithColor(new DiscordColor("#d82b40"));
+                        await e.Context.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, new DiscordInteractionResponseBuilder().AddEmbed(embed).AsEphemeral(true));
+                    }
+
+                }
+            } else {
+
+                // Log the error
+                Console.WriteLine($"Error executing command {e.Context}: {e.Exception}");
+
+                // Optionally notify the user in the channel
+                if (e.Context.Channel is DiscordChannel channel) {
+                    await channel.SendMessageAsync($"An error occurred while executing the command: {e.Exception.Message}");
+                }
+
             }
         }
 
