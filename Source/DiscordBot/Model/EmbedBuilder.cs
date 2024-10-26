@@ -199,7 +199,7 @@ namespace DiscordBot.Model {
             _title = title;
             return this;
         }
-        public EmbedBuilder WithTitle(string title = null, string iconLink = null) {
+        public EmbedBuilder WithTitle(string? title = null, string? iconLink = null) {
             _title = title;
             _titleLink = iconLink;
             return this;
@@ -216,7 +216,7 @@ namespace DiscordBot.Model {
             _footer = footer;
             return this;
         }
-        public EmbedBuilder WithFooter(string footer = null, string iconLink = null) {
+        public EmbedBuilder WithFooter(string? footer = null, string? iconLink = null) {
             _footer = footer;
             _footerUrl = iconLink;
             return this;
@@ -225,12 +225,12 @@ namespace DiscordBot.Model {
             _author = author;
             return this;
         }
-        public EmbedBuilder WithAuthor(string author = null, string iconLink = null) {
+        public EmbedBuilder WithAuthor(string? author = null, string? iconLink = null) {
             _author = author;
             _authorLink = iconLink;
             return this;
         }
-        public EmbedBuilder WithAuthor(string author, string authorLink = null, string iconLink = null) {
+        public EmbedBuilder WithAuthor(string author, string? authorLink = null, string? iconLink = null) {
             _author = author;
             _authorLink = authorLink;
             _authorUrl = iconLink;
