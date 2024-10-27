@@ -145,7 +145,7 @@ namespace DiscordBot.Utils
                 }
 
                 foreach (var embed in serverEmbeds) {
-                    guildEmbeds.Add(embed.Id, embed);
+                    guildEmbeds.Add((ulong)embed.MessageId!, embed);
                 }
 
                 // Read template data
@@ -216,6 +216,39 @@ namespace DiscordBot.Utils
             }
         }
 
+        public static async Task<EmbedBuilder> GetTemplate(ulong guildId, string template) {
+            try {
+                if (templates.TryGetValue(guildId, out var t)) {
+                    if (t.TryGetValue(template, out var _)) {
+                        return templates[guildId][template];
+                    } else {
+                        string file = Path.Combine(Environment.CurrentDirectory, "Saves", "Templates.json");
+                        using (StreamReader sr = new StreamReader(file)) {
+                            var data = await sr.ReadToEndAsync();
+                            var json = JsonConvert.DeserializeObject<Dictionary<string, EmbedBuilder>>(data)!;
+                            return json[template];
+                        }
+                            
+                    }
+                }
+                throw new UtilException($"{AnsiColor.BRIGHT_RED}[Error] {AnsiColor.RESET}Embeded message for guild {guildId} with template {template} could not be found.");
+            } catch (Exception ex) {
+                throw new UtilException($"{AnsiColor.BRIGHT_RED}[Error] {AnsiColor.RESET}Embeded message for guild {guildId} with template {template} could not be found.", ex);
+            }
+        }
+
+        public static bool ExistsEmbed(ulong guildId, ulong messageId) {
+            try {
+                if (embeds.TryGetValue(guildId, out var embededMessage)) {
+                    if (embededMessage.ContainsKey(messageId)) {
+                        return true;
+                    } return false;
+                } return false;
+            } catch (Exception ex) {
+                throw new UtilException($"{AnsiColor.BRIGHT_RED}[Error] {AnsiColor.RESET}Embeded message for guild {guildId} with message id {messageId} could not be found.", ex);
+            }
+        }
+
         public static EmbedBuilder GetEmbed(ulong guildId, ulong messageId) {
             try {
                 if (embeds.TryGetValue(guildId, out var embededMessage)) {
@@ -236,7 +269,19 @@ namespace DiscordBot.Utils
                     await JsonData.SaveEmbedsAsync(guildId);
                 }
             } catch (Exception ex) {
-                throw new UtilException($"{AnsiColor.BRIGHT_RED}[Error] {AnsiColor.RESET}Embeded message for guild {guildId} with message id {messageId} could not be added.", ex);
+                throw new UtilException($"{AnsiColor.BRIGHT_RED}[Error] {AnsiColor.RESET}Embeded message for guild {guildId} with message id {messageId} already exists.", ex);
+            }
+        }
+
+        public static async Task SetEmbed(ulong guildId, ulong messageId, EmbedBuilder embed) {
+            try {
+                if (ExistsEmbed(guildId, messageId)) {
+                    embeds[guildId][messageId] = embed;
+                    await JsonData.SaveEmbedsAsync(guildId);
+                } else throw new UtilException($"Couldn't save message for guild {guildId}.");
+            } catch (Exception ex) {
+                Console.WriteLine(ex);
+                throw new UtilException($"An error creating message occurred for {guildId} with message id {messageId}.", ex);
             }
         }
 

@@ -1,0 +1,41 @@
+{
+    "EMBED_CREATE": {
+        "title": "This is an example title",
+        "description": "This is the description text.",
+        "footer": "Footer sample text",
+        "image": "local://template_image.png",
+        "thumbnail": "local://template_thumbnail.png",
+        "color": "#0681cd",
+        "timestamp": true
+    },
+    "EVENT_POST_CREATE": {
+        "description": "Click the button to create an event.",
+        "author": "Event Creation",
+        "author_url": "https://cdn-icons-png.flaticon.com/512/1869/1869397.png",
+        "color": "#0681cd",
+        "timestamp": true
+    },
+    "EVENT_CREATE": {
+        "description": "This is the description text.",
+        "footer": "Hosted by {event.host}",
+        "image": "local://template_image.png",
+        "color": "#0681cd",
+        "timestamp": true,
+        "data": {
+            "event.name": "{event.name}",
+            "event.title": "### {event.name}",
+            "event.intro": "Hey **everyone**! We'll be hosting **{event.name}**!",
+            "event.info.title": "### Information",
+            "event.info": "N/A",
+            "event.reward.title": "### Rewards",
+            "event.reward": "N/A",
+            "event.time.title": "### ",
+            "event.timezone": "CET",
+            "event.start": "{event.start}",
+            "event.end": "{event.end}"
+        },
+        "childs": {},
+        "roles": [],
+        "fields": []
+    }
+}

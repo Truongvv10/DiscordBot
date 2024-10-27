@@ -1,26 +1,17 @@
 ﻿using DSharpPlus.CommandsNext;
 using DSharpPlus;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using DiscordBot.Manager;
 using DiscordBot.Commands.Slash;
 using DSharpPlus.Interactivity.Extensions;
 using DSharpPlus.Interactivity;
 using DSharpPlus.SlashCommands;
-using DiscordBot.Commands.Slash;
 using DiscordBot.Listeners;
 using DiscordBot.Utils;
 using DSharpPlus.Entities;
 using DSharpPlus.EventArgs;
 using DSharpPlus.SlashCommands.EventArgs;
-using System.Reflection;
 using DiscordBot.Exceptions;
 using AnsiColor = DiscordBot.Utils.AnsiColor;
-using DiscordBot.Exceptions;
-using DiscordBot.Model;
 
 namespace DiscordBot.Services {
     public class DiscordService {
@@ -114,7 +105,7 @@ namespace DiscordBot.Services {
 
                 // Optionally notify the user in the channel
                 if (e.Context.Channel is DiscordChannel channel) {
-                    await channel.SendMessageAsync($"An error occurred while executing the command: {e.Exception.Message}");
+                    await channel.SendMessageAsync(e.Exception.Message);
                 }
 
             }

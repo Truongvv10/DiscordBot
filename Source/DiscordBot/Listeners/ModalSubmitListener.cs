@@ -14,21 +14,31 @@ using DiscordBot.Model.Enums;
 using DSharpPlus.SlashCommands;
 using DiscordBot.Utils;
 using DiscordBot.Exceptions;
-using DiscordBot.Model;
 using static System.Runtime.InteropServices.JavaScript.JSType;
+using Microsoft.VisualBasic;
+using System.Threading.Channels;
+using System.Diagnostics;
+using AnsiColor = DiscordBot.Utils.AnsiColor;
 
 namespace DiscordBot.Listeners {
     public class ModalSubmitListener {
         public async Task HandleEmbedCommand(DiscordClient discordClient, ModalSubmitEventArgs e) {
+            try {
 
-			try {
+                // Start the stopwatch
+                Stopwatch stopwatch = Stopwatch.StartNew();
+
+                // Variables
                 var options = e.Values;
                 var selection = e.Interaction.Data.CustomId.Split(";")[1];
                 var messageId = ulong.Parse(e.Interaction.Data.CustomId.Split(";")[2]);
                 var guildId = e.Interaction.Guild.Id;
                 var embed = CacheData.GetEmbed(guildId, messageId);
+                var channel = await DiscordUtil.GetChannelByIdAsync(e.Interaction.Guild, (ulong)embed.ChannelId!);
                 var message = await DiscordUtil.GetMessageByIdAsync(e.Interaction.Channel, messageId);
+                var components = message != null ? message.Components : new List<DiscordComponent>();
 
+                // Check modals
                 switch (selection) {
 
                     case Identity.SELECTION_TITLE:
@@ -159,9 +169,9 @@ namespace DiscordBot.Listeners {
                             embed.SetCustomSaveMessage(Identity.EVENT_END, end);
                         } else throw new ListenerException($"Time \"{end}\" has incorrect format");
 
-                        string startDate = await DiscordUtil.TranslateTimestamp(parsedStartDateTime, (embed.CustomSaves[Identity.EVENT_TIMEZONE] as string)!, TimestampEnum.LONG_DATE_AND_SHORT_TIME);
-                        string endDate = await DiscordUtil.TranslateTimestamp(parsedEndDateTime, (embed.CustomSaves[Identity.EVENT_TIMEZONE] as string)!, TimestampEnum.LONG_DATE_AND_SHORT_TIME);
-                        string startDateRelative = await DiscordUtil.TranslateTimestamp(parsedStartDateTime, (embed.CustomSaves[Identity.EVENT_TIMEZONE] as string)!, TimestampEnum.RELATIVE);
+                        string startDate = await DiscordUtil.TranslateToDynamicTimestamp(parsedStartDateTime, (embed.CustomSaves[Identity.EVENT_TIMEZONE] as string)!, TimestampEnum.LONG_DATE_AND_SHORT_TIME);
+                        string endDate = await DiscordUtil.TranslateToDynamicTimestamp(parsedEndDateTime, (embed.CustomSaves[Identity.EVENT_TIMEZONE] as string)!, TimestampEnum.LONG_DATE_AND_SHORT_TIME);
+                        string startDateRelative = await DiscordUtil.TranslateToDynamicTimestamp(parsedStartDateTime, (embed.CustomSaves[Identity.EVENT_TIMEZONE] as string)!, TimestampEnum.RELATIVE);
 
                         embed.ClearFields();
                         embed.AddField("Start Date:", $"{startDate} ({startDateRelative})", false);
@@ -169,22 +179,38 @@ namespace DiscordBot.Listeners {
                         embed.AddField("React with a `✅` if you're coming to the event!", "**React with a `❌` if you're going to miss out...**", false);
                         break;
 
+                    case Identity.SELECTION_EVENT_CREATION:
+                        components = DiscordUtil.EventComponent();
+                        var hidden = embed.IsEphemeral;
+                        embed = await CacheData.GetTemplate(e.Interaction.Guild.Id, "EVENT_CREATE");
+                        embed.SetCustomSaveMessage(Identity.EVENT_NAME, e.Values[Identity.EVENT_NAME]);
+                        embed.SetCustomSaveMessage(Identity.EVENT_TITLE, embed.CustomSaves[Identity.EVENT_TITLE].ToString()!.Replace("{event.name}", e.Values[Identity.EVENT_NAME].ToString()));
+                        embed.SetCustomSaveMessage(Identity.EVENT_INTRO, embed.CustomSaves[Identity.EVENT_INTRO].ToString()!.Replace("{event.name}", e.Values[Identity.EVENT_NAME].ToString()));
+                        embed.SetCustomSaveMessage(Identity.EVENT_TIMEZONE, e.Values[Identity.EVENT_TIMEZONE]);
+                        embed.SetCustomSaveMessage(Identity.EVENT_START, e.Values[Identity.EVENT_START]);
+                        embed.SetCustomSaveMessage(Identity.EVENT_END, e.Values[Identity.EVENT_END]);
+
+                        embed.Owner = e.Interaction.User.Id;
+                        embed.Footer = embed.Footer!.Replace("{event.host}", e.Interaction.User.Username);
+                        embed.FooterUrl = e.Interaction.User.AvatarUrl;
+                        embed.Description = BuildEventDesciption(embed);
+                        embed.IsEphemeral = hidden;
+                        embed.Type = CommandEnum.EVENTS_EDIT;
+                        embed.ChannelId = channel.Id;
+
+                        await DiscordUtil.CreateMessageAsync(CommandEnum.EVENTS_EDIT, e.Interaction, embed, channel.Id, hidden);
+                        return;
+
                     default:
                         break;
                 }
 
-                // Create a list of action rows (as you may have multiple rows of components)
-                var actionRows = new List<DiscordActionRowComponent>();
-
                 // Ensure you're working with the correct component type
-                foreach (var row in message.Components) {
+                var actionRows = new List<DiscordActionRowComponent>();
+                foreach (var row in components) {
                     // Ensure it's an action row
-                    if (row is DiscordActionRowComponent actionRow) {
-                        actionRows.Add(actionRow); // Add the entire action row
-                    } else {
-                        // Handle the case where the component is not in an action row (optional)
-                        throw new InvalidOperationException("Component is not an action row.");
-                    }
+                    if (row is DiscordActionRowComponent actionRow) actionRows.Add(actionRow); 
+                    else throw new InvalidOperationException("Component is not an action row.");
                 }
 
                 // If you have multiple action rows, pass them all to the response
@@ -197,16 +223,27 @@ namespace DiscordBot.Listeners {
                 await e.Interaction.CreateResponseAsync(InteractionResponseType.UpdateMessage, response);
                 await JsonData.SaveEmbedsAsync(guildId);
 
+                // Stop the stopwatch and log the elapsed time
+                stopwatch.Stop();
+
+                // Logger
+                Console.WriteLine(
+                    $"{AnsiColor.RESET}[{DateTime.Now}] " +
+                    $"{AnsiColor.BRIGHT_GREEN}-> Message edited took {AnsiColor.YELLOW}{stopwatch.ElapsedMilliseconds}ms " +
+                    $"{AnsiColor.RESET}(message: {message.Id})");
+
             } catch (UtilException ex) {
-                Console.WriteLine(ex);
-            } catch (Exception ex) {
                 throw new ListenerException(ex.Message);
-			}
+
+            } catch (Exception ex) {
+                throw new ListenerException($"An error has occured while submitting modal", ex);
+            }
 
         }
 
         private string BuildEventDesciption(EmbedBuilder embed) {
 
+            string name = (string)embed.CustomSaves[Identity.EVENT_NAME];
             string title = (string)embed.CustomSaves[Identity.EVENT_TITLE];
             string intro = (string)embed.CustomSaves[Identity.EVENT_INTRO];
             string infoTitle = (string)embed.CustomSaves[Identity.EVENT_INFO_TITLE];
@@ -215,13 +252,13 @@ namespace DiscordBot.Listeners {
             string reward = (string)embed.CustomSaves[Identity.EVENT_REWARD];
             string timeTitle = (string)embed.CustomSaves[Identity.EVENT_TIME_TITLE];
 
-            return 
-                title + "\n" + 
-                intro + "\n" + 
-                infoTitle + "\n" + 
-                info + "\n" + 
-                rewardTitle + "\n" + 
-                reward + "\n" + 
+            return
+                title + "\n" +
+                intro + "\n" +
+                infoTitle + "\n" +
+                info + "\n" +
+                rewardTitle + "\n" +
+                reward + "\n" +
                 timeTitle + "\n";
 
         }

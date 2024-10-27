@@ -27,25 +27,25 @@ namespace DiscordBot.Commands.Slash {
             [Option("thumbnail", "The thumbnail of your embeded message that will be added.")] DiscordAttachment? thumbnail = null,
             [Option("ping", "The role that will get pinged on sending message.")] DiscordRole? pingrole = null) {
 
-            LogCommand(ctx, CommandEnum.BROADCAST);
+            //LogCommand(ctx, CommandEnum.BROADCAST);
 
-            try {
-                EmbedBuilder embed = new EmbedBuilder() {
-                    Author = ctx.User.Username,
-                    AuthorLink = ctx.User.AvatarUrl,
-                    AuthorUrl = ctx.User.AvatarUrl,
-                    FooterUrl = ctx.Client.CurrentUser.AvatarUrl,
-                    ChannelId = channel.Id,
-                    Description = "Sample description.",
-                    HasTimeStamp = true,
-                };
-                if (image is not null) embed.Image = image.Url;
-                if (thumbnail is not null) embed.Thumbnail = thumbnail.Url;
-                if (pingrole is not null) embed.AddPingRole(pingrole.Id);
-                await CreateEmbedMessageAsync(ctx, embed, EmbedId.BROADCAST, channel.Id, true);
-            } catch (Exception ex) {
-                throw new CommandException($"Embed.UseEmbedCommand: {ex}");
-            }
+            //try {
+            //    EmbedBuilder embed = new EmbedBuilder() {
+            //        Author = ctx.User.Username,
+            //        AuthorLink = ctx.User.AvatarUrl,
+            //        AuthorUrl = ctx.User.AvatarUrl,
+            //        FooterUrl = ctx.Client.CurrentUser.AvatarUrl,
+            //        ChannelId = channel.Id,
+            //        Description = "Sample description.",
+            //        HasTimeStamp = true,
+            //    };
+            //    if (image is not null) embed.Image = image.Url;
+            //    if (thumbnail is not null) embed.Thumbnail = thumbnail.Url;
+            //    if (pingrole is not null) embed.AddPingRole(pingrole.Id);
+            //    await CreateEmbedMessageAsync(ctx, embed, EmbedType.BROADCAST, channel.Id, true);
+            //} catch (Exception ex) {
+            //    throw new CommandException($"Embed.UseEmbedCommand: {ex}");
+            //}
         }
 
     }

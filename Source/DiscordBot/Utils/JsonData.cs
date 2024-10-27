@@ -14,7 +14,8 @@ using System.Xml.Linq;
 using DiscordBot.Exceptions;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
-namespace DiscordBot.Utils {
+namespace DiscordBot.Utils
+{
     public static class JsonData {
 
         #region Private Properties

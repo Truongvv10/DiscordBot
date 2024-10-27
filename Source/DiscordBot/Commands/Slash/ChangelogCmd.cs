@@ -20,19 +20,19 @@ namespace DiscordBot.Commands.Slash {
         public async Task UseChangelogCommand(InteractionContext ctx) {
             try {
 
-                // Log the command the user is using
-                LogCommand(ctx, CommandEnum.CHANGELOG);
+                //// Log the command the user is using
+                //LogCommand(ctx, CommandEnum.CHANGELOG);
 
-                // Build the embed message with default values
-                EmbedBuilder embed = new EmbedBuilder() {
-                    Title = "Changelog Editor",
-                    Description = "Choose which embed you want to edit.",
-                    ChannelId = ctx.Channel.Id,
-                    Owner = ctx.User.Id
-                };
+                //// Build the embed message with default values
+                //EmbedBuilder embed = new EmbedBuilder() {
+                //    Title = "Changelog Editor",
+                //    Description = "Choose which embed you want to edit.",
+                //    ChannelId = ctx.Channel.Id,
+                //    Owner = ctx.User.Id
+                //};
 
-                // Create the embed message
-                await CreateEmbedMessageAsync(ctx, embed, EmbedId.CHANGELOG, ctx.Channel.Id, false);
+                //// Create the embed message
+                //await CreateEmbedMessageAsync(ctx, embed, EmbedType.CHANGELOG, ctx.Channel.Id, false);
 
             } catch (Exception ex) {
                 throw new CommandException($"Embed.UseChangelogCommand: {ex}");

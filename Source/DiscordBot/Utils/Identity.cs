@@ -52,6 +52,7 @@ namespace DiscordBot.Utils {
         public const string SELECTION_TEMPLATE_REMOVE = PREFIX + "selection.template.remove";
 
         // Selection Component Event
+        public const string SELECTION_EVENT_CREATION = PREFIX + "selection.event.create";
         public const string SELECTION_EVENT_INTRODUCTION = PREFIX + "selection.event.introduction";
         public const string SELECTION_EVENT_INFORMATION = PREFIX + "selection.event.information";
         public const string SELECTION_EVENT_REWARDS = PREFIX + "selection.event.rewards";
@@ -99,6 +100,7 @@ namespace DiscordBot.Utils {
         public const string MODAL_EVENT_END = PREFIX + "modal.event.end";
 
         // Event
+        public const string EVENT_NAME = PREFIX + "event.name";
         public const string EVENT_TITLE = PREFIX + "event.title";
         public const string EVENT_INTRO = PREFIX + "event.intro";
         public const string EVENT_INFO_TITLE = PREFIX + "event.info.title";

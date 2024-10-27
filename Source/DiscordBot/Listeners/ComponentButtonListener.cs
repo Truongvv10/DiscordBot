@@ -51,11 +51,11 @@ namespace DiscordBot.Listeners {
 
                 if (e.Id == ("embedButtonChannel")) {
                     await e.Interaction.CreateResponseAsync(InteractionResponseType.DeferredMessageUpdate);
-                    var channel = await DiscordUtil.GetChannelByIdAsync(e.Guild, embed.ChannelId);
+                    var channel = await DiscordUtil.GetChannelByIdAsync(e.Guild, (ulong)embed.ChannelId!);
                     var sentMessage = await channel.SendMessageAsync(content: pingRoles + " " + embed.Content, embed: embed.Build());
                     embed.AddCopiedMessage(sentMessage.Id, sentMessage.Channel.Id);
                     var copy = embed.DeepClone();
-                    copy.Id = sentMessage.Id;
+                    copy.MessageId = sentMessage.Id;
                     copy.ChannelId = sentMessage.ChannelId;
                     copy.Time = DateTime.Now.Ticks;
                     await CacheData.AddEmbed(guildId, sentMessage.Id, copy);
@@ -87,7 +87,16 @@ namespace DiscordBot.Listeners {
                     await sentMessage.DeleteAsync();
                     await CacheData.RemoveEmbed(guildId, sentMessage.Id);
                 }
+                if (e.Id == ("embedButtonEventPostCreate")) {
+                    modal.WithTitle("EVENT CREATION").WithCustomId($"embedModal;{Identity.SELECTION_EVENT_CREATION};{messageId}");
+                    modal.AddComponents(new TextInputComponent("EVENT NAME", Identity.EVENT_NAME, "Write something...", embed.CustomSaves[Identity.EVENT_NAME] as string, true, TextInputStyle.Short, 4, 32));
+                    modal.AddComponents(new TextInputComponent("TIME ZONE", Identity.EVENT_TIMEZONE, "Europe/Brussels", embed.CustomSaves[Identity.EVENT_TIMEZONE] as string, true, TextInputStyle.Short));
+                    modal.AddComponents(new TextInputComponent("START DATE", Identity.EVENT_START, "DD/MM/YYYY hh:mm", embed.CustomSaves[Identity.EVENT_START] as string, true, TextInputStyle.Short));
+                    modal.AddComponents(new TextInputComponent("END DATE", Identity.EVENT_END, "DD/MM/YYYY hh:mm", embed.CustomSaves[Identity.EVENT_END] as string, true, TextInputStyle.Short));
+                    await e.Interaction.CreateResponseAsync(InteractionResponseType.Modal, modal);
+                }
                 await JsonData.SaveEmbedsAsync(guildId);
+
             } catch (Exception ex) {
                 Console.WriteLine(ex);
                 throw;

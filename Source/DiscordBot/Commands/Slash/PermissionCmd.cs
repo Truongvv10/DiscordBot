@@ -15,33 +15,33 @@ namespace DiscordBot.Commands.Slash {
         [RequirePermission(CommandEnum.PERMISSIONS)]
         public async Task UsePermissionEditCommand(InteractionContext ctx) {
 
-            try {
+            //try {
 
-                // Build the embed message with default values
-                EmbedBuilder embed = new EmbedBuilder() {
-                    Title = "Permissions Editor",
-                    Owner = ctx.User.Id
-                };
+            //    // Build the embed message with default values
+            //    EmbedBuilder embed = new EmbedBuilder() {
+            //        Title = "Permissions Editor",
+            //        Owner = ctx.User.Id
+            //    };
 
-                foreach (var perms in CacheData.Permissions[ctx.Guild.Id]) {
-                    string desc =
-                        $"```ansi\n" +
-                        $"{AnsiColor.RESET}Everyone : {AnsiColor.GREEN}{perms.Value.AllowEveryone}\n" +
-                        $"{AnsiColor.RESET}Admins   : {AnsiColor.GREEN}{perms.Value.AllowAdministrator}\n" +
-                        $"{AnsiColor.RESET}Reactions: {AnsiColor.GREEN}{perms.Value.AllowAddReaction}\n" +
-                        $"{AnsiColor.RESET}Users    : {AnsiColor.YELLOW}{perms.Value.AllowedUsers.Count()}\n" +
-                        $"{AnsiColor.RESET}Roles    : {AnsiColor.YELLOW}{perms.Value.AllowedRoles.Count()}\n" +
-                        $"{AnsiColor.RESET}Channels : {AnsiColor.MAGENTA}{perms.Value.AllowedChannels.Count()}\n" +
-                        $"```";
-                    embed.AddField(perms.Value.Cmd, desc);
-                }
+            //    foreach (var perms in CacheData.Permissions[ctx.Guild.Id]) {
+            //        string desc =
+            //            $"```ansi\n" +
+            //            $"{AnsiColor.RESET}Everyone : {AnsiColor.GREEN}{perms.Value.AllowEveryone}\n" +
+            //            $"{AnsiColor.RESET}Admins   : {AnsiColor.GREEN}{perms.Value.AllowAdministrator}\n" +
+            //            $"{AnsiColor.RESET}Reactions: {AnsiColor.GREEN}{perms.Value.AllowAddReaction}\n" +
+            //            $"{AnsiColor.RESET}Users    : {AnsiColor.YELLOW}{perms.Value.AllowedUsers.Count()}\n" +
+            //            $"{AnsiColor.RESET}Roles    : {AnsiColor.YELLOW}{perms.Value.AllowedRoles.Count()}\n" +
+            //            $"{AnsiColor.RESET}Channels : {AnsiColor.MAGENTA}{perms.Value.AllowedChannels.Count()}\n" +
+            //            $"```";
+            //        embed.AddField(perms.Value.Cmd, desc);
+            //    }
 
-                // Create the embed message
-                await CreateEmbedMessageAsync(ctx, embed, EmbedId.PERMISSION, ctx.Interaction.Channel.Id, false);
+            //    // Create the embed message
+            //    await CreateEmbedMessageAsync(ctx, embed, EmbedType.PERMISSION, ctx.Interaction.Channel.Id, false);
 
-            } catch (Exception ex) {
-                throw new CommandException($"Embed.UseEmbedCommand: {ex}");
-            }
+            //} catch (Exception ex) {
+            //    throw new CommandException($"Embed.UseEmbedCommand: {ex}");
+            //}
 
 
         }

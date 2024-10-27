@@ -1,13 +1,14 @@
-﻿using DiscordBot.Model;
-using DiscordBot.Model.Enums;
+﻿using DiscordBot.Model.Enums;
 using DiscordBot.Services;
 using DiscordBot.Utils;
 using DSharpPlus;
 using DSharpPlus.Entities;
 using DSharpPlus.SlashCommands;
 using DiscordBot.Commands;
+using DiscordBot.Exceptions;
 
-namespace DiscordBot.Commands.Slash {
+namespace DiscordBot.Commands.Slash
+{
     public class TimestampCmd : SlashCommand {
 
         [SlashCommand("timestamp", "Generate dynamic discord timestamp")]
@@ -17,19 +18,17 @@ namespace DiscordBot.Commands.Slash {
             [Option("time", "The time with format: \"hh/mm\". (24 hour clock)")] string time,
             [Option("time-zone", "The time zone you live in.")] string timeZone) {
 
-            LogCommand(ctx, CommandEnum.TIMESTAMP);
-
             try {
                 string inputDateTime = $"{date.Trim()} {time.Trim()}";
                 if (DateTime.TryParseExact(inputDateTime, "d/M/yyyy H:m", null, System.Globalization.DateTimeStyles.None, out DateTime parsedDateTime)) {
 
-                    string date1 = await DiscordUtil.TranslateTimestamp(parsedDateTime, timeZone, TimestampEnum.SHORT_DATE);
-                    string date2 = await DiscordUtil.TranslateTimestamp(parsedDateTime, timeZone, TimestampEnum.SHORT_TIME);
-                    string date3 = await DiscordUtil.TranslateTimestamp(parsedDateTime, timeZone, TimestampEnum.LONG_DATE);
-                    string date4 = await DiscordUtil.TranslateTimestamp(parsedDateTime, timeZone, TimestampEnum.LONG_TIME);
-                    string date5 = await DiscordUtil.TranslateTimestamp(parsedDateTime, timeZone, TimestampEnum.LONG_DATE_AND_SHORT_TIME);
-                    string date6 = await DiscordUtil.TranslateTimestamp(parsedDateTime, timeZone, TimestampEnum.LONG_DATE_WITH_DAY_OF_WEEK_AND_SHORT_TIME);
-                    string date7 = await DiscordUtil.TranslateTimestamp(parsedDateTime, timeZone, TimestampEnum.RELATIVE);
+                    string date1 = await DiscordUtil.TranslateToDynamicTimestamp(parsedDateTime, timeZone, TimestampEnum.SHORT_DATE);
+                    string date2 = await DiscordUtil.TranslateToDynamicTimestamp(parsedDateTime, timeZone, TimestampEnum.SHORT_TIME);
+                    string date3 = await DiscordUtil.TranslateToDynamicTimestamp(parsedDateTime, timeZone, TimestampEnum.LONG_DATE);
+                    string date4 = await DiscordUtil.TranslateToDynamicTimestamp(parsedDateTime, timeZone, TimestampEnum.LONG_TIME);
+                    string date5 = await DiscordUtil.TranslateToDynamicTimestamp(parsedDateTime, timeZone, TimestampEnum.LONG_DATE_AND_SHORT_TIME);
+                    string date6 = await DiscordUtil.TranslateToDynamicTimestamp(parsedDateTime, timeZone, TimestampEnum.LONG_DATE_WITH_DAY_OF_WEEK_AND_SHORT_TIME);
+                    string date7 = await DiscordUtil.TranslateToDynamicTimestamp(parsedDateTime, timeZone, TimestampEnum.RELATIVE);
 
                     EmbedBuilder embed = new EmbedBuilder()
                         .WithAuthor($"Dynamic Discord Time ({timeZone})", "https://cdn-icons-png.flaticon.com/512/2972/2972531.png", "https://cdn-icons-png.flaticon.com/512/2972/2972531.png")
@@ -50,8 +49,7 @@ namespace DiscordBot.Commands.Slash {
 
                 }
             } catch (Exception ex) {
-
-                throw;
+                throw new CommandException($"An error occured using the command: {ex}");
             }
 
         }

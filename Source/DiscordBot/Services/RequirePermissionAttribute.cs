@@ -39,7 +39,7 @@ namespace DiscordBot.Services {
             var permission = await CacheData.GetPermission(ctx.Guild.Id, Command);
             var roles = user.Roles;
 
-            LogCommand(user, ctx.Guild);
+            LogCommand(user, ctx.Guild, ctx.Interaction.Channel);
 
             if (permission.AllowEveryone) {
                 return true;
@@ -56,12 +56,12 @@ namespace DiscordBot.Services {
             }
         }
 
-        private void LogCommand(DiscordUser user, DiscordGuild guild) {
+        private void LogCommand(DiscordUser user, DiscordGuild guild, DiscordChannel channel) {
             Console.WriteLine(
                 $"{AnsiColor.RESET}[{DateTime.Now}] " +
-                $"{AnsiColor.GREEN}{user.Username} issued command: " +
+                $"{AnsiColor.BRIGHT_GREEN}{user.Username} issued command: " +
                 $"{AnsiColor.YELLOW}/{command.ToString().ToLower()} " +
-                $"{AnsiColor.RESET}({guild.Name})");
+                $"{AnsiColor.RESET}({guild.Name}) ({channel.Name})");
         }
         #endregion
     }

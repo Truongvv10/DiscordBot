@@ -11,8 +11,10 @@ namespace DiscordBot.Model.Enums {
 
         [ChoiceName("/embed")]
         EMBED = 0,
+        [ChoiceName("/embed-create")]
+        EMBED_CREATE = 1,
         [ChoiceName("/embed-edit")]
-        EMBED_EDIT = 1,
+        EMBED_EDIT = 2,
 
 
         [ChoiceName("/permissions")]
@@ -21,6 +23,14 @@ namespace DiscordBot.Model.Enums {
 
         [ChoiceName("/events")]
         EVENTS = 200,
+        [ChoiceName("/events-create")]
+        EVENTS_CREATE = 201,
+        [ChoiceName("/events-edit")]
+        EVENTS_EDIT = 202,
+        [ChoiceName("/events-reminder")]
+        EVENTS_REMINDER = 203,
+        [ChoiceName("/events-winners")]
+        EVENTS_WINNERS = 204,
 
 
         [ChoiceName("/timestamp")]

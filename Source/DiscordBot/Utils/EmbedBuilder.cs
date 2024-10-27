@@ -1,4 +1,5 @@
-﻿using DiscordBot.Model.Enums;
+﻿using DiscordBot.Exceptions;
+using DiscordBot.Model.Enums;
 using DSharpPlus.Entities;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -12,10 +13,10 @@ using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace DiscordBot.Model {
+namespace DiscordBot.Utils {
     public class EmbedBuilder {
         #region Private Properties
-        private EmbedId _type;
+        private CommandEnum _type;
         private string? _title;
         private string? _titleLink;
         private string? _description;
@@ -30,9 +31,10 @@ namespace DiscordBot.Model {
         private string? _color;
         private bool _hasTimeStamp;
         private long? _time;
+        private bool _isEphemeral;
         private ulong? _owner;
-        private ulong _messageId;
-        private ulong _channelId;
+        private ulong? _messageId;
+        private ulong? _channelId;
         private Dictionary<string, object> _customSaves = new();
         private Dictionary<ulong, ulong> _childEmbeds = new();
         private HashSet<ulong> _pingRoles = new();
@@ -41,9 +43,10 @@ namespace DiscordBot.Model {
 
         #region Constructors
         public EmbedBuilder() {
-            _type = EmbedId.DEFAULT;
+            _type = CommandEnum.EMBED_CREATE;
             _color = "#0681cd";
             _hasTimeStamp = false;
+            _isEphemeral = false;
             _time = DateTime.Now.Ticks;
         }
         public EmbedBuilder(string description) : this() {
@@ -56,7 +59,7 @@ namespace DiscordBot.Model {
 
         #region Properties
         [JsonProperty("type", NullValueHandling = NullValueHandling.Ignore)]
-        public EmbedId Type {
+        public CommandEnum Type {
             get => _type;
             set => _type = value;
         }
@@ -139,6 +142,12 @@ namespace DiscordBot.Model {
             set => _hasTimeStamp = value;
         }
 
+        [JsonProperty("ephemeral", NullValueHandling = NullValueHandling.Ignore)]
+        public bool IsEphemeral {
+            get => _isEphemeral;
+            set => _isEphemeral = value;
+        }
+
         [JsonProperty("creation_date", NullValueHandling = NullValueHandling.Ignore)]
         public long? Time {
             get => _time;
@@ -152,13 +161,13 @@ namespace DiscordBot.Model {
         }
 
         [JsonProperty("channel_id", NullValueHandling = NullValueHandling.Ignore)]
-        public ulong ChannelId {
+        public ulong? ChannelId {
             get => _channelId;
             set => _channelId = value;
         }
 
         [JsonProperty("message_id", NullValueHandling = NullValueHandling.Ignore)]
-        public ulong Id {
+        public ulong? MessageId {
             get => _messageId;
             set => _messageId = value;
         }
@@ -189,7 +198,7 @@ namespace DiscordBot.Model {
         #endregion
 
         #region Methods
-        public EmbedBuilder WithType(EmbedId type) {
+        public EmbedBuilder WithType(CommandEnum type) {
             _type = type;
             return this;
         }
@@ -252,6 +261,10 @@ namespace DiscordBot.Model {
         }
         public EmbedBuilder WithHastimestamp(bool hasTimeStamp) {
             _hasTimeStamp = hasTimeStamp;
+            return this;
+        }
+        public EmbedBuilder WithIsEphemeral(bool isEphemeral) {
+            _isEphemeral = isEphemeral;
             return this;
         }
         public EmbedBuilder WithTime(long time) {
@@ -326,8 +339,8 @@ namespace DiscordBot.Model {
         }
         public EmbedBuilder SetPingRoles(ulong[] roleIds) {
             _pingRoles.Clear();
-            if (roleIds.Count() > 0) 
-                foreach (var roleid in roleIds) 
+            if (roleIds.Count() > 0)
+                foreach (var roleid in roleIds)
                     _pingRoles.Add(roleid);
             return this;
         }
@@ -366,11 +379,12 @@ namespace DiscordBot.Model {
                     foreach (var field in _fields) embed.AddField(field.Item1, field.Item2, field.Item3);
 
                 return embed.Build();
+
             } catch (Exception ex) {
-                Console.WriteLine(ex);
-                throw;
+                throw new DomainException("An error occurred while building embed", ex);
             }
         }
+
         public EmbedBuilder DeepClone() {
             var clone = new EmbedBuilder {
                 _type = _type,
@@ -387,6 +401,7 @@ namespace DiscordBot.Model {
                 _thumbnail = _thumbnail,
                 _color = _color,
                 _hasTimeStamp = _hasTimeStamp,
+                _isEphemeral = _isEphemeral,
                 _time = _time,
                 _owner = _owner,
                 _messageId = _messageId,
