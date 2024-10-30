@@ -78,6 +78,15 @@ namespace DiscordBot.Utils {
                         .AddEmbed(embed.Build())
                         .AddComponents(actionRows);
 
+                    // Check for any roles to mention
+                    if (embed.PingRoles.Any()) {
+                        var tasks = embed.PingRoles.Select(async x => await GetRolesByIdAsync(interaction.Guild, x));
+                        var roles = await Task.WhenAll(tasks);
+                        var content = string.Empty;
+                        foreach (var role in roles) if (role.Name == "@everyone") content += "@everyone"; else content += role.Mention;
+                        response.WithContent(content + embed.Content);
+                    }
+
                     await interaction.CreateResponseAsync(InteractionResponseType.UpdateMessage, response);
 
                     // Stop the stopwatch and log the elapsed time
