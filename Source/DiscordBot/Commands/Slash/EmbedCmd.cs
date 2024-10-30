@@ -14,7 +14,7 @@ using System.Threading.Channels;
 namespace DiscordBot.Commands.Slash {
 
     [SlashCommandGroup("embed", "Commands for sending embeded messages")]
-    public class EmbedCmd : SlashCommand {
+    public class EmbedCmd : ApplicationCommandModule {
 
         private const string EMBED = "EMBED";
         private const string EMBED_CREATE = "CREATE";
@@ -29,13 +29,11 @@ namespace DiscordBot.Commands.Slash {
             [Option("thumbnail", "The thumbnail of your embeded message that will be added.")] DiscordAttachment? thumbnail = null,
             [Option("ping", "The server role that will get pinged on sending message.")] DiscordRole? pingrole = null) {
             try {
-
                 // Build the embed message with default values
                 var template = $"{EMBED}_{EMBED_CREATE}";
                 var embed = await CacheData.GetTemplate(ctx.Guild.Id, template);
                 embed.ChannelId = channel.Id;
                 embed.Owner = ctx.User.Id;
-                embed.Author = ctx.User.Username;
                 embed.Type = CommandEnum.EMBED_CREATE;
 
                 // Add the optional values
@@ -56,9 +54,7 @@ namespace DiscordBot.Commands.Slash {
         public async Task Edit(InteractionContext ctx, 
             [Option("message-id", "The id of the embeded message you want to edit.")] string id,
             [Option("hidden", "If only you can see this embeded message, default is true")] bool hidden = true) {
-
             try {
-
                 // Check if the id is a valid ulong
                 if (ulong.TryParse(id, out ulong messageid)) {
                     var embed = CacheData.GetEmbed(ctx.Guild.Id, messageid);

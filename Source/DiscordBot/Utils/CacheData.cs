@@ -15,6 +15,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using DiscordBot.Exceptions;
+using System.Runtime.InteropServices;
 
 namespace DiscordBot.Utils
 {
@@ -234,6 +235,17 @@ namespace DiscordBot.Utils
                 throw new UtilException($"{AnsiColor.BRIGHT_RED}[Error] {AnsiColor.RESET}Embeded message for guild {guildId} with template {template} could not be found.");
             } catch (Exception ex) {
                 throw new UtilException($"{AnsiColor.BRIGHT_RED}[Error] {AnsiColor.RESET}Embeded message for guild {guildId} with template {template} could not be found.", ex);
+            }
+        }
+
+        public static async Task<Dictionary<string, EmbedBuilder>> GetTemplateAll(ulong guildId) {
+            try {
+                if (templates.TryGetValue(guildId, out var t)) {
+                    return t;
+                }
+                throw new UtilException($"{AnsiColor.BRIGHT_RED}[Error] {AnsiColor.RESET}Templates for guild {guildId} can not be found.");
+            } catch (Exception ex) {
+                throw new UtilException($"{AnsiColor.BRIGHT_RED}[Error] {AnsiColor.RESET}Templates for guild {guildId} can not be found.", ex);
             }
         }
 

@@ -9,7 +9,7 @@ using DiscordBot.Commands;
 using static System.Net.Mime.MediaTypeNames;
 
 namespace DiscordBot.Commands.Slash {
-    public class PermissionCmd : SlashCommand {
+    public class PermissionCmd : ApplicationCommandModule {
 
         [SlashCommand("permissions", "Show an overview of permissions")]
         [RequirePermission(CommandEnum.PERMISSIONS)]

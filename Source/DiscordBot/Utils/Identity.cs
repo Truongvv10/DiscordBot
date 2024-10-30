@@ -49,10 +49,12 @@ namespace DiscordBot.Utils {
         public const string SELECTION_FIELD_REMOVE = PREFIX + "selection.field.remove";
         public const string SELECTION_TEMPLATE_ADD = PREFIX + "selection.template.add";
         public const string SELECTION_TEMPLATE_USE = PREFIX + "selection.template.use";
+        public const string SELECTION_TEMPLATE_INPUT = PREFIX + "selection.template.input";
         public const string SELECTION_TEMPLATE_REMOVE = PREFIX + "selection.template.remove";
 
         // Selection Component Event
         public const string SELECTION_EVENT_CREATION = PREFIX + "selection.event.create";
+        public const string SELECTION_EVENT_PROPERTIES = PREFIX + "selection.event.properties";
         public const string SELECTION_EVENT_INTRODUCTION = PREFIX + "selection.event.introduction";
         public const string SELECTION_EVENT_INFORMATION = PREFIX + "selection.event.information";
         public const string SELECTION_EVENT_REWARDS = PREFIX + "selection.event.rewards";
@@ -69,35 +71,49 @@ namespace DiscordBot.Utils {
         public const string SELECTION_PERMS_NOTION = PREFIX + "selection.permission.notion";
 
         // Modal
-        public const string MODAL_TITLE = PREFIX + "modal.title";
-        public const string MODAL_TITLE_LINK = PREFIX + "modal.title.link";
-        public const string MODAL_DESCRIPTION = PREFIX + "modal.description";
-        public const string MODAL_CONTENT = PREFIX + "modal.content";
-        public const string MODAL_FOOTER = PREFIX + "modal.footer";
-        public const string MODAL_FOOTER_URL = PREFIX + "modal.footer.url";
-        public const string MODAL_AUTHOR = PREFIX + "modal.author";
-        public const string MODAL_AUTHOR_LINK = PREFIX + "modal.author.link";
-        public const string MODAL_AUTHOR_URL = PREFIX + "modal.author.url";
-        public const string MODAL_COLOR = PREFIX + "modal.color";
-        public const string MODAL_IMAGE = PREFIX + "modal.image";
-        public const string MODAL_THUMBNAIL = PREFIX + "modal.thumnail";
-        public const string MODAL_PINGROLE = PREFIX + "modal.pingrole";
+        public const string MODAL_EMBED = PREFIX + "modal.embed";
+        public const string MODAL_EVENT = PREFIX + "modal.event";
+        public const string MODAL_TEMPLATE = PREFIX + "modal.template";
         public const string MODAL_TIMESTAMP = PREFIX + "modal.timestamp";
-        public const string MODAL_FIELD_TITLE = PREFIX + "modal.field.title";
-        public const string MODAL_FIELD_TEXT = PREFIX + "modal.field.text";
-        public const string MODAL_FIELD_INLINE = PREFIX + "modal.field.inline";
-        public const string MODAL_FIELD_INDEX = PREFIX + "modal.field.index";
-        public const string MODAL_TEMPLATE_ADD = PREFIX + "modal.template.add";
-        public const string MODAL_TEMPLATE_REMOVE = PREFIX + "modal.template.remove";
-        public const string MODAL_TEMPLATE_USE = PREFIX + "modal.template.use";
-        public const string MODAL_EVENT_TITLE = PREFIX + "modal.event.title";
-        public const string MODAL_EVENT_INTRO = PREFIX + "modal.event.intro";
-        public const string MODAL_EVENT_INFO = PREFIX + "modal.event.info";
-        public const string MODAL_EVENT_REWARD = PREFIX + "modal.event.reward";
-        public const string MODAL_EVENT_TIMEZONE = PREFIX + "modal.event.timezone";
-        public const string MODAL_EVENT_TIME_TITLE = PREFIX + "modal.event.time.title";
-        public const string MODAL_EVENT_START = PREFIX + "modal.event.start";
-        public const string MODAL_EVENT_END = PREFIX + "modal.event.end";
+
+        // Modal Component Default
+        public const string MODAL_COMP_TITLE = PREFIX + "modal.component.title";
+        public const string MODAL_COMP_TITLE_LINK = PREFIX + "modal.component.title.link";
+        public const string MODAL_COMP_DESCRIPTION = PREFIX + "modal.component.description";
+        public const string MODAL_COMP_CONTENT = PREFIX + "modal.component.content";
+        public const string MODAL_COMP_FOOTER = PREFIX + "modal.component.footer";
+        public const string MODAL_COMP_FOOTER_URL = PREFIX + "modal.component.footer.url";
+        public const string MODAL_COMP_AUTHOR = PREFIX + "modal.component.author";
+        public const string MODAL_COMP_AUTHOR_LINK = PREFIX + "modal.component.author.link";
+        public const string MODAL_COMP_AUTHOR_URL = PREFIX + "modal.component.author.url";
+        public const string MODAL_COMP_COLOR = PREFIX + "modal.component.color";
+        public const string MODAL_COMP_IMAGE = PREFIX + "modal.component.image";
+        public const string MODAL_COMP_THUMBNAIL = PREFIX + "modal.component.thumnail";
+        public const string MODAL_COMP_PINGROLE = PREFIX + "modal.component.pingrole";
+        public const string MODAL_COMP_TIMESTAMP = PREFIX + "modal.component.timestamp";
+        public const string MODAL_COMP_FIELD_TITLE = PREFIX + "modal.component.field.title";
+        public const string MODAL_COMP_FIELD_TEXT = PREFIX + "modal.component.field.text";
+        public const string MODAL_COMP_FIELD_INLINE = PREFIX + "modal.component.field.inline";
+        public const string MODAL_COMP_FIELD_INDEX = PREFIX + "modal.component.field.index";
+        public const string MODAL_COMP_TEMPLATE_ADD = PREFIX + "modal.component.template.add";
+        public const string MODAL_COMP_TEMPLATE_REMOVE = PREFIX + "modal.component.template.remove";
+        public const string MODAL_COMP_TEMPLATE_USE = PREFIX + "modal.component.template.use";
+        public const string MODAL_COMP_EVENT_TITLE = PREFIX + "modal.component.event.title";
+        public const string MODAL_COMP_EVENT_INTRO = PREFIX + "modal.component.event.intro";
+        public const string MODAL_COMP_EVENT_INFO = PREFIX + "modal.component.event.info";
+        public const string MODAL_COMP_EVENT_REWARD = PREFIX + "modal.component.event.reward";
+        public const string MODAL_COMP_EVENT_TIMEZONE = PREFIX + "modal.component.event.timezone";
+        public const string MODAL_COMP_EVENT_TIME_TITLE = PREFIX + "modal.component.event.time.title";
+        public const string MODAL_COMP_EVENT_START = PREFIX + "modal.component.event.start";
+        public const string MODAL_COMP_EVENT_END = PREFIX + "modal.component.event.end";
+
+        // Modal Component Timestamp
+        public const string MODAL_COMP_TIMESTAMP_TIMEZONE = PREFIX + "modal.component.timestamp.timezone";
+        public const string MODAL_COMP_TIMESTAMP_TIME = PREFIX + "modal.component.timestamp.time";
+
+        /// <summary>
+        /// These here are hidden data values that are used to store data in messages.
+        /// </summary>
 
         // Event
         public const string EVENT_NAME = PREFIX + "event.name";
@@ -111,5 +127,47 @@ namespace DiscordBot.Utils {
         public const string EVENT_TIME_TITLE = PREFIX + "event.time.title";
         public const string EVENT_START = PREFIX + "event.start";
         public const string EVENT_END = PREFIX + "event.end";
+        public const string EVENT_START_R = PREFIX + "event.start.relative";
+        public const string EVENT_END_R = PREFIX + "event.end.relative";
+        public const string EVENT_DESCRIPTION_START = PREFIX + "event.description.start";
+        public const string EVENT_DESCRIPTION_END = PREFIX + "event.description.end";
+        public const string EVENT_DESCRIPTION_REACTION = PREFIX + "event.description.reaction";
+
+        // Template
+        public const string TEMPLATE_NAME = PREFIX + "template.name";
+        public const string TEMPLATE_LIST = PREFIX + "template.list";
+        public const string TEMPLATE_LIST_CUSTOM = PREFIX + "template.list.custom";
+        public const string TEMPLATE_REPLACE_MESSAGE_ID = PREFIX + "template.replace.message";
+
+        // Timestamp
+        public const string TIMESTAMP_TIME = PREFIX + "timestamp.time";
+        public const string TIMESTAMP_TIMEZONE = PREFIX + "timestamp.timezone";
+        public const string TIMESTAMP_SHORT_DATE = PREFIX + "timestamp.short.date";
+        public const string TIMESTAMP_SHORT_TIME = PREFIX + "timestamp.short.time";
+        public const string TIMESTAMP_LONG_DATE = PREFIX + "timestamp.long.date";
+        public const string TIMESTAMP_LONG_TIME = PREFIX + "timestamp.long.time";
+        public const string TIMESTAMP_LONG_DATE_SHORT_TIME = PREFIX + "timestamp.long.date.short.time";
+        public const string TIMESTAMP_LONG_DATE_DAY_OF_WEEK_SHORT_TIME = PREFIX + "timestamp.long.date.day.of.week.short.time";
+        public const string TIMESTAMP_RELATIVE_TIME = PREFIX + "timestamp.relative.time";
+
+        // Template
+        public const string TDATA_EMBED_CREATE = "EMBED_CREATE";
+        public const string TDATA_EVENT_CREATE = "EVENT_CREATE";
+        public const string TDATA_EVENT_POST_CREATE = "EVENT_POST_CREATE";
+        public const string TDATA_CREATE = "TEMPLATE_CREATE";
+        public const string TDATA_USE = "TEMPLATE_USE";
+        public const string TDATA_TEMPLATE = "TIMESTAMP";
+
+        // Other
+        public const string REACTION_1 = PREFIX + "reaction.1";
+        public const string REACTION_2 = PREFIX + "reaction.2";
+        public const string REACTION_3 = PREFIX + "reaction.3";
+        public const string REACTION_4 = PREFIX + "reaction.4";
+        public const string REACTION_5 = PREFIX + "reaction.5";
+        public const string REACTION_6 = PREFIX + "reaction.6";
+        public const string REACTION_7 = PREFIX + "reaction.7";
+        public const string REACTION_8 = PREFIX + "reaction.8";
+        public const string REACTION_9 = PREFIX + "reaction.9";
+
     }
 }

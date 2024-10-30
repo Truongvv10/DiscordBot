@@ -16,7 +16,7 @@ using DSharpPlus.Interactivity;
 using DiscordBot.Services;
 
 namespace DiscordBot.Commands.Slash {
-    internal class NotionCmd : SlashCommand {
+    internal class NotionCmd : ApplicationCommandModule {
 
         private NotionClient _notionClient;
         private const string token = @"secret_4CS7Rgs0Jwr3FpxPdWfSZQsvhQEafvTq21SoxLvtzbA";

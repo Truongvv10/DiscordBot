@@ -29,13 +29,13 @@ namespace DiscordBot.Utils {
         private string? _image;
         private string? _thumbnail;
         private string? _color;
-        private bool _hasTimeStamp;
         private long? _time;
+        private bool _hasTimeStamp;
         private bool _isEphemeral;
         private ulong? _owner;
         private ulong? _messageId;
         private ulong? _channelId;
-        private Dictionary<string, object> _customSaves = new();
+        private Dictionary<string, object> _customData = new();
         private Dictionary<ulong, ulong> _childEmbeds = new();
         private HashSet<ulong> _pingRoles = new();
         private List<(string, string, bool)> _fields = new();
@@ -173,9 +173,9 @@ namespace DiscordBot.Utils {
         }
 
         [JsonProperty("data", NullValueHandling = NullValueHandling.Ignore)]
-        public IReadOnlyDictionary<string, object> CustomSaves {
-            get => _customSaves;
-            set { foreach (var item in value) { AddCustomSaveMessage(item.Key, item.Value); } }
+        public IReadOnlyDictionary<string, object> CustomData {
+            get => _customData;
+            set { foreach (var item in value) { AddCustomData(item.Key, item.Value); } }
         }
 
         [JsonProperty("childs", NullValueHandling = NullValueHandling.Ignore)]
@@ -283,22 +283,26 @@ namespace DiscordBot.Utils {
             _channelId = channelId;
             return this;
         }
-        public EmbedBuilder AddCustomSaveMessage(string customKey, object customValue) {
-            _customSaves.Add(customKey, customValue);
+        public EmbedBuilder AddCustomData(string customKey, object customValue) {
+            if (!_customData.TryAdd(customKey, customValue)) {
+                SetCustomData(customKey, customValue);
+            };
             return this;
         }
-        public EmbedBuilder RemoveCustomSaveMessage(string customKey) {
-            _customSaves.Remove(customKey);
+        public EmbedBuilder RemoveCustomData(string customKey) {
+            _customData.Remove(customKey);
             return this;
         }
-        public EmbedBuilder SetCustomSaveMessage(string id, object value) {
-            if (_customSaves.TryGetValue(id, out _)) {
-                _customSaves[id] = value;
+        public EmbedBuilder SetCustomData(string id, object value) {
+            if (_customData.ContainsKey(id)) {
+                _customData[id] = value;
+            } else {
+                AddCustomData(id, value);
             }
             return this;
         }
-        public EmbedBuilder ClearCustomSaveMessages() {
-            _customSaves.Clear();
+        public EmbedBuilder ClearCustomData() {
+            _customData.Clear();
             return this;
         }
         public EmbedBuilder AddCopiedMessage(ulong messageId, ulong channelId) {
@@ -354,7 +358,6 @@ namespace DiscordBot.Utils {
         }
         public DiscordEmbed Build() {
             try {
-
                 var embed = new DiscordEmbedBuilder();
 
                 if (!string.IsNullOrWhiteSpace(_title))

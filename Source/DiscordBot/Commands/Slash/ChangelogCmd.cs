@@ -14,7 +14,7 @@ using DiscordBot.Commands;
 using static System.Net.Mime.MediaTypeNames;
 
 namespace DiscordBot.Commands.Slash {
-    public class ChangelogCmd : SlashCommand {
+    public class ChangelogCmd : ApplicationCommandModule {
         [SlashCommand("changelog", "Setup/Edit/Create changelogs for your server.")]
         [RequirePermission(CommandEnum.CHANGELOG)]
         public async Task UseChangelogCommand(InteractionContext ctx) {

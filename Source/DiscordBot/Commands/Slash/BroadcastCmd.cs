@@ -16,7 +16,7 @@ using DiscordBot.Services;
 using DSharpPlus.SlashCommands.Attributes;
 
 namespace DiscordBot.Commands.Slash {
-    public class BroadcastCmd : SlashCommand {
+    public class BroadcastCmd : ApplicationCommandModule {
 
 
         [SlashCommand("broadcast", "Send an embeded message to the current channel")]

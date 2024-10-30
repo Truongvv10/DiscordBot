@@ -12,10 +12,15 @@ using DiscordBot.Model.Enums;
 using DiscordBot.Utils;
 
 namespace DiscordBot.Listeners {
-    public class ComponentButtonListener {
+    public class ButtonClickEvent {
 
+        public async Task ButtonClick(DiscordClient sender, ComponentInteractionCreateEventArgs e) {
+            if (e.Interaction.Data.ComponentType == ComponentType.Button) {
+                if (e.Id.Contains("embedButton")) await UseEmbed(sender, e);
+            }
+        }
 
-        public async Task HandleEmbedCommand(DiscordClient discordClient, ComponentInteractionCreateEventArgs e) {
+        public async Task UseEmbed(DiscordClient discordClient, ComponentInteractionCreateEventArgs e) {
 
             var messageId = e.Message.Id;
             var guildId = e.Guild.Id;
@@ -88,13 +93,20 @@ namespace DiscordBot.Listeners {
                     await CacheData.RemoveEmbed(guildId, sentMessage.Id);
                 }
                 if (e.Id == ("embedButtonEventPostCreate")) {
-                    modal.WithTitle("EVENT CREATION").WithCustomId($"embedModal;{Identity.SELECTION_EVENT_CREATION};{messageId}");
-                    modal.AddComponents(new TextInputComponent("EVENT NAME", Identity.EVENT_NAME, "Write something...", embed.CustomSaves[Identity.EVENT_NAME] as string, true, TextInputStyle.Short, 4, 32));
-                    modal.AddComponents(new TextInputComponent("TIME ZONE", Identity.EVENT_TIMEZONE, "Europe/Brussels", embed.CustomSaves[Identity.EVENT_TIMEZONE] as string, true, TextInputStyle.Short));
-                    modal.AddComponents(new TextInputComponent("START DATE", Identity.EVENT_START, "DD/MM/YYYY hh:mm", embed.CustomSaves[Identity.EVENT_START] as string, true, TextInputStyle.Short));
-                    modal.AddComponents(new TextInputComponent("END DATE", Identity.EVENT_END, "DD/MM/YYYY hh:mm", embed.CustomSaves[Identity.EVENT_END] as string, true, TextInputStyle.Short));
+                    modal.WithTitle("EVENT CREATION").WithCustomId($"{Identity.MODAL_EVENT};{Identity.SELECTION_EVENT_CREATION};{messageId}");
+                    modal.AddComponents(new TextInputComponent("EVENT NAME", Identity.EVENT_NAME, "Write something...", embed.CustomData[Identity.EVENT_NAME] as string, true, TextInputStyle.Short, 4, 32));
+                    modal.AddComponents(new TextInputComponent("TIME ZONE", Identity.EVENT_TIMEZONE, "Europe/Brussels", embed.CustomData[Identity.EVENT_TIMEZONE] as string, true, TextInputStyle.Short));
+                    modal.AddComponents(new TextInputComponent("START DATE", Identity.EVENT_START, "DD/MM/YYYY hh:mm", embed.CustomData[Identity.EVENT_START] as string, true, TextInputStyle.Short));
+                    modal.AddComponents(new TextInputComponent("END DATE", Identity.EVENT_END, "DD/MM/YYYY hh:mm", embed.CustomData[Identity.EVENT_END] as string, true, TextInputStyle.Short));
                     await e.Interaction.CreateResponseAsync(InteractionResponseType.Modal, modal);
                 }
+
+                if (e.Id == ("embedButtonTemplateUse")) {
+                    modal.WithTitle("USE TEMPLATE").WithCustomId($"{Identity.MODAL_TEMPLATE};{Identity.SELECTION_TEMPLATE_INPUT};{embed.CustomData[Identity.TEMPLATE_REPLACE_MESSAGE_ID]}");
+                    modal.AddComponents(new TextInputComponent("TEMPLATE", Identity.TEMPLATE_NAME, "The template you want to use", null, true, TextInputStyle.Short, 1, 64));
+                    await e.Interaction.CreateResponseAsync(InteractionResponseType.Modal, modal);
+                }
+
                 await JsonData.SaveEmbedsAsync(guildId);
 
             } catch (Exception ex) {

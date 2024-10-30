@@ -16,6 +16,15 @@ namespace DiscordBot.Model.Enums {
         [ChoiceName("/embed-edit")]
         EMBED_EDIT = 2,
 
+        [ChoiceName("/embed-template")]
+        TEMPLATE = 50,
+        [ChoiceName("/embed-template-create")]
+        TEMPLATE_CREATE = 51,
+        [ChoiceName("/embed-template-edit")]
+        TEMPLATE_EDIT = 52,
+        [ChoiceName("/embed-template-use")]
+        TEMPLATE_USE = 53,
+
 
         [ChoiceName("/permissions")]
         PERMISSIONS = 100,

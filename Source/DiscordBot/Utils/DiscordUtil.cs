@@ -16,17 +16,21 @@ using System.Text.RegularExpressions;
 using Microsoft.Extensions.Logging;
 using System.Xml.Linq;
 using Microsoft.VisualBasic;
+using Newtonsoft.Json;
+using System.Net.Mail;
+using PuppeteerSharp;
+using DSharpPlus.CommandsNext.Converters;
 
 namespace DiscordBot.Utils {
     public static class DiscordUtil {
 
-        public static async Task CreateMessageAsync(CommandEnum type, DiscordInteraction interaction, EmbedBuilder embedBuilder, ulong channelId, bool hidden) {
+        public static async Task CreateMessageAsync(CommandEnum type, DiscordInteraction interaction, EmbedBuilder embed, ulong channelId, bool hidden = false) {
             try {
                 // Start the stopwatch
                 Stopwatch stopwatch = Stopwatch.StartNew();
 
                 // Create the response
-                var response = await CreateResponseAsync(type, interaction, embedBuilder, channelId, hidden);
+                var response = await CreateResponseAsync(type, interaction, embed, channelId, hidden);
                 await interaction.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, response);
                 var message = await interaction.GetOriginalResponseAsync().ConfigureAwait(false);
 
@@ -34,10 +38,10 @@ namespace DiscordBot.Utils {
                 stopwatch.Stop();
 
                 // Store the message ID and components for future reference
-                embedBuilder.WithMessageId(message.Id);
+                embed.WithMessageId(message.Id);
 
-                // Store the embed data
-                await CacheData.AddEmbed(interaction.Guild.Id, message.Id, embedBuilder);
+                // Store the embed in the cache
+                await CacheData.AddEmbed(interaction.Guild.Id, message.Id, embed);
 
                 // Logger
                 Console.WriteLine(
@@ -50,24 +54,101 @@ namespace DiscordBot.Utils {
             }
         }
 
-        public static async Task UpdateMessageAsync(CommandEnum type, DiscordInteraction interaction, EmbedBuilder embedBuilder, ulong channelId, bool hidden) {
+        public static async Task UpdateMessageAsync(DiscordInteraction interaction, EmbedBuilder embed) {
+            try {
+                if (embed.MessageId != null) {
+                    // Start the stopwatch
+                    Stopwatch stopwatch = Stopwatch.StartNew();
+
+                    // Get the original message
+                    var message = await GetMessageByIdAsync(interaction.Channel, embed.MessageId);
+                    var components = message.Components;
+
+                    // Ensure you're working with the correct component type
+                    var actionRows = new List<DiscordActionRowComponent>();
+                    foreach (var row in components) {
+
+                        // Ensure it's an action row
+                        if (row is DiscordActionRowComponent actionRow) actionRows.Add(actionRow);
+                        else throw new InvalidOperationException("Component is not an action row.");
+                    }
+
+                    // If you have multiple action rows, pass them all to the response
+                    var response = new DiscordInteractionResponseBuilder()
+                        .AddEmbed(embed.Build())
+                        .AddComponents(actionRows);
+
+                    await interaction.CreateResponseAsync(InteractionResponseType.UpdateMessage, response);
+
+                    // Stop the stopwatch and log the elapsed time
+                    stopwatch.Stop();
+
+                    // Store the embed in the cache
+                    await CacheData.SetEmbed(interaction.Guild.Id, message.Id, embed);
+
+                    // Logger
+                    Console.WriteLine(
+                        $"{AnsiColor.RESET}[{DateTime.Now}] " +
+                        $"{AnsiColor.BRIGHT_GREEN}-> Message update took {AnsiColor.YELLOW}{stopwatch.ElapsedMilliseconds}ms " +
+                        $"{AnsiColor.RESET}(message: {embed.MessageId})");
+
+                } else throw new UtilException($"Could not create response because message was null");
+            } catch (Exception ex) {
+                throw new UtilException($"Could not create response: {ex.Message}", ex);
+            }
+        }
+
+        public static async Task ModifyMessageAsync(CommandEnum type, DiscordInteraction interaction, EmbedBuilder embed, ulong channelId, bool hidden = false) {
             try {
                 // Start the stopwatch
                 Stopwatch stopwatch = Stopwatch.StartNew();
 
                 // Create the response
-                var response = await CreateResponseAsync(type, interaction, embedBuilder, channelId, hidden);
-                await interaction.CreateResponseAsync(InteractionResponseType.UpdateMessage, response);
-                var message = await interaction.GetOriginalResponseAsync().ConfigureAwait(false);
+                await interaction.CreateResponseAsync(InteractionResponseType.DeferredMessageUpdate);
+
+                // Create the response
+                var response = await CreateResponseAsync(type, interaction, embed, channelId, hidden);
+                var messageId = embed.CustomData.TryGetValue(Identity.TEMPLATE_REPLACE_MESSAGE_ID, out object templateId) ? (ulong)templateId! : (ulong)embed.MessageId!;
+                var channel = await GetChannelByIdAsync(interaction.Guild, channelId);
+                var oldMessage = channel != null ? await channel.GetMessageAsync((ulong)messageId) : null;
+
+                if (oldMessage != null) {
+
+                    // Ensure you're working with the correct component type
+                    var responseBuilder = new DiscordMessageBuilder()
+                        .WithContent(response.Content)
+                        .AddEmbeds(response.Embeds);
+
+                    // Ensure you're working with the correct component type
+                    var actionRows = new List<DiscordActionRowComponent>();
+                    foreach (var row in response.Components) {
+
+                        // Ensure it's an action row
+                        if (row is DiscordActionRowComponent actionRow) actionRows.Add(actionRow);
+                        else throw new InvalidOperationException("Component is not an action row.");
+                    }
+
+                    // If you have multiple action rows, pass them all to the response
+                    await oldMessage.ModifyAsync(new DiscordMessageBuilder()
+                        .WithContent(responseBuilder.Content)
+                        .AddEmbeds(responseBuilder.Embeds)
+                        .AddFiles(response.Files)
+                        .AddComponents(actionRows), false, Enumerable.Empty<DiscordAttachment>()
+                        );
+                }
 
                 // Stop the stopwatch and log the elapsed time
                 stopwatch.Stop();
 
+                // Store the embed in the cache
+                embed.MessageId = messageId;
+                await CacheData.SetEmbed(interaction.Guild.Id, messageId, embed);
+
                 // Logger
                 Console.WriteLine(
                     $"{AnsiColor.RESET}[{DateTime.Now}] " +
-                    $"{AnsiColor.BRIGHT_GREEN}-> Message edited took {AnsiColor.YELLOW}{stopwatch.ElapsedMilliseconds}ms " +
-                    $"{AnsiColor.RESET}(message: {message.Id})");
+                    $"{AnsiColor.BRIGHT_GREEN}-> Message modify took {AnsiColor.YELLOW}{stopwatch.ElapsedMilliseconds}ms " +
+                    $"{AnsiColor.RESET}(message: {messageId})");
 
             } catch (Exception ex) {
                 throw new CommandException($"Embed.UpdateMessageAsync: {ex.Message}", ex);
@@ -77,7 +158,6 @@ namespace DiscordBot.Utils {
         private static async Task<DiscordInteractionResponseBuilder> CreateResponseAsync(CommandEnum type, DiscordInteraction interaction, EmbedBuilder embedBuilder, ulong channelId, bool hidden) {
             try {
                 // Get discord channel through channel id
-                Stopwatch stopwatch = Stopwatch.StartNew();
                 DiscordChannel channel = await GetChannelByIdAsync(interaction.Guild, channelId);
 
                 // List of components
@@ -99,10 +179,16 @@ namespace DiscordBot.Utils {
                         break;
 
                     case CommandEnum.EVENTS_CREATE:
-                        var buttonComponentEventPost = new List<DiscordComponent> {
-                            new DiscordButtonComponent(ButtonStyle.Success, "embedButtonEventPostCreate", "Create"),
-                            new DiscordButtonComponent(ButtonStyle.Danger, "embedButtonCancel", "Cancel")};
-                        components.Add(new DiscordActionRowComponent(buttonComponentEventPost));
+                        var buttonEventPost = new List<DiscordComponent> {
+                            new DiscordButtonComponent(ButtonStyle.Success, "embedButtonEventPostCreate", "Create Event"),
+                            new DiscordButtonComponent(ButtonStyle.Danger, "embedButtonCancel", "Cancel", hidden)};
+                        components.Add(new DiscordActionRowComponent(buttonEventPost));
+                        break;
+
+                    case CommandEnum.TEMPLATE_USE:
+                        var buttonTemplateUse = new List<DiscordComponent> {
+                            new DiscordButtonComponent(ButtonStyle.Success, "embedButtonTemplateUse", "Select Template")};
+                        components.Add(new DiscordActionRowComponent(buttonTemplateUse));
                         break;
 
                     case CommandEnum.EVENTS_EDIT:
@@ -155,11 +241,13 @@ namespace DiscordBot.Utils {
             var response = new DiscordInteractionResponseBuilder();
             var folder = Path.Combine(Environment.CurrentDirectory, "Saves", "Images");
             var pattern = @"^local:\/\/.*";
+            var patternAttachment = @"^attachment:\/\/.*";
             var replace = "local://";
+            var replace2 = "attachment://";
 
             try {
-                if (embed.Image != null && Regex.IsMatch(embed.Image, pattern)) {
-                    var image = Path.Combine(folder, embed.Image.Replace(replace, ""));
+                if (embed.Image != null && (Regex.IsMatch(embed.Image, pattern) || embed.Image != null && Regex.IsMatch(embed.Image, patternAttachment))) {
+                    var image = Path.Combine(folder, embed.Image.Replace(replace, "").Replace(replace2, ""));
                     var imageBytes = File.ReadAllBytes(image);
                     var imageStream = new MemoryStream(imageBytes);
                     var fileName = Path.GetFileName(image);
@@ -167,8 +255,8 @@ namespace DiscordBot.Utils {
                     response.AddFile(fileName, imageStream);
                 }
 
-                if (embed.Thumbnail != null && Regex.IsMatch(embed.Thumbnail, pattern)) {
-                    var thumbnail = Path.Combine(folder, embed.Thumbnail.Replace(replace, ""));
+                if (embed.Thumbnail != null && (Regex.IsMatch(embed.Thumbnail, pattern) || embed.Thumbnail != null && Regex.IsMatch(embed.Thumbnail, patternAttachment))) {
+                    var thumbnail = Path.Combine(folder, embed.Thumbnail.Replace(replace, "").Replace(replace2, ""));
                     var thumbnailBytes = File.ReadAllBytes(thumbnail);
                     var thumbnailStream = new MemoryStream(thumbnailBytes);
                     var fileName = Path.GetFileName(thumbnail);
@@ -183,16 +271,16 @@ namespace DiscordBot.Utils {
             }
         }
 
-        private static string BuildEventDesciption(EmbedBuilder embed) {
+        public static string BuildEventDesciption(EmbedBuilder embed) {
 
-            string name = (string)embed.CustomSaves[Identity.EVENT_NAME];
-            string title = (string)embed.CustomSaves[Identity.EVENT_TITLE];
-            string intro = (string)embed.CustomSaves[Identity.EVENT_INTRO];
-            string infoTitle = (string)embed.CustomSaves[Identity.EVENT_INFO_TITLE];
-            string info = (string)embed.CustomSaves[Identity.EVENT_INFO];
-            string rewardTitle = (string)embed.CustomSaves[Identity.EVENT_REWARD_TITLE];
-            string reward = (string)embed.CustomSaves[Identity.EVENT_REWARD];
-            string timeTitle = (string)embed.CustomSaves[Identity.EVENT_TIME_TITLE];
+            string name = (string)embed.CustomData[Identity.EVENT_NAME];
+            string title = (string)embed.CustomData[Identity.EVENT_TITLE];
+            string intro = (string)embed.CustomData[Identity.EVENT_INTRO];
+            string infoTitle = (string)embed.CustomData[Identity.EVENT_INFO_TITLE];
+            string info = (string)embed.CustomData[Identity.EVENT_INFO];
+            string rewardTitle = (string)embed.CustomData[Identity.EVENT_REWARD_TITLE];
+            string reward = (string)embed.CustomData[Identity.EVENT_REWARD];
+            string timeTitle = (string)embed.CustomData[Identity.EVENT_TIME_TITLE];
 
             return
                 title + "\n" +
@@ -249,7 +337,8 @@ namespace DiscordBot.Utils {
 
             var selectOptions = new List<DiscordSelectComponentOption>() {
                     new DiscordSelectComponentOption("Use from template", Identity.SELECTION_TEMPLATE_USE, "Choose an existing template.", emoji: new DiscordComponentEmoji("🗂")),
-                    new DiscordSelectComponentOption("Save to template", Identity.SELECTION_TEMPLATE_ADD, "Save this embed to be a template.", emoji: new DiscordComponentEmoji("🗃️"))};
+                    new DiscordSelectComponentOption("Save to template", Identity.SELECTION_TEMPLATE_ADD, "Save this embed to be a template.", emoji: new DiscordComponentEmoji("🗃️")),
+                    new DiscordSelectComponentOption("Delete template", Identity.MODAL_COMP_TEMPLATE_REMOVE, "Remove saved templates.", emoji: new DiscordComponentEmoji("❌"))};
 
             List<DiscordComponent> selectComponents = new() {
                 new DiscordSelectComponent(Identity.COMPONENT_TEMPLATE, "Choose from template options", selectOptions)};
@@ -264,7 +353,7 @@ namespace DiscordBot.Utils {
 
             var selectPermissionOption = new List<DiscordSelectComponentOption>();
             var buttonEditOption = new List<DiscordActionRowComponent>();
-            var hideButtons = embed.CustomSaves.ContainsKey(Identity.SELECTION_PERMS);
+            var hideButtons = embed.CustomData.ContainsKey(Identity.SELECTION_PERMS);
             var commandPermissions = Enum.GetValues(typeof(CommandEnum)).Cast<CommandEnum>().ToList();
 
             foreach (var cmd in commandPermissions) {
@@ -295,7 +384,7 @@ namespace DiscordBot.Utils {
 
             var selectPermissionOption = new List<DiscordSelectComponentOption>();
             var buttonEditOption = new List<DiscordActionRowComponent>();
-            var hideButtons = embed.CustomSaves.ContainsKey(Identity.SELECTION_PERMS);
+            var hideButtons = embed.CustomData.ContainsKey(Identity.SELECTION_PERMS);
             var commandPermissions = Enum.GetValues(typeof(CommandEnum)).Cast<CommandEnum>().ToList();
 
             foreach (var cmd in commandPermissions) {
@@ -323,10 +412,12 @@ namespace DiscordBot.Utils {
         public static List<DiscordActionRowComponent> EventComponent() {
 
             var selectEventComponents = new List<DiscordSelectComponentOption>() {
-                new DiscordSelectComponentOption("Introduction", Identity.SELECTION_EVENT_INTRODUCTION, "Edit introduction of the event.", emoji: new DiscordComponentEmoji("🔶")),
+                new DiscordSelectComponentOption("Properties", Identity.SELECTION_EVENT_PROPERTIES, "Edit properties of the event.", emoji: new DiscordComponentEmoji("🔶")),
+                new DiscordSelectComponentOption("Introduction", Identity.SELECTION_EVENT_INTRODUCTION, "Edit introduction of the event.", emoji: new DiscordComponentEmoji("📑")),
                 new DiscordSelectComponentOption("Information", Identity.SELECTION_EVENT_INFORMATION, "Edit information of the event.", emoji: new DiscordComponentEmoji("ℹ️")),
                 new DiscordSelectComponentOption("Top rewards", Identity.SELECTION_EVENT_REWARDS, "Edit top rewards of the event.", emoji: new DiscordComponentEmoji("🏆")),
-                new DiscordSelectComponentOption("Timestamps", Identity.SELECTION_EVENT_TIMESTAMP, "Edit timestamp of the event.", emoji: new DiscordComponentEmoji("⏰"))
+                new DiscordSelectComponentOption("Date Format", Identity.SELECTION_EVENT_TIMESTAMP, "Edit timestamp of the event.", emoji: new DiscordComponentEmoji("📅")),
+                new DiscordSelectComponentOption("Reaction Format", Identity.SELECTION_EVENT_REACTION, "Edit reactions of the event.", emoji: new DiscordComponentEmoji("☺️"))
             };
 
             List<DiscordComponent> selectComponents = new() {
@@ -338,39 +429,10 @@ namespace DiscordBot.Utils {
             return results;
         }
 
-        public static async Task SendImageEmbedAsync(DiscordInteraction interaction, string imagePath, string title = "Here is your image!", string description = "This image was uploaded as an attachment.") {
+        public static async Task<DiscordMessage?> GetMessageByIdAsync(DiscordChannel channel, ulong? messageId) {
             try {
-                // Check if the file exists
-                if (!File.Exists(imagePath)) {
-                    return;
-                }
-
-                Console.WriteLine(imagePath);
-                var message = new DiscordInteractionResponseBuilder();
-
-                // Read the image as a file stream
-                using (var fs = new FileStream(imagePath, FileMode.Open, FileAccess.Read)) {
-                    // Create the embed message
-                    message
-                        .AddEmbed(new DiscordEmbedBuilder()
-                            .WithTitle(title)
-                            .WithDescription(description)
-                            .WithImageUrl($"attachment://{Path.GetFileName(imagePath)}")) // Link to the attached image
-                        .AddFile(Path.GetFileName(imagePath), fs); // Attach the image with its filename
-
-                    // Send the embed with the image attached
-                    await interaction.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, message);
-                    Console.WriteLine($"attachment://{Path.GetFileName(imagePath)}");
-
-                }
-            } catch (Exception ex) {
-                Console.WriteLine(ex);
-            }
-        }
-
-        public static async Task<DiscordMessage?> GetMessageByIdAsync(DiscordChannel channel, ulong messageId) {
-            try {
-                return await channel.GetMessageAsync(messageId); ;
+                if (messageId != null) return await channel.GetMessageAsync((ulong)messageId);
+                else return null;
             } catch (Exception) {
                 return null;
             }
@@ -389,8 +451,42 @@ namespace DiscordBot.Utils {
             } else throw new UtilException($"No channel with id \"{channelId}\" found.");
         }
 
+        public static async Task<string> CreatePingRoles(EmbedBuilder embed, DiscordGuild guild) {
+
+            string pingRoles = string.Empty;
+
+            if (embed.PingRoles.Count > 0) {
+
+                // List of roles to be kept
+                List<DiscordRole> roles = new();
+
+                // Translate each id in to roles
+                foreach (var roleId in embed.PingRoles) {
+                    roles.Add(await DiscordUtil.GetRolesByIdAsync(guild, roleId));
+                }
+
+                // Extract the mention property from each role.
+                foreach (var role in roles) {
+                    if (role.Name == "@everyone") {
+                        pingRoles += "@everyone";
+                    } else pingRoles += role.Mention + " ";
+                }
+
+            }
+
+            return pingRoles;
+        }
+
+        public static Task<bool> ExistTimeZone(string timeZoneId) {
+            var test = Task.FromResult(DateTimeZoneProviders.Tzdb.GetZoneOrNull(TranslateCustomTimezone(timeZoneId)) is null ? false : true);
+            return test;
+        }
+
         public static async Task<string> TranslateToDynamicTimestamp(DateTime localDateTime, string timeZoneId, TimestampEnum timestampType) {
             try {
+                // Translate custom timezones to Discord timezones
+                timeZoneId = TranslateCustomTimezone(timeZoneId);
+
                 // Map TimestampEnum to Discord format characters
                 char timestampTypeChar = timestampType switch {
                     TimestampEnum.SHORT_TIME => 't',
@@ -422,9 +518,65 @@ namespace DiscordBot.Utils {
                 string discordTimestamp = $"<t:{unixTimestamp}:{timestampTypeChar}>";
 
                 return await Task.FromResult(discordTimestamp);
+
             } catch (Exception ex) {
-                throw new Exception($"Could not translate {localDateTime} to Discord timestamp.", ex);
+                throw new UtilException($"Could not translate {localDateTime} to Discord timestamp.", ex);
             }
+        }
+
+        private static string TranslateCustomTimezone(string timeZone) {
+
+            var copy = timeZone.ToUpper();
+
+            if (copy == TimeZoneEnum.BST.ToString())
+                return "Europe/London";
+
+            if (copy == TimeZoneEnum.MSK.ToString())
+                return "Europe/Moscow";
+
+            if (copy == TimeZoneEnum.GST.ToString())
+                return "Etc/GMT+4";
+
+            if (copy == TimeZoneEnum.PKT.ToString())
+                return "Etc/GMT+5";
+
+            if (copy == TimeZoneEnum.IST.ToString())
+                return "Etc/GMT+5";
+
+            if (copy == TimeZoneEnum.BST.ToString())
+                return "Etc/GMT+6";
+
+            if (copy == TimeZoneEnum.WIB.ToString())
+                return "Etc/GMT+7";
+
+            if (copy == TimeZoneEnum.JST.ToString())
+                return "Japan";
+
+            if (copy == TimeZoneEnum.BST.ToString())
+                return "Japan";
+
+            if (copy == TimeZoneEnum.AEST.ToString())
+                return "Etc/GMT+10";
+
+            if (copy == TimeZoneEnum.NZST.ToString())
+                return "Etc/GMT+12";
+
+            if (copy == TimeZoneEnum.HST.ToString())
+                return "US/Hawaii";
+
+            if (copy == TimeZoneEnum.PST.ToString())
+                return "US/Pacific";
+
+            if (copy == TimeZoneEnum.MST.ToString())
+                return "US/Mountain";
+
+            if (copy == TimeZoneEnum.CST.ToString())
+                return "US/Central";
+
+            if (copy == TimeZoneEnum.AST.ToString())
+                return "Canada/Atlantic";
+
+            return timeZone;
         }
     }
 }

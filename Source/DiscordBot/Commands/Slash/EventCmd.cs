@@ -9,11 +9,12 @@ using DSharpPlus;
 using System.Diagnostics;
 using NodaTime;
 using DiscordBot.Services;
+using System.Reflection;
 
 namespace DiscordBot.Commands.Slash {
 
     [SlashCommandGroup("event", "Commands for creating events")]
-    public class EventCmd : SlashCommand {
+    public class EventCmd : ApplicationCommandModule {
 
         private const string EVENT = "EVENT";
         private const string EVENT_CREATE = "CREATE";
@@ -26,14 +27,13 @@ namespace DiscordBot.Commands.Slash {
         [RequirePermission(CommandEnum.EVENTS)]
         public async Task Create(InteractionContext ctx,
             [Option("name", "The name of the event that will be used as title.")] string name,
-            [Option("time_zone", "The timezone of the date & time will be calculated to.")] string timeZone,
+            [Option("time_zone", "The timezone of the date & time will be calculated to.")] TimeZoneEnum timeZone,
             [Option("sent_channel", "The channel where your event will be sent to.")] DiscordChannel channel,
             [Option("hidden", "If only you can see this embeded message, default is false")] bool hidden = false,
             [Option("image", "The main image of your event message that will be added.")] DiscordAttachment? image = null,
             [Option("thumbnail", "The thumbnail of your event message that will be added.")] DiscordAttachment? thumbnail = null,
             [Option("ping", "The server roles that are pinged on sending event message.")] DiscordRole? pingrole = null) {
             try {
-
                 // Build the embed message with default values
                 var template = $"{EVENT}_{EVENT_POST_CREATE}";
                 var embed = await CacheData.GetTemplate(ctx.Guild.Id, template);
@@ -46,10 +46,10 @@ namespace DiscordBot.Commands.Slash {
                 embed.Type = CommandEnum.EVENTS_CREATE;
 
                 // Set the custom data
-                embed.AddCustomSaveMessage(Identity.EVENT_NAME, name);
-                embed.AddCustomSaveMessage(Identity.EVENT_TIMEZONE, timeZone);
-                embed.AddCustomSaveMessage(Identity.EVENT_START, DateTime.Now.AddDays(1).ToString("dd/MM/yyyy HH:mm"));
-                embed.AddCustomSaveMessage(Identity.EVENT_END, DateTime.Now.AddDays(1).AddHours(1).ToString("dd/MM/yyyy HH:mm"));
+                embed.AddCustomData(Identity.EVENT_NAME, name);
+                embed.AddCustomData(Identity.EVENT_TIMEZONE, timeZone.ToString());
+                embed.AddCustomData(Identity.EVENT_START, DateTime.Now.AddDays(1).ToString("dd/MM/yyyy HH:mm"));
+                embed.AddCustomData(Identity.EVENT_END, DateTime.Now.AddDays(1).AddHours(1).ToString("dd/MM/yyyy HH:mm"));
 
                 // Add the optional values
                 if (image is not null) embed.Image = image.Url;
