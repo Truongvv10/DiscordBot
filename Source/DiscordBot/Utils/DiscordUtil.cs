@@ -83,8 +83,8 @@ namespace DiscordBot.Utils {
                         var tasks = embed.PingRoles.Select(async x => await GetRolesByIdAsync(interaction.Guild, x));
                         var roles = await Task.WhenAll(tasks);
                         var content = string.Empty;
-                        foreach (var role in roles) if (role.Name == "@everyone") content += "@everyone"; else content += role.Mention;
-                        response.WithContent(content + embed.Content);
+                        foreach (var role in roles) if (role.Name == "@everyone") content += "@everyone "; else content += role.Mention + " ";
+                        response.WithContent(embed.Content + "\n\n" + content);
                     }
 
                     await interaction.CreateResponseAsync(InteractionResponseType.UpdateMessage, response);
@@ -233,8 +233,8 @@ namespace DiscordBot.Utils {
                     var tasks = embedBuilder.PingRoles.Select(async x => await GetRolesByIdAsync(interaction.Guild, x));
                     var roles = await Task.WhenAll(tasks);
                     var content = string.Empty;
-                    foreach (var role in roles) if (role.Name == "@everyone") content += "@everyone"; else content += role.Mention;
-                    response.WithContent(content + embedBuilder.Content);
+                    foreach (var role in roles) if (role.Name == "@everyone") content += "@everyone "; else content += role.Mention + " ";
+                    response.WithContent(embedBuilder.Content + "\n\n" + content);
                 }
 
                 // Return the response
