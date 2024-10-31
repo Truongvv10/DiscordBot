@@ -64,6 +64,13 @@
         "timestamp": false,
         "ephemeral": false
     },
+    "NO_PERMISSION": {
+        "author": "You don't have permission'",
+        "author_url": "https://cdn-icons-png.flaticon.com/512/1304/1304038.png",
+        "color": "#d82b40",
+        "timestamp": false,
+        "ephemeral": true
+    },
     "TIMESTAMP": {
         "description": "These are [**Dynamic Discord Timestamps**](https://r.3v.fi/discord-timestamps/), automatically adjusting based on the time zone you have provided.",
         "author": "Dynamic Discord Time ({timestamp.timezone})",

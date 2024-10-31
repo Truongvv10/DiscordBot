@@ -8,6 +8,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DiscordBot.Utils;
+using DiscordBot.Model.Enums;
 
 namespace DiscordBot.Events {
     public class SlashCommandUseEvent {
@@ -19,10 +21,9 @@ namespace DiscordBot.Events {
 
                     // Check if the failed check is a RequirePermissionAttribute
                     if (check is RequirePermissionAttribute att) {
-                        var embed = new DiscordEmbedBuilder()
-                            .WithAuthor($"You don't have permission for /{att.Command}", null, "https://cdn-icons-png.flaticon.com/512/2581/2581801.png")
-                            .WithColor(new DiscordColor("#d82b40"));
-                        await e.Context.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, new DiscordInteractionResponseBuilder().AddEmbed(embed).AsEphemeral(true));
+                        var interaction = e.Context.Interaction;
+                        var embed = await CacheData.GetTemplate(e.Context.Guild.Id, Identity.TDATA_NO_PERMISSION);
+                        await DiscordUtil.CreateMessageAsync(CommandEnum.NONE, interaction, embed, interaction.Channel.Id, embed.IsEphemeral);
                     }
                 }
             } else  Console.WriteLine($"Error executing command {e.Context}:\n{e.Exception}");

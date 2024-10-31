@@ -8,6 +8,8 @@ using System.Threading.Tasks;
 namespace DiscordBot.Model.Enums {
     public enum CommandEnum {
 
+        [ChoiceName("/none")]
+        NONE = -1,
 
         [ChoiceName("/embed")]
         EMBED = 0,

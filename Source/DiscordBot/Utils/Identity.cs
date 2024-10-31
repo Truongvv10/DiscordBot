@@ -154,6 +154,7 @@ namespace DiscordBot.Utils {
         public const string TDATA_USE = "TEMPLATE_USE";
         public const string TDATA_TEMPLATE = "TIMESTAMP";
         public const string TDATA_NITRO = "NITRO";
+        public const string TDATA_NO_PERMISSION = "NO_PERMISSION";
 
         // Other
         public const string REACTION_1 = PREFIX + "reaction.1";
