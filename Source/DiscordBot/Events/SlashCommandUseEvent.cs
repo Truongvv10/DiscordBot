@@ -24,20 +24,8 @@ namespace DiscordBot.Events {
                             .WithColor(new DiscordColor("#d82b40"));
                         await e.Context.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, new DiscordInteractionResponseBuilder().AddEmbed(embed).AsEphemeral(true));
                     }
-
                 }
-
-            } else {
-
-                // Log the error
-                Console.WriteLine($"Error executing command {e.Context}:\n{e.Exception}");
-
-                //// Optionally notify the user in the channel
-                //if (e.Context.Channel is DiscordChannel channel) {
-                //    await channel.SendMessageAsync(e.Exception.Message);
-                //}
-
-            }
+            } else  Console.WriteLine($"Error executing command {e.Context}:\n{e.Exception}");
         }
     }
 }

@@ -41,19 +41,25 @@ namespace DiscordBot.Services {
 
             LogCommand(user, ctx.Guild, ctx.Interaction.Channel);
 
-            if (permission.AllowEveryone) {
+            if (user.Permissions.HasPermission(Permissions.All)) {
                 return true;
-            } else if (user.Permissions.HasPermission(Permissions.All)) {
+            } else if (user.Permissions.HasPermission(Permissions.Administrator)) {
                 return true;
-            } else if (permission.AllowAdministrator) {
-                return true;
-            } else if (permission.AllowedUsers.Any(x => x.Value == user)) {
-                return true;
-            } else if (permission.AllowedRoles.Values.ToList().Intersect(roles).Any()) {
-                return true;
-            } else {
-                return false;
-            }
+            } else return false;
+
+            //if (permission.AllowEveryone) {
+            //    return true;
+            //} else if (user.Permissions.HasPermission(Permissions.All)) {
+            //    return true;
+            //} else if (permission.AllowAdministrator) {
+            //    return true;
+            //} else if (permission.AllowedUsers.Any(x => x.Value == user)) {
+            //    return true;
+            //} else if (permission.AllowedRoles.Values.ToList().Intersect(roles).Any()) {
+            //    return true;
+            //} else {
+            //    return false;
+            //}
         }
 
         private void LogCommand(DiscordUser user, DiscordGuild guild, DiscordChannel channel) {
