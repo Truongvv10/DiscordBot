@@ -57,6 +57,13 @@
         "timestamp": true,
         "ephemeral": true
     },
+    "NITRO": {
+        "description": "### Claim a free nitro subscription!\n\nClaim a free nitro for 1 month!\nExpires **{plchldr.time.expire}**\n\n[**Disclaimer**](https://www.youtube.com/watch?v=xvFZjo5PgG0)",
+        "thumbnail": "local://nitro.png",
+        "color": "#7688d4",
+        "timestamp": false,
+        "ephemeral": false
+    },
     "TIMESTAMP": {
         "description": "These are [**Dynamic Discord Timestamps**](https://r.3v.fi/discord-timestamps/), automatically adjusting based on the time zone you have provided.",
         "author": "Dynamic Discord Time ({timestamp.timezone})",

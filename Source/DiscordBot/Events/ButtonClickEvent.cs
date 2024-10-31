@@ -10,6 +10,7 @@ using System.Reflection;
 using System.Threading.Channels;
 using DiscordBot.Model.Enums;
 using DiscordBot.Utils;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace DiscordBot.Listeners {
     public class ButtonClickEvent {
@@ -92,6 +93,15 @@ namespace DiscordBot.Listeners {
                     await sentMessage.DeleteAsync();
                     await CacheData.RemoveEmbed(guildId, sentMessage.Id);
                 }
+
+                if (e.Id == ("embedButtonNitroClaim")) {
+                    await e.Interaction.CreateResponseAsync(InteractionResponseType.DeferredMessageUpdate);
+                    var nitroMessage = new DiscordFollowupMessageBuilder()
+                        .WithContent("https://www.icegif.com/wp-content/uploads/2023/01/icegif-162.gif")
+                        .AsEphemeral(true);
+                    await e.Interaction.CreateFollowupMessageAsync(nitroMessage.AsEphemeral(true));
+                }
+
                 if (e.Id == ("embedButtonEventPostCreate")) {
                     modal.WithTitle("EVENT CREATION").WithCustomId($"{Identity.MODAL_EVENT};{Identity.SELECTION_EVENT_CREATION};{messageId}");
                     modal.AddComponents(new TextInputComponent("EVENT NAME", Identity.EVENT_NAME, "Write something...", embed.CustomData[Identity.EVENT_NAME] as string, true, TextInputStyle.Short, 4, 32));

@@ -111,10 +111,6 @@ namespace DiscordBot.Utils {
         public const string MODAL_COMP_TIMESTAMP_TIMEZONE = PREFIX + "modal.component.timestamp.timezone";
         public const string MODAL_COMP_TIMESTAMP_TIME = PREFIX + "modal.component.timestamp.time";
 
-        /// <summary>
-        /// These here are hidden data values that are used to store data in messages.
-        /// </summary>
-
         // Event
         public const string EVENT_NAME = PREFIX + "event.name";
         public const string EVENT_TITLE = PREFIX + "event.title";
@@ -157,6 +153,7 @@ namespace DiscordBot.Utils {
         public const string TDATA_CREATE = "TEMPLATE_CREATE";
         public const string TDATA_USE = "TEMPLATE_USE";
         public const string TDATA_TEMPLATE = "TIMESTAMP";
+        public const string TDATA_NITRO = "NITRO";
 
         // Other
         public const string REACTION_1 = PREFIX + "reaction.1";
@@ -168,6 +165,15 @@ namespace DiscordBot.Utils {
         public const string REACTION_7 = PREFIX + "reaction.7";
         public const string REACTION_8 = PREFIX + "reaction.8";
         public const string REACTION_9 = PREFIX + "reaction.9";
+
+        // ========================================================================================================
+        //                                                                                                       //
+        //                                              Placeholders                                             //
+        //                                                                                                       //
+        // ========================================================================================================
+
+        public const string PLACEHOLDER_TIME = PREFIX + "plchldr.time";
+        public const string PLACEHOLDER_TIME_EXPIRE = PREFIX + "plchldr.time.expire";
 
     }
 }

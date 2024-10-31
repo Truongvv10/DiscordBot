@@ -45,6 +45,9 @@ namespace DiscordBot.Model.Enums {
         [ChoiceName("/timestamp")]
         TIMESTAMP = 300,
 
+        [ChoiceName("/nitro")]
+        NITRO = 305,
+
 
         [ChoiceName("/broadcast")]
         BROADCAST = 400,

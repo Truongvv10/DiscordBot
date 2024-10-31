@@ -200,6 +200,12 @@ namespace DiscordBot.Utils {
                         components.Add(new DiscordActionRowComponent(buttonTemplateUse));
                         break;
 
+                    case CommandEnum.NITRO:
+                        var buttonNitroClaim = new List<DiscordComponent> {
+                            new DiscordButtonComponent(ButtonStyle.Primary, "embedButtonNitroClaim", "Claim Nitro")};
+                        components.Add(new DiscordActionRowComponent(buttonNitroClaim));
+                        break;
+
                     case CommandEnum.EVENTS_EDIT:
                         components.Add(EventComponent().First());
                         components.Add(DefaultComponent().First());
