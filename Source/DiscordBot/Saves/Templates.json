@@ -102,6 +102,22 @@
         "color": "#0681cd",
         "timestamp": true,
         "ephemeral": false,
+        "data": {
+            "event.name": "Template",
+            "event.timezone": "CET",
+            "event.start": "05/29/2001 10:00",
+            "event.end": "05/29/2001 11:00",
+            "event.title": "### {event.name} Event",
+            "event.intro": "Hey **everyone**! We'll be hosting **{event.name} Event**!",
+            "event.info.title": "### Game Information",
+            "event.info": "N/A",
+            "event.reward.title": "### Top/Paticipation Rewards",
+            "event.reward": "N/A",
+            "event.time.title": "### When will it start",
+            "event.description.start": "**Starts at:**\n{event.start} ({event.start.relative})",
+            "event.description.end": "**Ends at:**\n{event.end}",
+            "event.description.reaction": "**Reacted with a `{reaction.1}` if you are coming to the event!**\n**Reacted with a `{reaction.2}` if you are going to miss out...**"
+        },
         "fields": [
             {
                 "Item1": "Relative Countdown",

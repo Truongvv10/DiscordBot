@@ -511,7 +511,7 @@ namespace DiscordBot.Utils {
                     TimestampEnum.LONG_DATE_AND_SHORT_TIME => 'f',
                     TimestampEnum.LONG_DATE_WITH_DAY_OF_WEEK_AND_SHORT_TIME => 'F',
                     TimestampEnum.RELATIVE => 'R',
-                    _ => 'R',
+                    _ => 'F',
                 };
 
                 // Convert the DateTime to NodaTime LocalDateTime
