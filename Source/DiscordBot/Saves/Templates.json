@@ -71,6 +71,30 @@
         "timestamp": false,
         "ephemeral": true
     },
+    "INACTIVITY": {
+        "author": "{plchldr.user.name}",
+        "author_url": "{plchldr.user.avatarurl}",
+        "color": "#d82b40",
+        "timestamp": false,
+        "ephemeral": true,
+        "fields": [
+            {
+                "Item1": "➡️ Start Date",
+                "Item2": "> {plchldr.time.start}",
+                "Item3": true
+            },
+            {
+                "Item1": "📅 End Date",
+                "Item2": "> plchldr.time.end",
+                "Item3": true
+            },
+            {
+                "Item1": "✅ Count Down",
+                "Item2": "> {plchldr.time.end.relative}",
+                "Item3": true
+            }
+        ]
+    },
     "TIMESTAMP": {
         "description": "These are [**Dynamic Discord Timestamps**](https://r.3v.fi/discord-timestamps/), automatically adjusting based on the time zone you have provided.",
         "author": "Dynamic Discord Time ({timestamp.timezone})",
@@ -85,22 +109,22 @@
                 "Item3": true
             },
             {
-                "Item1": "Relative",
+                "Item1": "Short Date",
                 "Item2": "{timestamp.short.date}\n```m\n{timestamp.short.date}```",
                 "Item3": true
             },
             {
-                "Item1": "Short Date",
+                "Item1": "Short Time",
                 "Item2": "{timestamp.short.time}\n```m\n{timestamp.short.time}```",
                 "Item3": true
             },
             {
-                "Item1": "Short Time",
+                "Item1": "Long Date",
                 "Item2": "{timestamp.long.date}\n```m\n{timestamp.long.date}```",
                 "Item3": true
             },
             {
-                "Item1": "Long Date",
+                "Item1": "Long Time",
                 "Item2": "{timestamp.long.time}\n```m\n{timestamp.long.time}```",
                 "Item3": true
             },

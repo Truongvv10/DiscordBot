@@ -44,7 +44,7 @@ namespace DiscordBot.Commands.Slash {
                 // Build the embed message with default values
                 var embed = await CacheData.GetTemplate(ctx.Guild.Id, Identity.TDATA_NITRO);
                 var time = await DiscordUtil.TranslateToDynamicTimestamp(DateTime.Now.AddMinutes(expire), "CET", TimestampEnum.RELATIVE);
-                embed.Description = embed.Description!.Replace($"{{{Identity.PLACEHOLDER_TIME_EXPIRE}}}", time);
+                embed.Description = embed.Description!.Replace($"{{{Identity.PL_TIME_EXPIRE}}}", time);
 
                 // Create embed message
                 await DiscordUtil.CreateMessageAsync(CommandEnum.NITRO, ctx.Interaction, embed, ctx.Channel.Id);

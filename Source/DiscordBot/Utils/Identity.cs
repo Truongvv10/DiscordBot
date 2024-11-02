@@ -169,12 +169,43 @@ namespace DiscordBot.Utils {
 
         // ========================================================================================================
         //                                                                                                       //
+        //                                                  Data                                                 //
+        //                                                                                                       //
+        // ========================================================================================================
+
+        public const string DATA_CONTENT = PREFIX + "data.content";
+        public const string DATA_EMBED_TITLE = PREFIX + "data.embed.title";
+        public const string DATA_EMBED_TITLE_LINK = PREFIX + "data.embed.title.link";
+        public const string DATA_EMBED_DESCRIPTION = PREFIX + "data.embed.description";
+        public const string DATA_EMBED_AUTHOR = PREFIX + "data.embed.author";
+        public const string DATA_EMBED_AUTHOR_LINK = PREFIX + "data.embed.author.link";
+        public const string DATA_EMBED_AUTHOR_URL = PREFIX + "data.embed.author.url";
+        public const string DATA_EMBED_FOOTER = PREFIX + "data.embed.footer";
+        public const string DATA_EMBED_FOOTER_URL = PREFIX + "data.embed.footer.url";
+        public const string DATA_EMBED_FIELDS = PREFIX + "data.embed.fields";
+
+        // ========================================================================================================
+        //                                                                                                       //
         //                                              Placeholders                                             //
         //                                                                                                       //
         // ========================================================================================================
 
-        public const string PLACEHOLDER_TIME = PREFIX + "plchldr.time";
-        public const string PLACEHOLDER_TIME_EXPIRE = PREFIX + "plchldr.time.expire";
+        public const string PL_NAME = PREFIX + "plchldr.name";
+
+        public const string PL_TIME = PREFIX + "plchldr.time";
+        public const string PL_TIMEZONE = PREFIX + "plchldr.timezone";
+        public const string PL_TIME_EXPIRE = PREFIX + "plchldr.time.expire";
+
+        public const string PL_TIME_START = PREFIX + "plchldr.time.start";
+        public const string PL_TIME_START_R = PREFIX + "plchldr.time.start.relative";
+        public const string PL_TIME_END = PREFIX + "plchldr.time.end";
+        public const string PL_TIME_END_R = PREFIX + "plchldr.time.end.relative";
+
+        public const string PL_USER_NAME = PREFIX + "plchldr.user.name";
+        public const string PL_USER_AVATARURL = PREFIX + "plchldr.user.avatarurl";
+
+        public const string PL_LIST_USERS = PREFIX + "plchldr.list.users";
+        public const string PL_LIST_REACTIONS = PREFIX + "plchldr.list.reactions";
 
     }
 }

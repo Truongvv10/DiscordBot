@@ -14,10 +14,10 @@ using DiscordBot.Model.Enums;
 namespace DiscordBot.Events {
     public class SlashCommandUseEvent {
         public async Task OnSlashCommandErrored(SlashCommandsExtension sender, SlashCommandErrorEventArgs e) {
-            if (e.Exception is SlashExecutionChecksFailedException slex) {
+            if (e.Exception is SlashExecutionChecksFailedException ex) {
 
                 // Loop through all failed checks
-                foreach (var check in slex.FailedChecks) {
+                foreach (var check in ex.FailedChecks) {
 
                     // Check if the failed check is a RequirePermissionAttribute
                     if (check is RequirePermissionAttribute att) {
