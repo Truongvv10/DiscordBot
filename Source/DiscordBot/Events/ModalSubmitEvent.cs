@@ -340,7 +340,8 @@ namespace APP.Events {
             try {
                 // Variables
                 var data = e.Values;
-                var message = (await dataService.GetTemplateAsync(e.Interaction.Guild.Id, Identity.TDATA_TEMPLATE)).Message;
+                var template = await dataService.GetTemplateAsync(e.Interaction.Guild.Id, Identity.TDATA_TEMPLATE);
+                var message = template.Message;
                 var embed = message.Embed;
 
                 // Check modals
@@ -353,37 +354,8 @@ namespace APP.Events {
                 if (!DateTime.TryParseExact(time, "dd/MM/yyyy HH:mm", null, System.Globalization.DateTimeStyles.None, out DateTime parsedTime))
                     throw new EventException($"Time \"{time}\" has an incorrect frmat.");
 
-                // Translate the time to the selected time zone
-                string date1 = await DiscordUtil.TranslateToDynamicTimestamp(parsedTime, timeZone, TimestampEnum.SHORT_DATE);
-                string date2 = await DiscordUtil.TranslateToDynamicTimestamp(parsedTime, timeZone, TimestampEnum.SHORT_TIME);
-                string date3 = await DiscordUtil.TranslateToDynamicTimestamp(parsedTime, timeZone, TimestampEnum.LONG_DATE);
-                string date4 = await DiscordUtil.TranslateToDynamicTimestamp(parsedTime, timeZone, TimestampEnum.LONG_TIME);
-                string date5 = await DiscordUtil.TranslateToDynamicTimestamp(parsedTime, timeZone, TimestampEnum.LONG_DATE_AND_SHORT_TIME);
-                string date6 = await DiscordUtil.TranslateToDynamicTimestamp(parsedTime, timeZone, TimestampEnum.LONG_DATE_WITH_DAY_OF_WEEK_AND_SHORT_TIME);
-                string date7 = await DiscordUtil.TranslateToDynamicTimestamp(parsedTime, timeZone, TimestampEnum.RELATIVE);
-
-                Dictionary<string, string> placeholders = new() {
-                    { Identity.TIMESTAMP_TIMEZONE, timeZone },
-                    { Identity.TIMESTAMP_SHORT_DATE, date1 },
-                    { Identity.TIMESTAMP_SHORT_TIME, date2 },
-                    { Identity.TIMESTAMP_LONG_DATE, date3 },
-                    { Identity.TIMESTAMP_LONG_TIME, date4 },
-                    { Identity.TIMESTAMP_LONG_DATE_SHORT_TIME, date5 },
-                    { Identity.TIMESTAMP_LONG_DATE_DAY_OF_WEEK_SHORT_TIME, date6 },
-                    { Identity.TIMESTAMP_RELATIVE_TIME, date7 }};
-
-                var copy = message.DeepClone();
-                embed.ClearFields();
-                embed.Author = placeholders.Aggregate(embed.Author, (current, p) => current.Replace("{" + p.Key + "}", p.Value));
-
-                foreach (var item in copy.Embed.Fields) {
-                    // Apply all placeholders to field title and value in one pass
-                    string one = placeholders.Aggregate(item.Item1, (current, p) => current.Replace("{" + p.Key + "}", p.Value));
-                    string two = placeholders.Aggregate(item.Item2, (current, p) => current.Replace("{" + p.Key + "}", p.Value));
-
-                    // Add updated fields back to embed
-                    embed.AddField(one, two, item.Item3);
-                }
+                message.AddData(Placeholder.TIMEZONE, timeZone);
+                message.AddData(Placeholder.DATE_START, parsedTime.ToString("dd/MM/yyyy HH:mm"));
 
                 await DiscordUtil.CreateMessageAsync(CommandEnum.TIMESTAMP, e.Interaction, message, e.Interaction.Channel.Id, message.IsEphemeral);
 

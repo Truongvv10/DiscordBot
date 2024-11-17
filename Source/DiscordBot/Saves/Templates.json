@@ -118,44 +118,44 @@
     "TIMESTAMP": {
         "embed": {
             "description": "These are [**Dynamic Discord Timestamps**](https://r.3v.fi/discord-timestamps/), automatically adjusting based on the time zone you have provided.",
-            "author": "Dynamic Discord Time ({timestamp.timezone})",
+            "author": "Dynamic Discord Time ({data.timezone})",
             "author_url": "https://icons.iconarchive.com/icons/flat-icons.com/flat/512/Clock-icon.png",
             "color": "#0681cd",
             "timestamp": true,
             "fields": [
                 {
                     "Item1": "Relative Countdown",
-                    "Item2": "{timestamp.relative.time}\n```m\n{timestamp.relative.time}```",
+                    "Item2": "{data.date.start.}\n```m\n{data.date.start.7}```",
                     "Item3": true
                 },
                 {
                     "Item1": "Short Date",
-                    "Item2": "{timestamp.short.date}\n```m\n{timestamp.short.date}```",
+                    "Item2": "{data.date.start.4}\n```m\n{data.date.start.4}```",
                     "Item3": true
                 },
                 {
                     "Item1": "Short Time",
-                    "Item2": "{timestamp.short.time}\n```m\n{timestamp.short.time}```",
+                    "Item2": "{data.date.start.6}\n```m\n{data.date.start.6}```",
                     "Item3": true
                 },
                 {
                     "Item1": "Long Date",
-                    "Item2": "{timestamp.long.date}\n```m\n{timestamp.long.date}```",
+                    "Item2": "{data.date.start.3}\n```m\n{data.date.start.3}```",
                     "Item3": true
                 },
                 {
                     "Item1": "Long Time",
-                    "Item2": "{timestamp.long.time}\n```m\n{timestamp.long.time}```",
+                    "Item2": "{data.date.start.5}\n```m\n{data.date.start.5}```",
                     "Item3": true
                 },
                 {
                     "Item1": "Long Date & Long Time",
-                    "Item2": "{timestamp.long.date.short.time}\n```m\n{timestamp.long.date.short.time}```",
+                    "Item2": "{data.date.start.2}\n```m\n{data.date.start.2}```",
                     "Item3": true
                 },
                 {
                     "Item1": "Long Date, Day of Week & Short Time",
-                    "Item2": "{timestamp.long.date.day.of.week.short.time}\n```m\n{timestamp.long.date.day.of.week.short.time}```",
+                    "Item2": "{data.date.start.7}\n```m\n{data.date.start.7}```",
                     "Item3": true
                 }
             ]
