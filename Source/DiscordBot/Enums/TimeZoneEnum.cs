@@ -77,6 +77,10 @@ namespace APP.Enums {
         [ChoiceName("HST (Hawaii Standard Time)")]
         HST,
 
+        [Description("GMT (UTC -09:00)")]
+        [ChoiceName("AKST (Alaska Standard Time)")]
+        AKST,
+
         [Description("GMT (UTC -08:00)")]
         [ChoiceName("PST (Pacific Standard Time)")]
         PST,

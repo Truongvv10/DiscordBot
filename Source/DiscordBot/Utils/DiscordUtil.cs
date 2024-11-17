@@ -545,6 +545,9 @@ namespace APP.Utils {
             if (copy == TimeZoneEnum.HST.ToString())
                 return "US/Hawaii";
 
+            if (copy == TimeZoneEnum.AKST.ToString())
+                return "US/Alaska";
+
             if (copy == TimeZoneEnum.PST.ToString())
                 return "US/Pacific";
 
