@@ -34,7 +34,15 @@ namespace APP.Utils {
                 string toReplace = $"{{{placeholder}}}";
                 string value = Regex.Replace(placeholder, @"(\.\d+)$", "");
                 if (data.TryGetValue(value, out var replacement)) {
-                    // logic
+                    if (Regex.IsMatch(placeholder, @"^data\.date\.(start|end)(\.\d+)?$")) {
+                        string timezone = data[TIMEZONE] ?? "CET";
+                        DateTime date = DateTime.ParseExact(data[DATE_START], "dd/MM/yyyy HH:mm", null);
+                        var timestamp = await TranslateTime(date, timezone, placeholder);
+                        input = input.Replace(toReplace, timestamp);
+                    }
+                    if (placeholder.Equals(TIMEZONE)) 
+                        input = input.Replace(toReplace, data[TIMEZONE]);
+
                 } else if (Regex.IsMatch(placeholder, @"^data\.date\.(start|end)(\.\d+)?$")) {
                     var timestamp = await TranslateTime(DateTime.Now, "CET", placeholder);
                     input = input.Replace(toReplace, timestamp);
@@ -55,7 +63,7 @@ namespace APP.Utils {
         private static List<string> ExtractPlaceholders(string input) {
             // Extract all placeholders from the input string using regex
             var matches = Regex.Matches(input, @"\{(.*?)\}");
-            var foundPlaceholders = new List<string>();
+            var foundPlaceholders = new HashSet<string>();
 
             // Iterate through the matches and add valid group values
             foreach (Match match in matches) {
@@ -71,7 +79,7 @@ namespace APP.Utils {
             }
 
             // Return the list of found placeholders
-            return foundPlaceholders;
+            return foundPlaceholders.ToList();
         }
 
         private static async Task<string> TranslateTime(DateTime date, string timeZone, string placeholder) {

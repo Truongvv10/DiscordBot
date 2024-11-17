@@ -49,6 +49,18 @@ namespace APP.Utils {
                 if (!string.IsNullOrWhiteSpace(embed.TitleUrl))
                     embed.TitleUrl = await Placeholder.Translate(embed.TitleUrl, message.Data);
 
+                if (!string.IsNullOrWhiteSpace(embed.Author))
+                    embed.Author = await Placeholder.Translate(embed.Author, message.Data);
+
+                if (!string.IsNullOrWhiteSpace(embed.AuthorUrl))
+                    embed.AuthorUrl = await Placeholder.Translate(embed.AuthorUrl, message.Data);
+
+                if (!string.IsNullOrWhiteSpace(embed.AuthorLink))
+                    embed.AuthorLink = await Placeholder.Translate(embed.AuthorLink, message.Data);
+
+                if (!string.IsNullOrWhiteSpace(embed.Author))
+                    embed.Author = await Placeholder.Translate(embed.Author, message.Data);
+
                 if (!string.IsNullOrWhiteSpace(embed.Description))
                     embed.Description = await Placeholder.Translate(embed.Description, message.Data);
 
