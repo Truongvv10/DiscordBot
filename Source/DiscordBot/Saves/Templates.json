@@ -125,7 +125,7 @@
             "fields": [
                 {
                     "Item1": "Relative Countdown",
-                    "Item2": "{data.date.start.}\n```m\n{data.date.start.7}```",
+                    "Item2": "{data.date.start.7}\n```m\n{data.date.start.7}```",
                     "Item3": true
                 },
                 {
@@ -155,7 +155,7 @@
                 },
                 {
                     "Item1": "Long Date, Day of Week & Short Time",
-                    "Item2": "{data.date.start.7}\n```m\n{data.date.start.7}```",
+                    "Item2": "{data.date.start.1}\n```m\n{data.date.start.1}```",
                     "Item3": true
                 }
             ]
