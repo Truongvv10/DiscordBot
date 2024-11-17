@@ -1,18 +1,24 @@
-﻿using DiscordBot.Services;
-using DSharpPlus.Entities;
-using DSharpPlus.SlashCommands.EventArgs;
+﻿using DSharpPlus.SlashCommands.EventArgs;
 using DSharpPlus.SlashCommands;
-using DSharpPlus;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using DiscordBot.Utils;
-using DiscordBot.Model.Enums;
+using BLL.Enums;
+using APP.Utils;
+using APP.Services;
+using BLL.Interfaces;
+using BLL.Model;
 
-namespace DiscordBot.Events {
+namespace APP.Events {
     public class SlashCommandUseEvent {
+
+        #region Fields
+        private readonly IDataService dataService;
+        #endregion
+
+        #region Constructors
+        public SlashCommandUseEvent(IDataService dataService) {
+            this.dataService = dataService;
+        }
+        #endregion
+
         public async Task OnSlashCommandErrored(SlashCommandsExtension sender, SlashCommandErrorEventArgs e) {
             if (e.Exception is SlashExecutionChecksFailedException ex) {
 
@@ -22,11 +28,11 @@ namespace DiscordBot.Events {
                     // Check if the failed check is a RequirePermissionAttribute
                     if (check is RequirePermissionAttribute att) {
                         var interaction = e.Context.Interaction;
-                        var embed = await CacheData.GetTemplate(e.Context.Guild.Id, Identity.TDATA_NO_PERMISSION);
-                        await DiscordUtil.CreateMessageAsync(CommandEnum.NONE, interaction, embed, interaction.Channel.Id, embed.IsEphemeral);
+                        var message = (await dataService.GetTemplateAsync(interaction.Guild.Id, Identity.TDATA_NO_PERMISSION)).Message;
+                        await DiscordUtil.CreateMessageAsync(CommandEnum.NONE, interaction, message, interaction.Channel.Id, message.IsEphemeral);
                     }
                 }
-            } else  Console.WriteLine($"Error executing command {e.Context}:\n{e.Exception}");
+            } else Console.WriteLine($"Error executing command {e.Context}:\n{e.Exception}");
         }
     }
 }

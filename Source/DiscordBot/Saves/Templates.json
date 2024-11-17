@@ -1,67 +1,79 @@
 {
     "EMBED_CREATE": {
-        "title": "This is an example title",
-        "description": "This is the description text.",
-        "footer": "Footer sample text",
-        "image": "local://template_image.png",
-        "thumbnail": "local://template_thumbnail.png",
-        "color": "#0681cd",
-        "timestamp": true
-    },
-    "EVENT_POST_CREATE": {
-        "description": "Click the button to create an event.",
-        "author": "Event Creation",
-        "author_url": "https://cdn-icons-png.flaticon.com/512/1869/1869397.png",
-        "color": "#0681cd",
-        "timestamp": true
-    },
-    "EVENT_CREATE": {
-        "footer": "Hosted by {event.host}",
-        "image": "local://template_image.png",
-        "color": "#0681cd",
-        "timestamp": true,
-        "data": {
-            "event.name": "Template",
-            "event.timezone": "CET",
-            "event.start": "05/29/2001 10:00",
-            "event.end": "05/29/2001 11:00",
-            "event.title": "### {event.name} Event",
-            "event.intro": "Hey **everyone**! We'll be hosting **{event.name} Event**!",
-            "event.info.title": "### Game Information",
-            "event.info": "N/A",
-            "event.reward.title": "### Top/Paticipation Rewards",
-            "event.reward": "N/A",
-            "event.time.title": "### When will it start",
-            "event.description.start": "**Starts at:**\n{event.start} ({event.start.relative})",
-            "event.description.end": "**Ends at:**\n{event.end}",
-            "event.description.reaction": "**Reacted with a `{reaction.1}` if you are coming to the event!**\n**Reacted with a `{reaction.2}` if you are going to miss out...**"
-        },
-        "childs": {},
-        "roles": [],
-        "fields": []
-    },
-    "TEMPLATE_CREATE": {
-        "description": "Template **`{template.name}`** has been saved.",
-        "author": "Template Creation",
-        "author_url": "https://cdn-icons-png.flaticon.com/512/580/580259.png",
-        "color": "#0681cd",
-        "timestamp": true,
-        "ephemeral": true
+        "embed": {
+            "title": "This is an example title",
+            "description": "This is the description text.",
+            "footer": "Footer sample text",
+            "image": "local://template_image.png",
+            "thumbnail": "local://template_thumbnail.png",
+            "color": "#0681cd",
+            "timestamp": true
+        }
     },
     "TEMPLATE_USE": {
-        "description": "**Select** an existing **template** below this message! You can overwrite default built-in templates by saving under these names:\n{template.list}\n\nCustom Templates:\n{template.list.custom}",
-        "author": "Using Template",
-        "author_url": "https://cdn-icons-png.flaticon.com/512/580/580259.png",
-        "image": "local://template_template.png",
-        "color": "#0681cd",
-        "timestamp": true,
+        "embed": {
+            "description": "**Select** an existing **template** below this message! You can overwrite default built-in templates by saving under these names:\n- {data.list.templates}\n\nCustom Templates:\n{template.list.custom}",
+            "author": "Using Template",
+            "author_url": "https://cdn-icons-png.flaticon.com/512/580/580259.png",
+            "image": "local://template_template.png",
+            "color": "#0681cd",
+            "timestamp": false
+        },
         "ephemeral": true
     },
+    "TEMPLATE_CREATE": {
+        "embed": {
+            "description": "Template **`{template.name}`** has been saved.",
+            "author": "Template Creation",
+            "author_url": "https://cdn-icons-png.flaticon.com/512/580/580259.png",
+            "color": "#0681cd",
+            "timestamp": true
+        },
+        "ephemeral": true
+    },
+    "EVENT_POST_CREATE": {
+        "embed": {
+            "description": "Click the button to create an event.",
+            "author": "Event Creation",
+            "author_url": "https://cdn-icons-png.flaticon.com/512/1869/1869397.png",
+            "color": "#0681cd",
+            "timestamp": true
+        }
+    },
+    "EVENT_CREATE": {
+        "embed": {
+            "footer": "Hosted by {event.host}",
+            "image": "local://template_image.png",
+            "color": "#0681cd",
+            "timestamp": true,
+            "data": {
+                "event.name": "Template",
+                "event.timezone": "CET",
+                "event.start": "05/29/2001 10:00",
+                "event.end": "05/29/2001 11:00",
+                "event.title": "### {event.name} Event",
+                "event.intro": "Hey **everyone**! We'll be hosting **{event.name} Event**!",
+                "event.info.title": "### Game Information",
+                "event.info": "N/A",
+                "event.reward.title": "### Top/Paticipation Rewards",
+                "event.reward": "N/A",
+                "event.time.title": "### When will it start",
+                "event.description.start": "**Starts at:**\n{event.start} ({event.start.relative})",
+                "event.description.end": "**Ends at:**\n{event.end}",
+                "event.description.reaction": "**Reacted with a `{reaction.1}` if you are coming to the event!**\n**Reacted with a `{reaction.2}` if you are going to miss out...**"
+            },
+            "childs": {},
+            "roles": [],
+            "fields": []
+        }
+    },
     "NITRO": {
-        "description": "### Claim a free nitro subscription!\n\nClaim a free nitro for **1 month**!\nExpires **{data.date.end}**\n\n[**Disclaimer**](https://www.youtube.com/watch?v=xvFZjo5PgG0)",
-        "thumbnail": "local://nitro.png",
-        "color": "#7688d4",
-        "timestamp": false,
+        "embed": {
+            "description": "### Claim a free nitro subscription!\n\nClaim a free nitro for **1 month**!\nExpires **{data.date.end}**\n\n[**Disclaimer**](https://www.youtube.com/watch?v=xvFZjo5PgG0)",
+            "thumbnail": "local://nitro.png",
+            "color": "#7688d4",
+            "timestamp": false
+        },
         "ephemeral": false,
         "data": {
             "data.date.end": "01/01/2024 00:00",
@@ -69,79 +81,84 @@
         }
     },
     "NO_PERMISSION": {
-        "author": "You don't have permission'",
-        "author_url": "https://cdn-icons-png.flaticon.com/512/1304/1304038.png",
-        "color": "#d82b40",
-        "timestamp": false,
+        "embed": {
+            "author": "You don't have permission'",
+            "author_url": "https://cdn-icons-png.flaticon.com/512/1304/1304038.png",
+            "color": "#d82b40",
+            "timestamp": false
+        },
         "ephemeral": true
     },
     "INACTIVITY": {
-        "author": "{plchldr.user.name}",
-        "author_url": "{plchldr.user.avatarurl}",
-        "color": "#d82b40",
-        "timestamp": false,
-        "ephemeral": true,
-        "fields": [
-            {
-                "Item1": "➡️ Start Date",
-                "Item2": "> {plchldr.time.start}",
-                "Item3": true
-            },
-            {
-                "Item1": "📅 End Date",
-                "Item2": "> plchldr.time.end",
-                "Item3": true
-            },
-            {
-                "Item1": "✅ Count Down",
-                "Item2": "> {plchldr.time.end.relative}",
-                "Item3": true
-            }
-        ]
+        "embed": {
+            "author": "{plchldr.user.name}",
+            "author_url": "{plchldr.user.avatarurl}",
+            "color": "#d82b40",
+            "timestamp": false,
+            "fields": [
+                {
+                    "Item1": "➡️ Start Date",
+                    "Item2": "> {plchldr.time.start}",
+                    "Item3": true
+                },
+                {
+                    "Item1": "📅 End Date",
+                    "Item2": "> plchldr.time.end",
+                    "Item3": true
+                },
+                {
+                    "Item1": "✅ Count Down",
+                    "Item2": "> {plchldr.time.end.relative}",
+                    "Item3": true
+                }
+            ]
+        },
+        "ephemeral": true
     },
     "TIMESTAMP": {
-        "description": "These are [**Dynamic Discord Timestamps**](https://r.3v.fi/discord-timestamps/), automatically adjusting based on the time zone you have provided.",
-        "author": "Dynamic Discord Time ({timestamp.timezone})",
-        "author_url": "https://icons.iconarchive.com/icons/flat-icons.com/flat/512/Clock-icon.png",
-        "color": "#0681cd",
-        "timestamp": true,
-        "ephemeral": false,
-        "fields": [
-            {
-                "Item1": "Relative Countdown",
-                "Item2": "{timestamp.relative.time}\n```m\n{timestamp.relative.time}```",
-                "Item3": true
-            },
-            {
-                "Item1": "Short Date",
-                "Item2": "{timestamp.short.date}\n```m\n{timestamp.short.date}```",
-                "Item3": true
-            },
-            {
-                "Item1": "Short Time",
-                "Item2": "{timestamp.short.time}\n```m\n{timestamp.short.time}```",
-                "Item3": true
-            },
-            {
-                "Item1": "Long Date",
-                "Item2": "{timestamp.long.date}\n```m\n{timestamp.long.date}```",
-                "Item3": true
-            },
-            {
-                "Item1": "Long Time",
-                "Item2": "{timestamp.long.time}\n```m\n{timestamp.long.time}```",
-                "Item3": true
-            },
-            {
-                "Item1": "Long Date & Long Time",
-                "Item2": "{timestamp.long.date.short.time}\n```m\n{timestamp.long.date.short.time}```",
-                "Item3": true
-            },
-            {
-                "Item1": "Long Date, Day of Week & Short Time",
-                "Item2": "{timestamp.long.date.day.of.week.short.time}\n```m\n{timestamp.long.date.day.of.week.short.time}```",
-                "Item3": true
-            }
-        ]
+        "embed": {
+            "description": "These are [**Dynamic Discord Timestamps**](https://r.3v.fi/discord-timestamps/), automatically adjusting based on the time zone you have provided.",
+            "author": "Dynamic Discord Time ({timestamp.timezone})",
+            "author_url": "https://icons.iconarchive.com/icons/flat-icons.com/flat/512/Clock-icon.png",
+            "color": "#0681cd",
+            "timestamp": true,
+            "fields": [
+                {
+                    "Item1": "Relative Countdown",
+                    "Item2": "{timestamp.relative.time}\n```m\n{timestamp.relative.time}```",
+                    "Item3": true
+                },
+                {
+                    "Item1": "Short Date",
+                    "Item2": "{timestamp.short.date}\n```m\n{timestamp.short.date}```",
+                    "Item3": true
+                },
+                {
+                    "Item1": "Short Time",
+                    "Item2": "{timestamp.short.time}\n```m\n{timestamp.short.time}```",
+                    "Item3": true
+                },
+                {
+                    "Item1": "Long Date",
+                    "Item2": "{timestamp.long.date}\n```m\n{timestamp.long.date}```",
+                    "Item3": true
+                },
+                {
+                    "Item1": "Long Time",
+                    "Item2": "{timestamp.long.time}\n```m\n{timestamp.long.time}```",
+                    "Item3": true
+                },
+                {
+                    "Item1": "Long Date & Long Time",
+                    "Item2": "{timestamp.long.date.short.time}\n```m\n{timestamp.long.date.short.time}```",
+                    "Item3": true
+                },
+                {
+                    "Item1": "Long Date, Day of Week & Short Time",
+                    "Item2": "{timestamp.long.date.day.of.week.short.time}\n```m\n{timestamp.long.date.day.of.week.short.time}```",
+                    "Item3": true
+                }
+            ]
+        }
     }
 }

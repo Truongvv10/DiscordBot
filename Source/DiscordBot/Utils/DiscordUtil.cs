@@ -1,173 +1,135 @@
 ﻿using DSharpPlus.Entities;
 using DSharpPlus;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using DiscordBot.Exceptions;
 using System.Data;
-using DiscordBot.Model.Enums;
 using NodaTime;
-using System.Threading.Channels;
-using DSharpPlus.SlashCommands;
 using System.Diagnostics;
 using System.Text.RegularExpressions;
-using Microsoft.Extensions.Logging;
-using System.Xml.Linq;
-using Microsoft.VisualBasic;
-using Newtonsoft.Json;
-using System.Net.Mail;
-using PuppeteerSharp;
-using DSharpPlus.CommandsNext.Converters;
+using BLL.Exceptions;
+using BLL.Enums;
+using BLL.Model;
+using APP.Enums;
+using BLL.Services;
+using BLL.Contexts;
+using BLL.Interfaces;
 
-namespace DiscordBot.Utils {
+namespace APP.Utils {
     public static class DiscordUtil {
 
-        public static async Task CreateMessageAsync(CommandEnum type, DiscordInteraction interaction, EmbedBuilder embed, ulong channelId, bool hidden = false) {
+        private static CacheData cacheData = new();
+        private static DataContext dataContext = new();
+        private static IDataService dataService = new DataService(dataContext, cacheData);
+
+        public static async Task CreateMessageAsync(CommandEnum type, DiscordInteraction interaction, Message message, ulong channelId, bool hidden = false) {
             try {
                 // Start the stopwatch
                 Stopwatch stopwatch = Stopwatch.StartNew();
 
+                // Translate the placeholders
+                var translated = message.DeepClone();
+                await translated.TranslatePlaceholders();
+
                 // Create the response
-                var response = await CreateResponseAsync(type, interaction, embed, channelId, hidden);
+                var response = await CreateResponseAsync(type, interaction, translated, channelId, hidden);
                 await interaction.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, response);
-                var message = await interaction.GetOriginalResponseAsync().ConfigureAwait(false);
+                var original = await interaction.GetOriginalResponseAsync().ConfigureAwait(true);
 
                 // Stop the stopwatch and log the elapsed time
                 stopwatch.Stop();
 
                 // Store the message ID and components for future reference
-                embed.WithMessageId(message.Id);
+                message.WithMessageId(original.Id);
+                message.GuildId = interaction.Guild.Id;
 
                 // Store the embed in the cache
-                await CacheData.AddEmbed(interaction.Guild.Id, message.Id, embed);
+                await dataService.AddMessageAsync(message);
 
                 // Logger
                 Console.WriteLine(
                     $"{AnsiColor.RESET}[{DateTime.Now}] " +
                     $"{AnsiColor.BRIGHT_GREEN}-> Message creation took {AnsiColor.YELLOW}{stopwatch.ElapsedMilliseconds}ms " +
-                    $"{AnsiColor.RESET}(message: {message.Id})");
+                    $"{AnsiColor.RESET}(message: {original.Id})");
 
             } catch (Exception ex) {
                 throw new CommandException($"Embed.CreateMessageAsync: {ex.Message}", ex);
             }
         }
 
-        public static async Task UpdateMessageAsync(DiscordInteraction interaction, EmbedBuilder embed) {
+        public static async Task UpdateMessageAsync(DiscordInteraction interaction, Message message, bool isDeferMessageUpdate = true) {
             try {
-                if (embed.MessageId != null) {
+                if (message.MessageId != null) {
                     // Start the stopwatch
                     Stopwatch stopwatch = Stopwatch.StartNew();
 
-                    // Get the original message
-                    var message = await GetMessageByIdAsync(interaction.Channel, embed.MessageId);
-                    var components = message.Components;
+                    // Translate the placeholders
+                    var translated = message.DeepClone();
+                    await translated.TranslatePlaceholders();
+                    var embed = translated.Embed.Build();
 
-                    // Ensure you're working with the correct component type
-                    var actionRows = new List<DiscordActionRowComponent>();
-                    foreach (var row in components) {
-
-                        // Ensure it's an action row
-                        if (row is DiscordActionRowComponent actionRow) actionRows.Add(actionRow);
-                        else throw new InvalidOperationException("Component is not an action row.");
-                    }
-
-                    // If you have multiple action rows, pass them all to the response
-                    var response = new DiscordInteractionResponseBuilder()
-                        .AddEmbed(embed.Build())
-                        .AddComponents(actionRows);
-
-                    // Check for any roles to mention
-                    if (embed.PingRoles.Any()) {
-                        var tasks = embed.PingRoles.Select(async x => await GetRolesByIdAsync(interaction.Guild, x));
-                        var roles = await Task.WhenAll(tasks);
-                        var content = string.Empty;
-                        foreach (var role in roles) if (role.Name == "@everyone") content += "@everyone "; else content += role.Mention + " ";
-                        response.WithContent(embed.Content + "\n\n" + content);
-                    }
-
-                    await interaction.CreateResponseAsync(InteractionResponseType.UpdateMessage, response);
+                    // Create the response
+                    if (isDeferMessageUpdate) await interaction.CreateResponseAsync(InteractionResponseType.DeferredMessageUpdate);
+                    var response = await CreateResponseAsync(message.Type, interaction, translated, (ulong)message.ChannelId!, message.IsEphemeral);
+                    var original = await interaction.GetOriginalResponseAsync();
+                    await original.ModifyAsync(new DiscordMessageBuilder()
+                        .WithContent(response.Content)
+                        .AddEmbeds(response.Embeds)
+                        .AddComponents(response.Components));
 
                     // Stop the stopwatch and log the elapsed time
                     stopwatch.Stop();
-
-                    // Store the embed in the cache
-                    await CacheData.SetEmbed(interaction.Guild.Id, message.Id, embed);
 
                     // Logger
                     Console.WriteLine(
                         $"{AnsiColor.RESET}[{DateTime.Now}] " +
                         $"{AnsiColor.BRIGHT_GREEN}-> Message update took {AnsiColor.YELLOW}{stopwatch.ElapsedMilliseconds}ms " +
-                        $"{AnsiColor.RESET}(message: {embed.MessageId})");
+                        $"{AnsiColor.RESET}(message: {message.MessageId})");
 
                 } else throw new UtilException($"Could not create response because message was null");
             } catch (Exception ex) {
+                Console.WriteLine(ex);
                 throw new UtilException($"Could not create response: {ex.Message}", ex);
             }
         }
 
-        public static async Task ModifyMessageAsync(CommandEnum type, DiscordInteraction interaction, EmbedBuilder embed, ulong channelId, bool hidden = false) {
+        public static async Task ModifyMessageAsync(CommandEnum type, DiscordInteraction interaction, Message message, ulong channelId, bool hidden = false) {
             try {
                 // Start the stopwatch
                 Stopwatch stopwatch = Stopwatch.StartNew();
 
-                // Create the response
-                await interaction.CreateResponseAsync(InteractionResponseType.DeferredMessageUpdate);
+                // Translate the placeholders
+                var translated = message.DeepClone();
+                await translated.TranslatePlaceholders();
+                var embed = translated.Embed;
 
-                // Create the response
-                var response = await CreateResponseAsync(type, interaction, embed, channelId, hidden);
-                var messageId = embed.CustomData.TryGetValue(Identity.TEMPLATE_REPLACE_MESSAGE_ID, out object templateId) ? (ulong)templateId! : (ulong)embed.MessageId!;
-                var channel = await GetChannelByIdAsync(interaction.Guild, channelId);
-                var oldMessage = channel != null ? await channel.GetMessageAsync((ulong)messageId) : null;
-
-                if (oldMessage != null) {
-
-                    // Ensure you're working with the correct component type
-                    var responseBuilder = new DiscordMessageBuilder()
-                        .WithContent(response.Content)
-                        .AddEmbeds(response.Embeds);
-
-                    // Ensure you're working with the correct component type
-                    var actionRows = new List<DiscordActionRowComponent>();
-                    foreach (var row in response.Components) {
-
-                        // Ensure it's an action row
-                        if (row is DiscordActionRowComponent actionRow) actionRows.Add(actionRow);
-                        else throw new InvalidOperationException("Component is not an action row.");
-                    }
-
-                    // If you have multiple action rows, pass them all to the response
-                    await oldMessage.ModifyAsync(new DiscordMessageBuilder()
-                        .WithContent(responseBuilder.Content)
-                        .AddEmbeds(responseBuilder.Embeds)
-                        .AddFiles(response.Files)
-                        .AddComponents(actionRows), false, Enumerable.Empty<DiscordAttachment>()
-                        );
-                }
+                var response = await CreateResponseAsync(type, interaction, translated, (ulong)message.ChannelId!, message.IsEphemeral);
+                var original = await interaction.GetOriginalResponseAsync();
+                await original.ModifyAsync(new DiscordMessageBuilder()
+                    .WithContent(response.Content)
+                    .AddEmbeds(response.Embeds)
+                    .AddComponents(response.Components)
+                    .AddFiles(response.Files), false, Enumerable.Empty<DiscordAttachment>());
 
                 // Stop the stopwatch and log the elapsed time
                 stopwatch.Stop();
 
                 // Store the embed in the cache
-                embed.MessageId = messageId;
-                await CacheData.SetEmbed(interaction.Guild.Id, messageId, embed);
+                await dataService.UpdateMessageAsync(message);
 
                 // Logger
                 Console.WriteLine(
                     $"{AnsiColor.RESET}[{DateTime.Now}] " +
                     $"{AnsiColor.BRIGHT_GREEN}-> Message modify took {AnsiColor.YELLOW}{stopwatch.ElapsedMilliseconds}ms " +
-                    $"{AnsiColor.RESET}(message: {messageId})");
+                    $"{AnsiColor.RESET}(message: {message.MessageId})");
 
             } catch (Exception ex) {
                 throw new CommandException($"Embed.UpdateMessageAsync: {ex.Message}", ex);
             }
         }
 
-        private static async Task<DiscordInteractionResponseBuilder> CreateResponseAsync(CommandEnum type, DiscordInteraction interaction, EmbedBuilder embedBuilder, ulong channelId, bool hidden) {
+        private static async Task<DiscordInteractionResponseBuilder> CreateResponseAsync(CommandEnum type, DiscordInteraction interaction, Message message, ulong toChannelId, bool hidden = false) {
             try {
+
                 // Get discord channel through channel id
-                DiscordChannel channel = await GetChannelByIdAsync(interaction.Guild, channelId);
+                DiscordChannel channel = await GetChannelByIdAsync(interaction.Guild, toChannelId);
 
                 // List of components
                 List<DiscordActionRowComponent> components = new();
@@ -175,7 +137,7 @@ namespace DiscordBot.Utils {
                 // Define button components with corresponding actions
                 var buttonComponent = new List<DiscordComponent> {
                     new DiscordButtonComponent(ButtonStyle.Success, "embedButtonChannel", $"Send to {channel.Name}"),
-                    new DiscordButtonComponent(ButtonStyle.Secondary, "embedButtonCurrent", $"Send here"),
+                    new DiscordButtonComponent(ButtonStyle.Secondary, "embedButtonTemplates", $"Templates"),
                     new DiscordButtonComponent(ButtonStyle.Primary, "embedButtonUpdate", $"Update"),
                     new DiscordButtonComponent(ButtonStyle.Danger, "embedButtonCancel", "Cancel", hidden)};
 
@@ -183,7 +145,6 @@ namespace DiscordBot.Utils {
 
                     case CommandEnum.EMBED_CREATE:
                         components.Add(DefaultComponent().First());
-                        components.Add(TemplateComponent().First());
                         components.Add(new DiscordActionRowComponent(buttonComponent));
                         break;
 
@@ -196,7 +157,10 @@ namespace DiscordBot.Utils {
 
                     case CommandEnum.TEMPLATE_USE:
                         var buttonTemplateUse = new List<DiscordComponent> {
-                            new DiscordButtonComponent(ButtonStyle.Success, "embedButtonTemplateUse", "Select Template")};
+                            new DiscordButtonComponent(ButtonStyle.Success, Identity.BUTTON_TEMPLATE_SAVE, "Save Template"),
+                            new DiscordButtonComponent(ButtonStyle.Primary, Identity.BUTTON_TEMPLATE_SELECT, "Select Template"),
+                            new DiscordButtonComponent(ButtonStyle.Secondary, Identity.BUTTON_TEMPLATE_DELETE, "Delete"),
+                            new DiscordButtonComponent(ButtonStyle.Danger, Identity.BUTTON_TEMPLATE_CANCEL, "Go Back")};
                         components.Add(new DiscordActionRowComponent(buttonTemplateUse));
                         break;
 
@@ -214,15 +178,9 @@ namespace DiscordBot.Utils {
                         break;
 
                     case CommandEnum.BROADCAST:
-                        foreach (var item in PermissionComponent(embedBuilder)) {
-                            components.Add(item);
-                        }
                         break;
 
                     case CommandEnum.CHANGELOG:
-                        foreach (var item in ChangelogComponent(embedBuilder)) {
-                            components.Add(item);
-                        }
                         break;
 
                     default:
@@ -230,29 +188,30 @@ namespace DiscordBot.Utils {
                 }
 
                 // Build the embed and response
-                var response = ResolveImageAttachment(embedBuilder)
+                var response = ResolveImageAttachment(message.Embed)
                     .AsEphemeral(hidden)
                     .AddComponents(components.ToList());
 
+
                 // Check for any roles to mention
-                if (embedBuilder.PingRoles.Any()) {
-                    var tasks = embedBuilder.PingRoles.Select(async x => await GetRolesByIdAsync(interaction.Guild, x));
+                if (message.Roles is not null && message.Roles.Count > 0) {
+                    var tasks = message.Roles.Select(async x => await GetRolesByIdAsync(interaction.Guild, x));
                     var roles = await Task.WhenAll(tasks);
                     var content = string.Empty;
                     foreach (var role in roles) if (role.Name == "@everyone") content += "@everyone "; else content += role.Mention + " ";
-                    response.WithContent(embedBuilder.Content + "\n\n" + content);
-                }
+                    response.WithContent(message.Content + "\n" + content);
+                } else response.WithContent(message.Content);
 
                 // Return the response
                 return response;
 
             } catch (Exception ex) {
                 Console.WriteLine(ex);
-                throw new CommandException($"Embed.CreateResponseAsync: {ex.Message}", ex);
+                throw new UtilException($"Embed.CreateResponseAsync: {ex.Message}", ex);
             }
         }
 
-        private static DiscordInteractionResponseBuilder ResolveImageAttachment(EmbedBuilder embed) {
+        private static DiscordInteractionResponseBuilder ResolveImageAttachment(Embed embed) {
             var response = new DiscordInteractionResponseBuilder();
             var folder = Path.Combine(Environment.CurrentDirectory, "Saves", "Images");
             var pattern = @"^local:\/\/.*";
@@ -261,50 +220,56 @@ namespace DiscordBot.Utils {
             var replace2 = "attachment://";
 
             try {
-                if (embed.Image != null && (Regex.IsMatch(embed.Image, pattern) || embed.Image != null && Regex.IsMatch(embed.Image, patternAttachment))) {
-                    var image = Path.Combine(folder, embed.Image.Replace(replace, "").Replace(replace2, ""));
-                    var imageBytes = File.ReadAllBytes(image);
-                    var imageStream = new MemoryStream(imageBytes);
-                    var fileName = Path.GetFileName(image);
-                    embed.WithImage($"attachment://{fileName}");
-                    response.AddFile(fileName, imageStream);
-                }
+                if (embed is not null) {
+                    if (embed.Image != null && (Regex.IsMatch(embed.Image, pattern) || embed.Image != null && Regex.IsMatch(embed.Image, patternAttachment))) {
+                        var image = Path.Combine(folder, embed.Image.Replace(replace, "").Replace(replace2, ""));
+                        var imageBytes = File.ReadAllBytes(image);
+                        var imageStream = new MemoryStream(imageBytes);
+                        var fileName = Path.GetFileName(image);
+                        embed.WithImage($"attachment://{fileName}");
+                        response.AddFile(fileName, imageStream);
+                    }
 
-                if (embed.Thumbnail != null && (Regex.IsMatch(embed.Thumbnail, pattern) || embed.Thumbnail != null && Regex.IsMatch(embed.Thumbnail, patternAttachment))) {
-                    var thumbnail = Path.Combine(folder, embed.Thumbnail.Replace(replace, "").Replace(replace2, ""));
-                    var thumbnailBytes = File.ReadAllBytes(thumbnail);
-                    var thumbnailStream = new MemoryStream(thumbnailBytes);
-                    var fileName = Path.GetFileName(thumbnail);
-                    embed.WithThumbnail($"attachment://{fileName}");
-                    response.AddFile(fileName, thumbnailStream);
-                }
+                    if (embed.Thumbnail != null && (Regex.IsMatch(embed.Thumbnail, pattern) || embed.Thumbnail != null && Regex.IsMatch(embed.Thumbnail, patternAttachment))) {
+                        var thumbnail = Path.Combine(folder, embed.Thumbnail.Replace(replace, "").Replace(replace2, ""));
+                        var thumbnailBytes = File.ReadAllBytes(thumbnail);
+                        var thumbnailStream = new MemoryStream(thumbnailBytes);
+                        var fileName = Path.GetFileName(thumbnail);
+                        embed.WithThumbnail($"attachment://{fileName}");
+                        response.AddFile(fileName, thumbnailStream);
+                    }
 
-                return response.AddEmbed(embed.Build());
+                    return response.AddEmbed(embed.Build());
+                } else return response;
 
             } catch (Exception ex) {
                 throw new CommandException($"Embed.CheckIfLocalImage: {ex.Message}", ex);
             }
         }
 
-        public static string BuildEventDesciption(EmbedBuilder embed) {
+        public static string BuildEventDesciption(Message message) {
+            var embed = message.Embed;
+            if (embed is not null) {
 
-            string name = (string)embed.CustomData[Identity.EVENT_NAME];
-            string title = (string)embed.CustomData[Identity.EVENT_TITLE];
-            string intro = (string)embed.CustomData[Identity.EVENT_INTRO];
-            string infoTitle = (string)embed.CustomData[Identity.EVENT_INFO_TITLE];
-            string info = (string)embed.CustomData[Identity.EVENT_INFO];
-            string rewardTitle = (string)embed.CustomData[Identity.EVENT_REWARD_TITLE];
-            string reward = (string)embed.CustomData[Identity.EVENT_REWARD];
-            string timeTitle = (string)embed.CustomData[Identity.EVENT_TIME_TITLE];
+                string name = (string)message.Data[Identity.EVENT_NAME];
+                string title = (string)message.Data[Identity.EVENT_TITLE];
+                string intro = (string)message.Data[Identity.EVENT_INTRO];
+                string infoTitle = (string)message.Data[Identity.EVENT_INFO_TITLE];
+                string info = (string)message.Data[Identity.EVENT_INFO];
+                string rewardTitle = (string)message.Data[Identity.EVENT_REWARD_TITLE];
+                string reward = (string)message.Data[Identity.EVENT_REWARD];
+                string timeTitle = (string)message.Data[Identity.EVENT_TIME_TITLE];
 
-            return
-                title + "\n" +
-                intro + "\n" +
-                infoTitle + "\n" +
-                info + "\n" +
-                rewardTitle + "\n" +
-                reward + "\n" +
-                timeTitle + "\n";
+                return
+                    title + "\n" +
+                    intro + "\n" +
+                    infoTitle + "\n" +
+                    info + "\n" +
+                    rewardTitle + "\n" +
+                    reward + "\n" +
+                    timeTitle + "\n";
+
+            } else throw new UtilException("YEYSY EYWAAWRWA");
 
         }
 
@@ -338,7 +303,7 @@ namespace DiscordBot.Utils {
             // Define button components with corresponding actions
             var buttonComponent = new List<DiscordComponent> {
                     new DiscordButtonComponent(ButtonStyle.Success, "embedButtonChannel", $"Send to {channel.Name}"),
-                    new DiscordButtonComponent(ButtonStyle.Secondary, "embedButtonCurrent", $"Send here"),
+                    new DiscordButtonComponent(ButtonStyle.Secondary, "embedButtonTemplates", $"Templates"),
                     new DiscordButtonComponent(ButtonStyle.Primary, "embedButtonUpdate", $"Update"),
                     new DiscordButtonComponent(ButtonStyle.Danger, "embedButtonCancel", "Cancel")};
 
@@ -364,11 +329,12 @@ namespace DiscordBot.Utils {
             return results;
         }
 
-        public static List<DiscordActionRowComponent> PermissionComponent(EmbedBuilder embed) {
+        public static List<DiscordActionRowComponent> PermissionComponent(Message message) {
 
+            var embed = message.Embed;
             var selectPermissionOption = new List<DiscordSelectComponentOption>();
             var buttonEditOption = new List<DiscordActionRowComponent>();
-            var hideButtons = embed.CustomData.ContainsKey(Identity.SELECTION_PERMS);
+            var hideButtons = message.Data.ContainsKey(Identity.SELECTION_PERMS);
             var commandPermissions = Enum.GetValues(typeof(CommandEnum)).Cast<CommandEnum>().ToList();
 
             foreach (var cmd in commandPermissions) {
@@ -395,11 +361,11 @@ namespace DiscordBot.Utils {
             return results;
         }
 
-        public static List<DiscordActionRowComponent> ChangelogComponent(EmbedBuilder embed) {
+        public static List<DiscordActionRowComponent> ChangelogComponent(Message message) {
 
             var selectPermissionOption = new List<DiscordSelectComponentOption>();
             var buttonEditOption = new List<DiscordActionRowComponent>();
-            var hideButtons = embed.CustomData.ContainsKey(Identity.SELECTION_PERMS);
+            var hideButtons = message.Data.ContainsKey(Identity.SELECTION_PERMS);
             var commandPermissions = Enum.GetValues(typeof(CommandEnum)).Cast<CommandEnum>().ToList();
 
             foreach (var cmd in commandPermissions) {
@@ -466,18 +432,18 @@ namespace DiscordBot.Utils {
             } else throw new UtilException($"No channel with id \"{channelId}\" found.");
         }
 
-        public static async Task<string> CreatePingRoles(EmbedBuilder embed, DiscordGuild guild) {
+        public static async Task<string> CreatePingRoles(Message message, DiscordGuild guild) {
 
             string pingRoles = string.Empty;
 
-            if (embed.PingRoles.Count > 0) {
+            if (message.Roles is not null && message.Roles.Any()) {
 
                 // List of roles to be kept
                 List<DiscordRole> roles = new();
 
                 // Translate each id in to roles
-                foreach (var roleId in embed.PingRoles) {
-                    roles.Add(await DiscordUtil.GetRolesByIdAsync(guild, roleId));
+                foreach (var roleId in message.Roles) {
+                    roles.Add(await GetRolesByIdAsync(guild, roleId));
                 }
 
                 // Extract the mention property from each role.

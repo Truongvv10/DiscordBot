@@ -12,14 +12,15 @@ using System.Threading.Tasks;
 namespace BLL.Model {
     public class Message {
         #region Fields
-        private ulong? channelId;
+        private CommandEnum type;
+        private ulong channelId;
         private string? content;
         private ulong? sender;
         private bool isEphemeral;
-        private Embed? embed;
+        private Embed embed;
+        private Dictionary<string, string> data = new();
         private Dictionary<ulong, ulong> childs = new();
         private List<ulong> roles = new();
-        private CommandEnum type;
         #endregion
 
         #region Constructors
@@ -27,25 +28,49 @@ namespace BLL.Model {
             type = CommandEnum.MESSAGE;
             isEphemeral = false;
         }
-        public Message(string context) : this() {
-            this.content = context;
+        public Message(string content) : this() {
+            this.content = content;
+        }
+        public Message(ulong guildId, ulong messageId, string content) : this(content) {
+            GuildId = guildId;
+            MessageId = messageId;
         }
         #endregion
 
         #region Properties
-        [Column("guild_id", TypeName = "decimal(20, 0)")]
-        [JsonIgnore]
-        public ulong GuildId { get; set; }
-
         [Column("message_id", TypeName = "decimal(20, 0)")]
         [JsonProperty("message_id", NullValueHandling = NullValueHandling.Ignore)]
-        public ulong MessageId { get; set; }
+        public ulong MessageId {
+            get;
+            set;
+        }
 
         [Column("channel_id", TypeName = "decimal(20, 0)")]
         [JsonProperty("channel_id", NullValueHandling = NullValueHandling.Ignore)]
-        public ulong? ChannelId {
+        public ulong ChannelId {
             get => channelId;
             set => channelId = value;
+        }
+
+        [Column("guild_id", TypeName = "decimal(20, 0)")]
+        [JsonProperty("guild_id", NullValueHandling = NullValueHandling.Ignore)]
+        public ulong GuildId { 
+            get; 
+            set;
+        }
+
+        [Column("guild")]
+        [JsonIgnore]
+        public Guild guild {
+            get;
+            set;
+        }
+
+        [Column("template")]
+        [JsonIgnore]
+        public Template Template {
+            get;
+            set;
         }
 
         [Column("content")]
@@ -71,9 +96,16 @@ namespace BLL.Model {
         }
 
         [JsonProperty("embed", NullValueHandling = NullValueHandling.Ignore)]
-        public Embed? Embed {
+        public Embed Embed {
             get => embed;
-            set => embed = value;
+            set => embed = value != null ? value : new Embed();
+        }
+
+        [Column("data", TypeName = "nvarchar(max)")]
+        [JsonProperty("data", NullValueHandling = NullValueHandling.Ignore)]
+        public Dictionary<string, string> Data {
+            get => data;
+            set { foreach (var item in value) { AddData(item.Key, item.Value); } }
         }
 
         [Column("children")]
@@ -85,7 +117,7 @@ namespace BLL.Model {
 
         [Column("roles")]
         [JsonProperty("roles", NullValueHandling = NullValueHandling.Ignore)]
-        public List<ulong>? Roles {
+        public List<ulong> Roles {
             get => roles;
             set => roles = value != null ? new List<ulong>(value) : new List<ulong>();
         }
@@ -125,6 +157,28 @@ namespace BLL.Model {
         }
         public Message WithChannelId(ulong channelId) {
             this.channelId = channelId;
+            return this;
+        }
+        public Message AddData(string customKey, string customValue) {
+            if (!data.TryAdd(customKey, customValue)) {
+                SetData(customKey, customValue);
+            };
+            return this;
+        }
+        public Message RemoveData(string customKey) {
+            data.Remove(customKey);
+            return this;
+        }
+        public Message SetData(string id, string value) {
+            if (data.ContainsKey(id)) {
+                data[id] = value;
+            } else {
+                AddData(id, value);
+            }
+            return this;
+        }
+        public Message ClearData() {
+            data.Clear();
             return this;
         }
         public Message AddChild(ulong messageId, ulong channelId) {

@@ -4,8 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DiscordBot.Utils {
-    public  static class Identity {
+namespace BLL.Model {
+    public class Identity {
 
         // Prefix
         private const string PREFIX = "";
@@ -27,6 +27,14 @@ namespace DiscordBot.Utils {
         public const string BUTTON_PERMISSION_CHANNELS = PREFIX + "button.permission.channels";
         public const string BUTTON_PERMISSION_SETTINGS = PREFIX + "button.permission.settings";
         public const string BUTTON_PERMISSION_RESET = PREFIX + "button.permission.reset";
+
+        // Button Component Permission
+        public const string BUTTON_TEMPLATE = PREFIX + "button.template";
+        public const string BUTTON_TEMPLATE_SELECT = PREFIX + BUTTON_TEMPLATE + ".template.select";
+        public const string BUTTON_TEMPLATE_SAVE = PREFIX + BUTTON_TEMPLATE + ".template.save";
+        public const string BUTTON_TEMPLATE_DELETE = PREFIX + BUTTON_TEMPLATE + ".template.delete";
+        public const string BUTTON_TEMPLATE_CANCEL = PREFIX + BUTTON_TEMPLATE + ".template.cancel";
+        public const string BUTTON_TEMPLATE_CONFIRM = PREFIX + BUTTON_TEMPLATE + ".template.confirm";
 
         // Button Component Changelog
         public const string BUTTON_CHANGELOG_CREATE = PREFIX + "button.changelog.create";
@@ -183,7 +191,5 @@ namespace DiscordBot.Utils {
         public const string DATA_EMBED_FOOTER = PREFIX + "data.embed.footer";
         public const string DATA_EMBED_FOOTER_URL = PREFIX + "data.embed.footer.url";
         public const string DATA_EMBED_FIELDS = PREFIX + "data.embed.fields";
-
-
     }
 }

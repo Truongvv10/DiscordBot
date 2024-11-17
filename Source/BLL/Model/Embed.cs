@@ -24,7 +24,6 @@ namespace BLL.Model {
         private string? color;
         private long? time;
         private bool hasTimeStamp;
-        private Dictionary<string, string> data = new();
         private List<(string, string, bool)> fields = new();
         #endregion
 
@@ -48,7 +47,20 @@ namespace BLL.Model {
         #region Properties
         [Column("message_id", TypeName = "decimal(20, 0)")]
         [JsonIgnore]
-        public ulong messageId {
+        public ulong MessageId {
+            get;
+            set;
+        }
+
+        [Column("guild_id", TypeName = "decimal(20, 0)")]
+        [JsonIgnore]
+        public ulong GuildId {
+            get;
+            set;
+        }
+
+        [JsonIgnore]
+        public Message Message {
             get;
             set;
         }
@@ -156,18 +168,13 @@ namespace BLL.Model {
             set => time = value;
         }
 
-        [Column("data", TypeName = "nvarchar(max)")]
-        [JsonProperty("data", NullValueHandling = NullValueHandling.Ignore)]
-        public Dictionary<string, string> Data {
-            get => data;
-            set { foreach (var item in value) { AddData(item.Key, item.Value); } }
-        }
-
         [Column("fields", TypeName = "nvarchar(max)")]
         [JsonProperty("fields", NullValueHandling = NullValueHandling.Ignore)]
         public IReadOnlyList<(string, string, bool)> Fields {
             get => fields;
-            set { foreach (var item in value) { AddField(item.Item1, item.Item2, item.Item3); } }
+            set {
+                foreach (var item in value) { AddField(item.Item1, item.Item2, item.Item3); } 
+            }
         }
         #endregion
 
@@ -233,42 +240,29 @@ namespace BLL.Model {
             this.time = time;
             return this;
         }
-        public Embed AddData(string customKey, string customValue) {
-            if (!data.TryAdd(customKey, customValue)) {
-                SetData(customKey, customValue);
-            };
-            return this;
-        }
-        public Embed RemoveData(string customKey) {
-            data.Remove(customKey);
-            return this;
-        }
-        public Embed SetData(string id, string value) {
-            if (data.ContainsKey(id)) {
-                data[id] = value;
-            } else {
-                AddData(id, value);
-            }
-            return this;
-        }
-        public Embed ClearData() {
-            data.Clear();
-            return this;
-        }
-        public Embed AddField(string title, string description) {
-            fields.Add((title, description, true));
-            return this;
-        }
-        public Embed AddField(string title, string description, bool isInline) {
+        public Embed AddField(string title, string description, bool isInline = true) {
             fields.Add((title, description, isInline));
+            return this;
+        }
+        public Embed AddFields(List<(string, string, bool)> fields) {
+            foreach (var field in fields) {
+                AddField(field.Item1, field.Item2, field.Item3);
+            }
             return this;
         }
         public Embed RemoveFieldAt(int index) {
             fields.RemoveAt(index);
             return this;
         }
-        public Embed removeFieldRange(int index, int count) {
+        public Embed RemoveFieldRange(int index, int count) {
             fields.RemoveRange(index, count);
+            return this;
+        }
+        public Embed SetFields(List<(string, string, bool)> fields) {
+            fields.Clear();
+            foreach (var field in fields) {
+                AddField(field.Item1, field.Item2, field.Item3);
+            }
             return this;
         }
         public Embed ClearFields() {

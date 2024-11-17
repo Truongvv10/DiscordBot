@@ -1,13 +1,8 @@
-﻿using DiscordBot.Model.Enums;
-using DSharpPlus.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using BLL.Enums;
+using BLL.Services;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
-namespace DiscordBot.Utils {
+namespace APP.Utils {
     public static class Placeholder {
 
         private const string PREFIX = "";
@@ -16,27 +11,20 @@ namespace DiscordBot.Utils {
         public const string ID = PREFIX + "data.id";
         public const string CUSTOM = PREFIX + "data.custom";
         public const string TIMEZONE = PREFIX + "data.timezone";
+        public const string TEMPLATE = PREFIX + "data.template";
         public const string DATE_START = PREFIX + "data.date.start";
         public const string DATE_END = PREFIX + "data.date.end";
         public const string USER_NAME = PREFIX + "data.user.name";
         public const string USER_AVATARURL = PREFIX + "data.user.avatarurl";
         public const string LIST_USERS = PREFIX + "data.list.users";
         public const string LIST_REACTIONS = PREFIX + "data.list.reactions";
+        public const string LIST_TEMPLATES = PREFIX + "data.list.templates";
+        public const string LIST_TEMPLATES_GUILD = PREFIX + "data.list.templates.guild";
+
 
         static Placeholder() {
             placeholders.AddRange(new[] {
-                ID, DATE_START, DATE_END, USER_NAME, USER_AVATARURL, LIST_USERS, LIST_REACTIONS});
-        }
-
-        public static async Task<DiscordEmbed> Translate(EmbedBuilder embed) {
-            var clone = embed.DeepClone2();
-
-            if (clone.CustomData != null) {
-                clone.Content = embed.Content ?? await Translate(embed.Content!, (Dictionary<string, string>)clone.CustomData);
-                clone.Description = embed.Description ?? await Translate(embed.Description!, (Dictionary<string, string>)clone.CustomData);
-            }
-
-            return clone.Build();
+                ID, CUSTOM, TIMEZONE, DATE_START, DATE_END, USER_NAME, USER_AVATARURL, LIST_USERS, LIST_REACTIONS, LIST_TEMPLATES, LIST_TEMPLATES_GUILD});
         }
 
         public static async Task<string> Translate(string input, Dictionary<string, string> data) {
@@ -44,11 +32,20 @@ namespace DiscordBot.Utils {
 
             foreach (var placeholder in replacements) {
                 string toReplace = $"{{{placeholder}}}";
-                if (data.TryGetValue(Regex.Replace(placeholder, @"(\.\d+)$", ""), out var replacement)) {
-                    replacement = input.Replace(toReplace, await TranslateTime(replacement, data[TIMEZONE], placeholder));
-                    input = input.Replace(toReplace, replacement);
-                } else {
-                    input = input.Replace(toReplace, "{placeholder.not.found}");
+                string value = Regex.Replace(placeholder, @"(\.\d+)$", "");
+                if (data.TryGetValue(value, out var replacement)) {
+                    // logic
+                } else if (Regex.IsMatch(placeholder, @"^data\.date\.(start|end)(\.\d+)?$")) {
+                    var timestamp = await TranslateTime(DateTime.Now, "CET", placeholder);
+                    input = input.Replace(toReplace, timestamp);
+                } else if (placeholder == TIMEZONE) {
+                    input = input.Replace(toReplace, "CET");
+                }
+
+                if (placeholder == LIST_TEMPLATES) {
+                    var cache = new CacheData();
+                    await cache.LoadTemplates();
+                    input = input.Replace(toReplace, cache.Templates.Keys.Aggregate("", (current, next) => current + "`" + next + "`, "));
                 }
             }
 
@@ -77,34 +74,31 @@ namespace DiscordBot.Utils {
             return foundPlaceholders;
         }
 
-        private static async Task<string> TranslateTime(string input, string timeZone, string placeholder) {
-            if (placeholder.Contains(DATE_START) || placeholder.Contains(DATE_END)) {
-                if (DateTime.TryParseExact(input, "d/M/yyyy H:m", null, System.Globalization.DateTimeStyles.None, out DateTime date)) {
+        private static async Task<string> TranslateTime(DateTime date, string timeZone, string placeholder) {
 
-                    if (Regex.IsMatch(placeholder, @".*\.1$"))
-                        return await DiscordUtil.TranslateToDynamicTimestamp(date, timeZone, TimestampEnum.LONG_DATE_WITH_DAY_OF_WEEK_AND_SHORT_TIME);
+            if (Regex.IsMatch(placeholder, @".*\.1$"))
+                return await DiscordUtil.TranslateToDynamicTimestamp(date, timeZone, TimestampEnum.LONG_DATE_WITH_DAY_OF_WEEK_AND_SHORT_TIME);
 
-                    if (Regex.IsMatch(placeholder, @".*\.2$"))
-                        return await DiscordUtil.TranslateToDynamicTimestamp(date, timeZone, TimestampEnum.LONG_DATE_AND_SHORT_TIME);
+            if (Regex.IsMatch(placeholder, @".*\.2$"))
+                return await DiscordUtil.TranslateToDynamicTimestamp(date, timeZone, TimestampEnum.LONG_DATE_AND_SHORT_TIME);
 
-                    if (Regex.IsMatch(placeholder, @".*\.3$"))
-                        return await DiscordUtil.TranslateToDynamicTimestamp(date, timeZone, TimestampEnum.LONG_DATE);
+            if (Regex.IsMatch(placeholder, @".*\.3$"))
+                return await DiscordUtil.TranslateToDynamicTimestamp(date, timeZone, TimestampEnum.LONG_DATE);
 
-                    if (Regex.IsMatch(placeholder, @".*\.4$"))
-                        return await DiscordUtil.TranslateToDynamicTimestamp(date, timeZone, TimestampEnum.SHORT_DATE);
+            if (Regex.IsMatch(placeholder, @".*\.4$"))
+                return await DiscordUtil.TranslateToDynamicTimestamp(date, timeZone, TimestampEnum.SHORT_DATE);
 
-                    if (Regex.IsMatch(placeholder, @".*\.5$"))
-                        return await DiscordUtil.TranslateToDynamicTimestamp(date, timeZone, TimestampEnum.LONG_TIME);
+            if (Regex.IsMatch(placeholder, @".*\.5$"))
+                return await DiscordUtil.TranslateToDynamicTimestamp(date, timeZone, TimestampEnum.LONG_TIME);
 
-                    if (Regex.IsMatch(placeholder, @".*\.6$"))
-                        return await DiscordUtil.TranslateToDynamicTimestamp(date, timeZone, TimestampEnum.SHORT_TIME);
+            if (Regex.IsMatch(placeholder, @".*\.6$"))
+                return await DiscordUtil.TranslateToDynamicTimestamp(date, timeZone, TimestampEnum.SHORT_TIME);
 
-                    if (Regex.IsMatch(placeholder, @".*\.7$"))
-                        return await DiscordUtil.TranslateToDynamicTimestamp(date, timeZone, TimestampEnum.RELATIVE);
+            if (Regex.IsMatch(placeholder, @".*\.7$"))
+                return await DiscordUtil.TranslateToDynamicTimestamp(date, timeZone, TimestampEnum.RELATIVE);
 
-                    return await DiscordUtil.TranslateToDynamicTimestamp(date, timeZone, TimestampEnum.LONG_DATE_WITH_DAY_OF_WEEK_AND_SHORT_TIME);
-                } else return input;
-            } else return input;
+            var result = await DiscordUtil.TranslateToDynamicTimestamp(date, timeZone, TimestampEnum.LONG_DATE_WITH_DAY_OF_WEEK_AND_SHORT_TIME);
+            return result;
         }
     }
 }

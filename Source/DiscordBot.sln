@@ -3,9 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.10.35027.167
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DiscordBot", "DiscordBot\DiscordBot.csproj", "{17A8168C-64F6-4D1C-8F67-370300F05F5E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "APP", "DiscordBot\APP.csproj", "{17A8168C-64F6-4D1C-8F67-370300F05F5E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test", "Test\Test.csproj", "{BC061B80-7251-4088-B522-6D5F94CFC5F6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BLL", "BLL\BLL.csproj", "{9E8CB185-376F-4383-AE1B-D00D4EEB4DAD}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TestApplications", "TestApplications", "{FB207B98-ECB0-43BD-800C-A99F5F8744F5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleTestApp", "ConsoleTestApp\ConsoleTestApp.csproj", "{D93EAD3B-58D3-4AFD-B583-D1787E41C161}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,13 +21,20 @@ Global
 		{17A8168C-64F6-4D1C-8F67-370300F05F5E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{17A8168C-64F6-4D1C-8F67-370300F05F5E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{17A8168C-64F6-4D1C-8F67-370300F05F5E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{BC061B80-7251-4088-B522-6D5F94CFC5F6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{BC061B80-7251-4088-B522-6D5F94CFC5F6}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{BC061B80-7251-4088-B522-6D5F94CFC5F6}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{BC061B80-7251-4088-B522-6D5F94CFC5F6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9E8CB185-376F-4383-AE1B-D00D4EEB4DAD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9E8CB185-376F-4383-AE1B-D00D4EEB4DAD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9E8CB185-376F-4383-AE1B-D00D4EEB4DAD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9E8CB185-376F-4383-AE1B-D00D4EEB4DAD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D93EAD3B-58D3-4AFD-B583-D1787E41C161}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D93EAD3B-58D3-4AFD-B583-D1787E41C161}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D93EAD3B-58D3-4AFD-B583-D1787E41C161}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D93EAD3B-58D3-4AFD-B583-D1787E41C161}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{D93EAD3B-58D3-4AFD-B583-D1787E41C161} = {FB207B98-ECB0-43BD-800C-A99F5F8744F5}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {1DBD2D4F-C202-46B1-9551-680B541F4F1F}

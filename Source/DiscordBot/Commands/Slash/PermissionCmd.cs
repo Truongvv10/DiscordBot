@@ -1,14 +1,8 @@
-﻿using DiscordBot.Exceptions;
-using DiscordBot.Model;
-using DiscordBot.Model.Enums;
-using DiscordBot.Services;
-using DiscordBot.Utils;
+﻿using APP.Services;
+using BLL.Enums;
 using DSharpPlus.SlashCommands;
-using System.Threading.Channels;
-using DiscordBot.Commands;
-using static System.Net.Mime.MediaTypeNames;
 
-namespace DiscordBot.Commands.Slash {
+namespace APP.Commands.Slash {
     public class PermissionCmd : ApplicationCommandModule {
 
         [SlashCommand("permissions", "Show an overview of permissions")]

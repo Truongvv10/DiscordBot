@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DiscordBot.Model.Enums {
+namespace APP.Enums {
     public enum TimeZoneEnum {
 
         [Description("GMT (UTC ±00:00)")]

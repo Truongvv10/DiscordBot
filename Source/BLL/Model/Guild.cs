@@ -4,22 +4,23 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BLL.Model {
-    public class Server {
+    public class Guild {
 
         #region Fields
         private ulong guildId;
         private Config config;
         private ICollection<Message>? messages;
+        private ICollection<Template>? templates;
         #endregion
 
         #region Constructors
-        public Server() {
+        public Guild() {
             config = new Config();
         }
-        public Server(ulong guildId) : this() {
+        public Guild(ulong guildId) : this() {
             this.guildId = guildId;
         }
-        public Server(ulong guildId, Config config) : this(guildId) {
+        public Guild(ulong guildId, Config config) : this(guildId) {
             this.config = config;
         }
         #endregion
@@ -43,6 +44,11 @@ namespace BLL.Model {
         public ICollection<Message>? Messages {
             get => messages;
             set => messages = value;
+        }
+
+        public ICollection<Template>? Templates {
+            get => templates;
+            set => templates = value;
         }
         #endregion
     }

@@ -1,17 +1,14 @@
-﻿using DiscordBot.Exceptions;
-using DiscordBot.Model.Enums;
-using DiscordBot.Services;
-using DiscordBot.Utils;
+﻿using BLL.Enums;
+using BLL.Exceptions;
 using DSharpPlus.Entities;
 using DSharpPlus;
 using DSharpPlus.SlashCommands;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using APP.Enums;
+using APP.Utils;
+using APP.Services;
+using BLL.Model;
 
-namespace DiscordBot.Commands.Slash {
+namespace APP.Commands.Slash {
     public class GeneralCommands : ApplicationCommandModule {
 
         private const string TIMESTAMP = "TIMESTAMP";
@@ -30,28 +27,28 @@ namespace DiscordBot.Commands.Slash {
 
                 // Create response model
                 await ctx.Interaction.CreateResponseAsync(InteractionResponseType.Modal, modal);
-                
+
             } catch (Exception ex) {
                 throw new CommandException($"An error occured using the command: /{TIMESTAMP}", ex);
             }
         }
 
-        [SlashCommand(NITRO, "Create nitro giveaway")]
-        [RequirePermission(CommandEnum.NITRO)]
-        public async Task Nitro(InteractionContext ctx,
-            [Option("expire", "The expire time (in minutes) of this nitro.")] double expire) {
-            try {
-                // Build the embed message with default values
-                var embed = await CacheData.GetTemplate(ctx.Guild.Id, Identity.TDATA_NITRO);
-                var time = await DiscordUtil.TranslateToDynamicTimestamp(DateTime.Now.AddMinutes(expire), "CET", TimestampEnum.RELATIVE);
-                embed.Description = embed.Description!.Replace($"{{{Identity.PL_TIME_EXPIRE}}}", time);
+        //[SlashCommand(NITRO, "Create nitro giveaway")]
+        //[RequirePermission(CommandEnum.NITRO)]
+        //public async Task Nitro(InteractionContext ctx,
+        //    [Option("expire", "The expire time (in minutes) of this nitro.")] double expire) {
+        //    try {
+        //        // Build the embed message with default values
+        //        var embed = await CacheData.GetTemplate(ctx.Guild.Id, Identity.TDATA_NITRO);
+        //        var time = await DiscordUtil.TranslateToDynamicTimestamp(DateTime.Now.AddMinutes(expire), "CET", TimestampEnum.RELATIVE);
+        //        embed.Description = embed.Description!.Replace($"{{{Identity.PL_TIME_EXPIRE}}}", time);
 
-                // Create embed message
-                await DiscordUtil.CreateMessageAsync(CommandEnum.NITRO, ctx.Interaction, embed, ctx.Channel.Id);
+        //        // Create embed message
+        //        await DiscordUtil.CreateMessageAsync(CommandEnum.NITRO, ctx.Interaction, embed, ctx.Channel.Id);
 
-            } catch (Exception ex) {
-                throw new CommandException($"An error occured using the command: /{NITRO}", ex);
-            }
-        }
+        //    } catch (Exception ex) {
+        //        throw new CommandException($"An error occured using the command: /{NITRO}", ex);
+        //    }
+        //}
     }
 }

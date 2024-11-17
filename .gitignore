@@ -400,3 +400,7 @@ FodyWeavers.xsd
 # Blacklisted folders
 Source/DiscordBot/Saves/Servers
 Source/DiscordBot/Saves/Config.json
+Source/DLL
+Source/ConsoleTestApp
+Source\BLL\Migrations
+Source\BLL\Contexts
