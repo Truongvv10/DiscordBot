@@ -34,9 +34,15 @@ namespace APP.Utils {
                 string toReplace = $"{{{placeholder}}}";
                 string value = Regex.Replace(placeholder, @"(\.\d+)$", "");
                 if (data.TryGetValue(value, out var replacement)) {
-                    if (Regex.IsMatch(placeholder, @"^data\.date\.(start|end)(\.\d+)?$")) {
+                    if (Regex.IsMatch(placeholder, @"^data\.date\.start(\.\d+)?$")) {
                         string timezone = data[TIMEZONE] ?? "CET";
                         DateTime date = DateTime.ParseExact(data[DATE_START], "dd/MM/yyyy HH:mm", null);
+                        var timestamp = await TranslateTime(date, timezone, placeholder);
+                        input = input.Replace(toReplace, timestamp);
+                    }
+                    if (Regex.IsMatch(placeholder, @"^data\.date\.end(\.\d+)?$")) {
+                        string timezone = data[TIMEZONE] ?? "CET";
+                        DateTime date = DateTime.ParseExact(data[DATE_END], "dd/MM/yyyy HH:mm", null);
                         var timestamp = await TranslateTime(date, timezone, placeholder);
                         input = input.Replace(toReplace, timestamp);
                     }

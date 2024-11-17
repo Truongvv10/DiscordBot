@@ -69,7 +69,7 @@
     },
     "NITRO": {
         "embed": {
-            "description": "### Claim a free nitro subscription!\n\nClaim a free nitro for **1 month**!\nExpires **{data.date.end}**\n\n[**Disclaimer**](https://www.youtube.com/watch?v=xvFZjo5PgG0)",
+            "description": "### Claim a free nitro subscription!\n\nClaim a free nitro for **1 month**!\nExpires **{data.date.end.7}**\n\n[**Disclaimer**](https://www.youtube.com/watch?v=xvFZjo5PgG0)",
             "thumbnail": "local://nitro.png",
             "color": "#7688d4",
             "timestamp": false

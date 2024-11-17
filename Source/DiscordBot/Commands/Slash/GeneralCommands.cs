@@ -7,12 +7,20 @@ using APP.Enums;
 using APP.Utils;
 using APP.Services;
 using BLL.Model;
+using BLL.Services;
+using BLL.Interfaces;
 
 namespace APP.Commands.Slash {
     public class GeneralCommands : ApplicationCommandModule {
 
+        #region Fields
         private const string TIMESTAMP = "TIMESTAMP";
         private const string NITRO = "NITRO";
+        #endregion
+
+        #region Properties
+        public required IDataService DataService { private get; set; }
+        #endregion
 
         [SlashCommand(TIMESTAMP, "Generate dynamic discord timestamp")]
         [RequirePermission(CommandEnum.TIMESTAMP)]
@@ -33,22 +41,23 @@ namespace APP.Commands.Slash {
             }
         }
 
-        //[SlashCommand(NITRO, "Create nitro giveaway")]
-        //[RequirePermission(CommandEnum.NITRO)]
-        //public async Task Nitro(InteractionContext ctx,
-        //    [Option("expire", "The expire time (in minutes) of this nitro.")] double expire) {
-        //    try {
-        //        // Build the embed message with default values
-        //        var embed = await CacheData.GetTemplate(ctx.Guild.Id, Identity.TDATA_NITRO);
-        //        var time = await DiscordUtil.TranslateToDynamicTimestamp(DateTime.Now.AddMinutes(expire), "CET", TimestampEnum.RELATIVE);
-        //        embed.Description = embed.Description!.Replace($"{{{Identity.PL_TIME_EXPIRE}}}", time);
+        [SlashCommand(NITRO, "Create nitro giveaway")]
+        [RequirePermission(CommandEnum.NITRO)]
+        public async Task Nitro(InteractionContext ctx,
+            [Option("expire", "The expire time (in minutes) of this nitro.")] double expire) {
+            try {
+                // Build the embed message with default values
+                var template = await DataService.GetTemplateAsync(ctx.Guild.Id, Identity.TDATA_NITRO);
+                var message = template!.Message;
+                var date = DateTime.Now.AddMinutes(expire);
+                message.SetData(Placeholder.DATE_END, date.ToString("dd/MM/yyyy HH:mm"));
 
-        //        // Create embed message
-        //        await DiscordUtil.CreateMessageAsync(CommandEnum.NITRO, ctx.Interaction, embed, ctx.Channel.Id);
+                // Create embed message
+                await DiscordUtil.CreateMessageAsync(CommandEnum.NITRO, ctx.Interaction, message, ctx.Channel.Id);
 
-        //    } catch (Exception ex) {
-        //        throw new CommandException($"An error occured using the command: /{NITRO}", ex);
-        //    }
-        //}
+            } catch (Exception ex) {
+                throw new CommandException($"An error occured using the command: /{NITRO}", ex);
+            }
+        }
     }
 }
