@@ -1,123 +1,123 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace BLL.Model {
+﻿namespace BLL.Model {
     public class Identity {
 
         // Prefix
         private const string PREFIX = "";
 
-        // Component
-        public const string COMPONENT_SELECT = PREFIX + "component.select";
-        public const string COMPONENT_TEMPLATE = PREFIX + "component.template";
-        public const string COMPONENT_EVENT = PREFIX + "component.event";
 
+        #region Selections
+        public const string SELECTION_EMBED = $"{PREFIX}.selection.embed";
+        public const string SELECTION_TEMPLATE = $"{PREFIX}.selection.template";
+        public const string SELECTION_EVENT = $"{PREFIX}.selection.event";
+        public const string SELECTION_PERMISSION = $"{PREFIX}.selection.permission";
+
+        // Selection Embed
+        public const string SELECTION_TITLE = $"{SELECTION_EMBED}.title";
+        public const string SELECTION_DESCRIPTION = $"{SELECTION_EMBED}.description";
+        public const string SELECTION_CONTENT = $"{SELECTION_EMBED}.content";
+        public const string SELECTION_FOOTER = $"{SELECTION_EMBED}.footer";
+        public const string SELECTION_AUTHOR = $"{SELECTION_EMBED}.author";
+        public const string SELECTION_COLOR = $"{SELECTION_EMBED}.color";
+        public const string SELECTION_IMAGE = $"{SELECTION_EMBED}.image";
+        public const string SELECTION_THUMBNAIL = $"{SELECTION_EMBED}.thumbnail";
+        public const string SELECTION_PINGROLE = $"{SELECTION_EMBED}.pingrole";
+        public const string SELECTION_TIMESTAMP = $"{SELECTION_EMBED}.timestamp";
+        public const string SELECTION_FIELD_ADD = $"{SELECTION_EMBED}.field.add";
+        public const string SELECTION_FIELD_REMOVE = $"{SELECTION_EMBED}.field.remove";
+        public const string SELECTION_TEMPLATE_ADD = $"{SELECTION_EMBED}.template.add";
+        public const string SELECTION_TEMPLATE_USE = $"{SELECTION_EMBED}.template.use";
+        public const string SELECTION_TEMPLATE_INPUT = $"{SELECTION_EMBED}.template.input";
+        public const string SELECTION_TEMPLATE_REMOVE = $"{SELECTION_EMBED}.template.remove";
+
+        // Selection Event
+        public const string SELECTION_EVENT_CREATION = $"{SELECTION_EVENT}.create";
+        public const string SELECTION_EVENT_PROPERTIES = $"{SELECTION_EVENT}.properties";
+        public const string SELECTION_EVENT_INTRODUCTION = $"{SELECTION_EVENT}.introduction";
+        public const string SELECTION_EVENT_INFORMATION = $"{SELECTION_EVENT}.information";
+        public const string SELECTION_EVENT_REWARDS = $"{SELECTION_EVENT}.rewards";
+        public const string SELECTION_EVENT_TIMESTAMP = $"{SELECTION_EVENT}.timestamp";
+        public const string SELECTION_EVENT_REACTION = $"{SELECTION_EVENT}.reaction";
+
+        // Selection Permission
+        public const string SELECTION_PERMS_PERMS = $"{SELECTION_PERMISSION}.permission";
+        public const string SELECTION_PERMS_EMBED = $"{SELECTION_PERMISSION}.embed";
+        public const string SELECTION_PERMS_EVENTS = $"{SELECTION_PERMISSION}.events";
+        public const string SELECTION_PERMS_TIMESTAMP = $"{SELECTION_PERMISSION}.timestamp";
+        public const string SELECTION_PERMS_BROADCAST = $"{SELECTION_PERMISSION}.broadcast";
+        public const string SELECTION_PERMS_NOTION = $"{SELECTION_PERMISSION}.notion";
+        #endregion
+
+        #region Buttons
         // Button Component
-        public const string BUTTON_CHANNEL = PREFIX + "button.channel";
-        public const string BUTTON_CURRENT_CHANNEL = PREFIX + "button.current.channel";
-        public const string BUTTON_UPDATE = PREFIX + "button.update";
-        public const string BUTTON_CANCEL = PREFIX + "button.cancel";
+        private const string BUTTON_EMBED = $"{PREFIX}.button.embed";
+        public const string BUTTON_CHANNEL = $"{BUTTON_EMBED}.channel";
+        public const string BUTTON_TEMPLATE = $"{BUTTON_EMBED}.template";
+        public const string BUTTON_UPDATE = $"{BUTTON_EMBED}.update";
+        public const string BUTTON_CANCEL = $"{BUTTON_EMBED}.cancel";
 
         // Button Component Permission
-        public const string BUTTON_PERMISSION_USERS = PREFIX + "button.permission.users";
-        public const string BUTTON_PERMISSION_ROLES = PREFIX + "button.permission.roles";
-        public const string BUTTON_PERMISSION_CHANNELS = PREFIX + "button.permission.channels";
-        public const string BUTTON_PERMISSION_SETTINGS = PREFIX + "button.permission.settings";
-        public const string BUTTON_PERMISSION_RESET = PREFIX + "button.permission.reset";
+        private const string BUTTON_TEMPLATES = $"{PREFIX}.button.template";
+        public const string BUTTON_TEMPLATES_SELECT = $"{BUTTON_TEMPLATES}.select";
+        public const string BUTTON_TEMPLATES_ADD = $"{BUTTON_TEMPLATES}.save";
+        public const string BUTTON_TEMPLATES_DELETE =  $"{BUTTON_TEMPLATES}.delete";
+        public const string BUTTON_TEMPLATES_CANCEL = $"{BUTTON_TEMPLATES}.cancel";
+        public const string BUTTON_TEMPLATES_CONFIRM = $"{BUTTON_TEMPLATES}.confirm";
+        #endregion
 
-        // Button Component Permission
-        public const string BUTTON_TEMPLATE = PREFIX + "button.template";
-        public const string BUTTON_TEMPLATE_SELECT = PREFIX + BUTTON_TEMPLATE + ".template.select";
-        public const string BUTTON_TEMPLATE_SAVE = PREFIX + BUTTON_TEMPLATE + ".template.save";
-        public const string BUTTON_TEMPLATE_DELETE = PREFIX + BUTTON_TEMPLATE + ".template.delete";
-        public const string BUTTON_TEMPLATE_CANCEL = PREFIX + BUTTON_TEMPLATE + ".template.cancel";
-        public const string BUTTON_TEMPLATE_CONFIRM = PREFIX + BUTTON_TEMPLATE + ".template.confirm";
+        #region Modals
+        public const string MODAL_EMBED = $"{PREFIX}.modal.embed";
+        public const string MODAL_EVENT = $"{PREFIX}.modal.event";
+        public const string MODAL_TEMPLATES = $"{PREFIX}.modal.templates";
+        public const string MODAL_TIMESTAMP = $"{PREFIX}.modal.timestamp";
 
-        // Button Component Changelog
-        public const string BUTTON_CHANGELOG_CREATE = PREFIX + "button.changelog.create";
-        public const string BUTTON_CHANGELOG_REMOVE = PREFIX + "button.changelog.remove";
-        public const string BUTTON_CHANGELOG_CANCEL = PREFIX + "button.changelog.cancel";
+        // Modal Default
+        private const string MODAL_DATA = $"{MODAL_EMBED}.component";
+        public const string MODAL_DATA_TITLE = $"{MODAL_DATA}.title";
+        public const string MODAL_DATA_TITLE_LINK = $"{MODAL_DATA}.title.link";
+        public const string MODAL_DATA_DESCRIPTION = $"{MODAL_DATA}.description";
+        public const string MODAL_DATA_CONTENT = $"{MODAL_DATA}.content";
+        public const string MODAL_DATA_FOOTER = $"{MODAL_DATA}.footer";
+        public const string MODAL_DATA_FOOTER_URL = $"{MODAL_DATA}.footer.url";
+        public const string MODAL_DATA_AUTHOR = $"{MODAL_DATA}.author";
+        public const string MODAL_DATA_AUTHOR_LINK = $"{MODAL_DATA}.author.link";
+        public const string MODAL_DATA_AUTHOR_URL = $"{MODAL_DATA}.author.url";
+        public const string MODAL_DATA_COLOR = $"{MODAL_DATA}.color";
+        public const string MODAL_DATA_IMAGE = $"{MODAL_DATA}.image";
+        public const string MODAL_DATA_THUMBNAIL = $"{MODAL_DATA}.thumnail";
+        public const string MODAL_DATA_PINGROLE = $"{MODAL_DATA}.pingrole";
+        public const string MODAL_DATA_TIMESTAMP = $"{MODAL_DATA}.timestamp";
+        public const string MODAL_DATA_FIELD_TITLE = $"{MODAL_DATA}.field.title";
+        public const string MODAL_DATA_FIELD_TEXT = $"{MODAL_DATA}.field.text";
+        public const string MODAL_DATA_FIELD_INLINE = $"{MODAL_DATA}.field.inline";
+        public const string MODAL_DATA_FIELD_INDEX = $"{MODAL_DATA}.field.index";
+        public const string MODAL_DATA_TEMPLATE_ADD = $"{MODAL_DATA}.template.add";
+        public const string MODAL_DATA_TEMPLATE_REMOVE = $"{MODAL_DATA}.template.remove";
+        public const string MODAL_DATA_TEMPLATE_USE = $"{MODAL_DATA}.template.use";
 
-        // Selection Component Default
-        public const string SELECTION_TITLE = PREFIX + "selection.title";
-        public const string SELECTION_DESCRIPTION = PREFIX + "selection.description";
-        public const string SELECTION_CONTENT = PREFIX + "selection.content";
-        public const string SELECTION_FOOTER = PREFIX + "selection.footer";
-        public const string SELECTION_AUTHOR = PREFIX + "selection.author";
-        public const string SELECTION_COLOR = PREFIX + "selection.color";
-        public const string SELECTION_IMAGE = PREFIX + "selection.image";
-        public const string SELECTION_THUMBNAIL = PREFIX + "selection.thumbnail";
-        public const string SELECTION_PINGROLE = PREFIX + "selection.pingrole";
-        public const string SELECTION_TIMESTAMP = PREFIX + "selection.timestamp";
-        public const string SELECTION_TIMESTAMP_CHANGE = PREFIX + "selection.timestamp.change";
-        public const string SELECTION_FIELD_ADD = PREFIX + "selection.field.add";
-        public const string SELECTION_FIELD_REMOVE = PREFIX + "selection.field.remove";
-        public const string SELECTION_TEMPLATE_ADD = PREFIX + "selection.template.add";
-        public const string SELECTION_TEMPLATE_USE = PREFIX + "selection.template.use";
-        public const string SELECTION_TEMPLATE_INPUT = PREFIX + "selection.template.input";
-        public const string SELECTION_TEMPLATE_REMOVE = PREFIX + "selection.template.remove";
+        // Modal Event
+        private const string MODAL_DATA_EVENT = $"{MODAL_EVENT}.component";
+        public const string MODAL_DATA_EVENT_TITLE = $"{MODAL_DATA_EVENT}.title";
+        public const string MODAL_DATA_EVENT_INTRO = $"{MODAL_DATA_EVENT}.intro";
+        public const string MODAL_DATA_EVENT_INFO = $"{MODAL_DATA_EVENT}.info";
+        public const string MODAL_DATA_EVENT_REWARD = $"{MODAL_DATA_EVENT}.reward";
+        public const string MODAL_DATA_EVENT_TIMEZONE = $"{MODAL_DATA_EVENT}.timezone";
+        public const string MODAL_DATA_EVENT_TIME_TITLE = $"{MODAL_DATA_EVENT}.time.title";
+        public const string MODAL_DATA_EVENT_START = $"{MODAL_DATA_EVENT}.start";
+        public const string MODAL_DATA_EVENT_END = $"{MODAL_DATA_EVENT}.end";
 
-        // Selection Component Event
-        public const string SELECTION_EVENT_CREATION = PREFIX + "selection.event.create";
-        public const string SELECTION_EVENT_PROPERTIES = PREFIX + "selection.event.properties";
-        public const string SELECTION_EVENT_INTRODUCTION = PREFIX + "selection.event.introduction";
-        public const string SELECTION_EVENT_INFORMATION = PREFIX + "selection.event.information";
-        public const string SELECTION_EVENT_REWARDS = PREFIX + "selection.event.rewards";
-        public const string SELECTION_EVENT_TIMESTAMP = PREFIX + "selection.event.timestamp";
-        public const string SELECTION_EVENT_REACTION = PREFIX + "selection.event.reaction";
+        // Modal Templates
+        private const string MODAL_DATA_TEMPLATES = $"{MODAL_TEMPLATES}.component";
+        public const string MODAL_DATA_TEMPLATES_ADD_NAME = $"{MODAL_DATA_TEMPLATES}.add.name";
+        public const string MODAL_DATA_TEMPLATES_ADD_MESSAGE = $"{MODAL_DATA_TEMPLATES}.add.message";
+        public const string MODAL_DATA_TEMPLATES_USE_NAME = $"{MODAL_DATA_TEMPLATES}.use.name";
+        public const string MODAL_DATA_TEMPLATES_USE_MESSAGE = $"{MODAL_DATA_TEMPLATES}.use.message";
+        public const string MODAL_DATA_TEMPLATES_REMOVE_NAME = $"{MODAL_DATA_TEMPLATES}.remove.name";
 
-        // Selection Component Permission
-        public const string SELECTION_PERMS = PREFIX + "selection.permission";
-        public const string SELECTION_PERMS_PERMS = PREFIX + "selection.permission.permission";
-        public const string SELECTION_PERMS_EMBED = PREFIX + "selection.permission.embed";
-        public const string SELECTION_PERMS_EVENTS = PREFIX + "selection.permission.events";
-        public const string SELECTION_PERMS_TIMESTAMP = PREFIX + "selection.permission.timestamp";
-        public const string SELECTION_PERMS_BROADCAST = PREFIX + "selection.permission.broadcast";
-        public const string SELECTION_PERMS_NOTION = PREFIX + "selection.permission.notion";
-
-        // Modal
-        public const string MODAL_EMBED = PREFIX + "modal.embed";
-        public const string MODAL_EVENT = PREFIX + "modal.event";
-        public const string MODAL_TEMPLATE = PREFIX + "modal.template";
-        public const string MODAL_TIMESTAMP = PREFIX + "modal.timestamp";
-
-        // Modal Component Default
-        public const string MODAL_COMP_TITLE = PREFIX + "modal.component.title";
-        public const string MODAL_COMP_TITLE_LINK = PREFIX + "modal.component.title.link";
-        public const string MODAL_COMP_DESCRIPTION = PREFIX + "modal.component.description";
-        public const string MODAL_COMP_CONTENT = PREFIX + "modal.component.content";
-        public const string MODAL_COMP_FOOTER = PREFIX + "modal.component.footer";
-        public const string MODAL_COMP_FOOTER_URL = PREFIX + "modal.component.footer.url";
-        public const string MODAL_COMP_AUTHOR = PREFIX + "modal.component.author";
-        public const string MODAL_COMP_AUTHOR_LINK = PREFIX + "modal.component.author.link";
-        public const string MODAL_COMP_AUTHOR_URL = PREFIX + "modal.component.author.url";
-        public const string MODAL_COMP_COLOR = PREFIX + "modal.component.color";
-        public const string MODAL_COMP_IMAGE = PREFIX + "modal.component.image";
-        public const string MODAL_COMP_THUMBNAIL = PREFIX + "modal.component.thumnail";
-        public const string MODAL_COMP_PINGROLE = PREFIX + "modal.component.pingrole";
-        public const string MODAL_COMP_TIMESTAMP = PREFIX + "modal.component.timestamp";
-        public const string MODAL_COMP_FIELD_TITLE = PREFIX + "modal.component.field.title";
-        public const string MODAL_COMP_FIELD_TEXT = PREFIX + "modal.component.field.text";
-        public const string MODAL_COMP_FIELD_INLINE = PREFIX + "modal.component.field.inline";
-        public const string MODAL_COMP_FIELD_INDEX = PREFIX + "modal.component.field.index";
-        public const string MODAL_COMP_TEMPLATE_ADD = PREFIX + "modal.component.template.add";
-        public const string MODAL_COMP_TEMPLATE_REMOVE = PREFIX + "modal.component.template.remove";
-        public const string MODAL_COMP_TEMPLATE_USE = PREFIX + "modal.component.template.use";
-        public const string MODAL_COMP_EVENT_TITLE = PREFIX + "modal.component.event.title";
-        public const string MODAL_COMP_EVENT_INTRO = PREFIX + "modal.component.event.intro";
-        public const string MODAL_COMP_EVENT_INFO = PREFIX + "modal.component.event.info";
-        public const string MODAL_COMP_EVENT_REWARD = PREFIX + "modal.component.event.reward";
-        public const string MODAL_COMP_EVENT_TIMEZONE = PREFIX + "modal.component.event.timezone";
-        public const string MODAL_COMP_EVENT_TIME_TITLE = PREFIX + "modal.component.event.time.title";
-        public const string MODAL_COMP_EVENT_START = PREFIX + "modal.component.event.start";
-        public const string MODAL_COMP_EVENT_END = PREFIX + "modal.component.event.end";
-
-        // Modal Component Timestamp
-        public const string MODAL_COMP_TIMESTAMP_TIMEZONE = PREFIX + "modal.component.timestamp.timezone";
-        public const string MODAL_COMP_TIMESTAMP_TIME = PREFIX + "modal.component.timestamp.time";
+        // Modal Timestamps
+        private const string MODAL_DATA_TIMESTAMPS = $"{MODAL_TIMESTAMP}.component";
+        public const string MODAL_DATA_TIMESTAMPS_TIMEZONE = $"{MODAL_DATA_TIMESTAMPS}.timezone";
+        public const string MODAL_DATA_TIMESTAMPS_TIME = $"{MODAL_DATA_TIMESTAMPS}.time";
+        #endregion
 
         // Event
         public const string EVENT_NAME = PREFIX + "event.name";
@@ -143,37 +143,17 @@ namespace BLL.Model {
         public const string TEMPLATE_LIST_CUSTOM = PREFIX + "template.list.custom";
         public const string TEMPLATE_REPLACE_MESSAGE_ID = PREFIX + "template.replace.message";
 
-        // Timestamp
-        public const string TIMESTAMP_TIME = PREFIX + "timestamp.time";
-        public const string TIMESTAMP_TIMEZONE = PREFIX + "timestamp.timezone";
-        public const string TIMESTAMP_SHORT_DATE = PREFIX + "timestamp.short.date";
-        public const string TIMESTAMP_SHORT_TIME = PREFIX + "timestamp.short.time";
-        public const string TIMESTAMP_LONG_DATE = PREFIX + "timestamp.long.date";
-        public const string TIMESTAMP_LONG_TIME = PREFIX + "timestamp.long.time";
-        public const string TIMESTAMP_LONG_DATE_SHORT_TIME = PREFIX + "timestamp.long.date.short.time";
-        public const string TIMESTAMP_LONG_DATE_DAY_OF_WEEK_SHORT_TIME = PREFIX + "timestamp.long.date.day.of.week.short.time";
-        public const string TIMESTAMP_RELATIVE_TIME = PREFIX + "timestamp.relative.time";
-
         // Template
         public const string TDATA_EMBED_CREATE = "EMBED_CREATE";
         public const string TDATA_EVENT_CREATE = "EVENT_CREATE";
         public const string TDATA_EVENT_POST_CREATE = "EVENT_POST_CREATE";
         public const string TDATA_CREATE = "TEMPLATE_CREATE";
         public const string TDATA_USE = "TEMPLATE_USE";
-        public const string TDATA_TEMPLATE = "TIMESTAMP";
+        public const string TDATA_TIMESTAMP = "TIMESTAMP";
+        public const string TDATA_TEMPLATES = "TEMPLATES";
+        public const string TDATA_TEMPLATES_SAVE = "TEMPLATES_SAVE";
         public const string TDATA_NITRO = "NITRO";
         public const string TDATA_NO_PERMISSION = "NO_PERMISSION";
-
-        // Other
-        public const string REACTION_1 = PREFIX + "reaction.1";
-        public const string REACTION_2 = PREFIX + "reaction.2";
-        public const string REACTION_3 = PREFIX + "reaction.3";
-        public const string REACTION_4 = PREFIX + "reaction.4";
-        public const string REACTION_5 = PREFIX + "reaction.5";
-        public const string REACTION_6 = PREFIX + "reaction.6";
-        public const string REACTION_7 = PREFIX + "reaction.7";
-        public const string REACTION_8 = PREFIX + "reaction.8";
-        public const string REACTION_9 = PREFIX + "reaction.9";
 
         // ========================================================================================================
         //                                                                                                       //
