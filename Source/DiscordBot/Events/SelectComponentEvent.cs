@@ -22,9 +22,9 @@ namespace APP.Events {
 
         public async Task ComponentSelect(DiscordClient sender, ComponentInteractionCreateEventArgs e) {
             if (e.Interaction.Data.ComponentType == ComponentType.StringSelect) {
-                if (e.Id == Identity.COMPONENT_SELECT) await HandleEmbedInteraction(sender, e);
-                if (e.Id == Identity.COMPONENT_TEMPLATE) await HandleTemplateInteraction(sender, e);
-                if (e.Id == Identity.COMPONENT_EVENT) await HandleEventInteraction(sender, e);
+                if (e.Id == Identity.SELECTION_EMBED) await HandleEmbedInteraction(sender, e);
+                if (e.Id == Identity.SELECTION_TEMPLATE) await HandleTemplateInteraction(sender, e);
+                if (e.Id == Identity.SELECTION_EVENT) await HandleEventInteraction(sender, e);
             }
         }
 
@@ -44,52 +44,52 @@ namespace APP.Events {
                     switch (option) {
                         case Identity.SELECTION_TITLE:
                             modal.WithTitle($"EDITING TITLE").WithCustomId($"{Identity.MODAL_EMBED};{option};{messageId}");
-                            modal.AddComponents(new TextInputComponent("TITLE TEXT", Identity.MODAL_COMP_TITLE, text, embed.Title, false, TextInputStyle.Short));
-                            modal.AddComponents(new TextInputComponent("TITLE LINK", Identity.MODAL_COMP_TITLE_LINK, exampleUrl, embed.TitleUrl, false, TextInputStyle.Short));
+                            modal.AddComponents(new TextInputComponent("TITLE TEXT", Identity.MODAL_DATA_TITLE, text, embed.Title, false, TextInputStyle.Short));
+                            modal.AddComponents(new TextInputComponent("TITLE LINK", Identity.MODAL_DATA_TITLE_LINK, exampleUrl, embed.TitleUrl, false, TextInputStyle.Short));
                             await e.Interaction.CreateResponseAsync(InteractionResponseType.Modal, modal);
                             break;
                         case Identity.SELECTION_DESCRIPTION:
                             modal.WithTitle($"EDITING DESCRIPTION").WithCustomId($"{Identity.MODAL_EMBED};{option};{messageId}");
-                            modal.AddComponents(new TextInputComponent(option, Identity.MODAL_COMP_DESCRIPTION, text, embed.Description, false, TextInputStyle.Paragraph));
+                            modal.AddComponents(new TextInputComponent(option, Identity.MODAL_DATA_DESCRIPTION, text, embed.Description, false, TextInputStyle.Paragraph));
                             await e.Interaction.CreateResponseAsync(InteractionResponseType.Modal, modal);
                             break;
                         case Identity.SELECTION_CONTENT:
                             modal.WithTitle($"EDITING PLAIN CONTENT").WithCustomId($"{Identity.MODAL_EMBED};{option};{messageId}");
-                            modal.AddComponents(new TextInputComponent(option, Identity.MODAL_COMP_CONTENT, text, message.Content, false, TextInputStyle.Paragraph));
+                            modal.AddComponents(new TextInputComponent(option, Identity.MODAL_DATA_CONTENT, text, message.Content, false, TextInputStyle.Paragraph));
                             await e.Interaction.CreateResponseAsync(InteractionResponseType.Modal, modal);
                             break;
                         case Identity.SELECTION_FOOTER:
                             modal.WithTitle($"EDITING FOOTER").WithCustomId($"{Identity.MODAL_EMBED};{option};{messageId}");
-                            modal.AddComponents(new TextInputComponent("FOOTER TEXT", Identity.MODAL_COMP_FOOTER, text, embed.Footer, false, TextInputStyle.Short));
-                            modal.AddComponents(new TextInputComponent("FOOTER IMAGE", Identity.MODAL_COMP_FOOTER_URL, exampleUrl, embed.FooterUrl, false, TextInputStyle.Short));
+                            modal.AddComponents(new TextInputComponent("FOOTER TEXT", Identity.MODAL_DATA_FOOTER, text, embed.Footer, false, TextInputStyle.Short));
+                            modal.AddComponents(new TextInputComponent("FOOTER IMAGE", Identity.MODAL_DATA_FOOTER_URL, exampleUrl, embed.FooterUrl, false, TextInputStyle.Short));
                             await e.Interaction.CreateResponseAsync(InteractionResponseType.Modal, modal);
                             break;
                         case Identity.SELECTION_AUTHOR:
                             modal.WithTitle($"EDITING AUTHOR").WithCustomId($"{Identity.MODAL_EMBED};{option};{messageId}");
-                            modal.AddComponents(new TextInputComponent("AUTHOR TEXT", Identity.MODAL_COMP_AUTHOR, text + " or self", embed.Author, false, TextInputStyle.Short));
-                            modal.AddComponents(new TextInputComponent("AUTHOR LINK", Identity.MODAL_COMP_AUTHOR_LINK, exampleUrl, embed.AuthorLink, false, TextInputStyle.Short));
-                            modal.AddComponents(new TextInputComponent("AUTHOR IMAGE", Identity.MODAL_COMP_AUTHOR_URL, exampleUrl, embed.AuthorUrl, false, TextInputStyle.Short));
+                            modal.AddComponents(new TextInputComponent("AUTHOR TEXT", Identity.MODAL_DATA_AUTHOR, text + " or self", embed.Author, false, TextInputStyle.Short));
+                            modal.AddComponents(new TextInputComponent("AUTHOR LINK", Identity.MODAL_DATA_AUTHOR_LINK, exampleUrl, embed.AuthorLink, false, TextInputStyle.Short));
+                            modal.AddComponents(new TextInputComponent("AUTHOR IMAGE", Identity.MODAL_DATA_AUTHOR_URL, exampleUrl, embed.AuthorUrl, false, TextInputStyle.Short));
                             await e.Interaction.CreateResponseAsync(InteractionResponseType.Modal, modal);
                             break;
                         case Identity.SELECTION_COLOR:
                             modal.WithTitle($"EDITING COLOR").WithCustomId($"{Identity.MODAL_EMBED};{option};{messageId}");
-                            modal.AddComponents(new TextInputComponent(option, Identity.MODAL_COMP_COLOR, text, embed.Color, false, TextInputStyle.Short));
+                            modal.AddComponents(new TextInputComponent(option, Identity.MODAL_DATA_COLOR, text, embed.Color, false, TextInputStyle.Short));
                             await e.Interaction.CreateResponseAsync(InteractionResponseType.Modal, modal);
                             break;
                         case Identity.SELECTION_IMAGE:
                             modal.WithTitle($"EDITING IMAGE").WithCustomId($"{Identity.MODAL_EMBED};{option};{messageId}");
-                            modal.AddComponents(new TextInputComponent(option, Identity.MODAL_COMP_IMAGE, exampleUrl, embed.Image, false, TextInputStyle.Short));
+                            modal.AddComponents(new TextInputComponent(option, Identity.MODAL_DATA_IMAGE, exampleUrl, embed.Image, false, TextInputStyle.Short));
                             await e.Interaction.CreateResponseAsync(InteractionResponseType.Modal, modal);
                             break;
                         case Identity.SELECTION_THUMBNAIL:
                             modal.WithTitle($"EDITING THUMBNAIL").WithCustomId($"{Identity.MODAL_EMBED};{option};{messageId}");
-                            modal.AddComponents(new TextInputComponent(option, Identity.MODAL_COMP_THUMBNAIL, exampleUrl, embed.Thumbnail, false, TextInputStyle.Short));
+                            modal.AddComponents(new TextInputComponent(option, Identity.MODAL_DATA_THUMBNAIL, exampleUrl, embed.Thumbnail, false, TextInputStyle.Short));
                             await e.Interaction.CreateResponseAsync(InteractionResponseType.Modal, modal);
                             break;
                         case Identity.SELECTION_PINGROLE:
                             string roleId = "836964332595707955, 1265749062183813242, everyone";
                             modal.WithTitle($"EDITING PINGED ROLES").WithCustomId($"{Identity.MODAL_EMBED};{option};{messageId}");
-                            modal.AddComponents(new TextInputComponent($"ROLES", Identity.MODAL_COMP_PINGROLE, roleId, string.Join(", ", message.Roles), true, TextInputStyle.Paragraph));
+                            modal.AddComponents(new TextInputComponent($"ROLES", Identity.MODAL_DATA_PINGROLE, roleId, string.Join(", ", message.Roles), true, TextInputStyle.Paragraph));
                             await e.Interaction.CreateResponseAsync(InteractionResponseType.Modal, modal);
                             break;
                         case Identity.SELECTION_TIMESTAMP:
@@ -98,15 +98,15 @@ namespace APP.Events {
                             break;
                         case Identity.SELECTION_FIELD_ADD:
                             modal.WithTitle($"ADDING FIELD TEXT").WithCustomId($"{Identity.MODAL_EMBED};{option};{messageId}");
-                            modal.AddComponents(new TextInputComponent("TITLE", Identity.MODAL_COMP_FIELD_TITLE, text, null, true, TextInputStyle.Short));
-                            modal.AddComponents(new TextInputComponent("TEXT", Identity.MODAL_COMP_FIELD_TEXT, text, null, true, TextInputStyle.Paragraph));
-                            modal.AddComponents(new TextInputComponent("INLINE", Identity.MODAL_COMP_FIELD_INLINE, "True or False", "True", true, TextInputStyle.Short));
+                            modal.AddComponents(new TextInputComponent("TITLE", Identity.MODAL_DATA_FIELD_TITLE, text, null, true, TextInputStyle.Short));
+                            modal.AddComponents(new TextInputComponent("TEXT", Identity.MODAL_DATA_FIELD_TEXT, text, null, true, TextInputStyle.Paragraph));
+                            modal.AddComponents(new TextInputComponent("INLINE", Identity.MODAL_DATA_FIELD_INLINE, "True or False", "True", true, TextInputStyle.Short));
                             await e.Interaction.CreateResponseAsync(InteractionResponseType.Modal, modal);
                             break;
                         case Identity.SELECTION_FIELD_REMOVE:
                             if (embed.Fields.Count() != 0) {
                                 modal.WithTitle($"REMOVING FIELD").WithCustomId($"{Identity.MODAL_EMBED};{option};{messageId}");
-                                modal.AddComponents(new TextInputComponent("INDEX", Identity.MODAL_COMP_FIELD_INDEX, $"Number from 1 to {embed.Fields.Count()}", null, true, TextInputStyle.Short, 1, 2));
+                                modal.AddComponents(new TextInputComponent("INDEX", Identity.MODAL_DATA_FIELD_INDEX, $"Number from 1 to {embed.Fields.Count()}", null, true, TextInputStyle.Short, 1, 2));
                                 await e.Interaction.CreateResponseAsync(InteractionResponseType.Modal, modal);
                             }
                             break;
@@ -141,7 +141,7 @@ namespace APP.Events {
 
                         case Identity.SELECTION_TEMPLATE_ADD:
                             modal.WithTitle("SAVE TEMPLATE").WithCustomId($"{Identity.MODAL_EMBED};{option};{messageId}");
-                            modal.AddComponents(new TextInputComponent("SAVE TEMPLATE", Identity.MODAL_COMP_TEMPLATE_ADD, text, null, true, TextInputStyle.Short, 3, 24));
+                            modal.AddComponents(new TextInputComponent("SAVE TEMPLATE", Identity.MODAL_DATA_TEMPLATE_ADD, text, null, true, TextInputStyle.Short, 3, 24));
                             await e.Interaction.CreateResponseAsync(InteractionResponseType.Modal, modal);
                             break;
 

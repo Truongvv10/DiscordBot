@@ -11,6 +11,7 @@ using APP.Enums;
 using BLL.Services;
 using BLL.Contexts;
 using BLL.Interfaces;
+using Microsoft.VisualBasic;
 
 namespace APP.Utils {
     public static class DiscordUtil {
@@ -136,10 +137,10 @@ namespace APP.Utils {
 
                 // Define button components with corresponding actions
                 var buttonComponent = new List<DiscordComponent> {
-                    new DiscordButtonComponent(ButtonStyle.Success, "embedButtonChannel", $"Send to {channel.Name}"),
-                    new DiscordButtonComponent(ButtonStyle.Secondary, "embedButtonTemplates", $"Templates"),
-                    new DiscordButtonComponent(ButtonStyle.Primary, "embedButtonUpdate", $"Update"),
-                    new DiscordButtonComponent(ButtonStyle.Danger, "embedButtonCancel", "Cancel", hidden)};
+                    new DiscordButtonComponent(ButtonStyle.Success, Identity.BUTTON_CHANNEL, $"Send to {channel.Name}"),
+                    new DiscordButtonComponent(ButtonStyle.Secondary, Identity.BUTTON_TEMPLATE, $"Use Template"),
+                    new DiscordButtonComponent(ButtonStyle.Primary, Identity.BUTTON_UPDATE, $"Update"),
+                    new DiscordButtonComponent(ButtonStyle.Danger, Identity.BUTTON_CANCEL, "Cancel", hidden)};
 
                 switch (type) {
 
@@ -155,18 +156,18 @@ namespace APP.Utils {
                         components.Add(new DiscordActionRowComponent(buttonEventPost));
                         break;
 
-                    case CommandEnum.TEMPLATE_USE:
+                    case CommandEnum.TEMPLATES:
                         var buttonTemplateUse = new List<DiscordComponent> {
-                            new DiscordButtonComponent(ButtonStyle.Success, Identity.BUTTON_TEMPLATE_SAVE, "Save Template"),
-                            new DiscordButtonComponent(ButtonStyle.Primary, Identity.BUTTON_TEMPLATE_SELECT, "Select Template"),
-                            new DiscordButtonComponent(ButtonStyle.Secondary, Identity.BUTTON_TEMPLATE_DELETE, "Delete"),
-                            new DiscordButtonComponent(ButtonStyle.Danger, Identity.BUTTON_TEMPLATE_CANCEL, "Go Back")};
+                            new DiscordButtonComponent(ButtonStyle.Success, Identity.BUTTON_TEMPLATES_ADD, "Add Template"),
+                            new DiscordButtonComponent(ButtonStyle.Primary, Identity.BUTTON_TEMPLATES_SELECT, "Use Template"),
+                            new DiscordButtonComponent(ButtonStyle.Secondary, Identity.BUTTON_TEMPLATES_DELETE, "Delete"),
+                            new DiscordButtonComponent(ButtonStyle.Danger, Identity.BUTTON_TEMPLATES_CANCEL, "Cancel")};
                         components.Add(new DiscordActionRowComponent(buttonTemplateUse));
                         break;
 
                     case CommandEnum.NITRO:
                         var buttonNitroClaim = new List<DiscordComponent> {
-                            new DiscordButtonComponent(ButtonStyle.Primary, "embedButtonNitroClaim", "Claim Nitro")};
+                            new DiscordButtonComponent(ButtonStyle.Primary, Identity.BUTTON_NITRO, "Claim Nitro")};
                         components.Add(new DiscordActionRowComponent(buttonNitroClaim));
                         break;
 
@@ -247,6 +248,44 @@ namespace APP.Utils {
             }
         }
 
+        public static DiscordMessageBuilder ResolveImageAttachment(Message message) {
+            var embed = message.Embed;
+            var response = new DiscordMessageBuilder();
+            var folder = Path.Combine(Environment.CurrentDirectory, "Saves", "Images");
+            var pattern = @"^local:\/\/.*";
+            var patternAttachment = @"^attachment:\/\/.*";
+            var replace = "local://";
+            var replace2 = "attachment://";
+
+            try {
+                if (embed is not null) {
+                    if (embed.Image != null && (Regex.IsMatch(embed.Image, pattern) || embed.Image != null && Regex.IsMatch(embed.Image, patternAttachment))) {
+                        var image = Path.Combine(folder, embed.Image.Replace(replace, "").Replace(replace2, ""));
+                        var imageBytes = File.ReadAllBytes(image);
+                        var imageStream = new MemoryStream(imageBytes);
+                        var fileName = Path.GetFileName(image);
+                        embed.WithImage($"attachment://{fileName}");
+                        response.AddFile(fileName, imageStream);
+                    }
+
+                    if (embed.Thumbnail != null && (Regex.IsMatch(embed.Thumbnail, pattern) || embed.Thumbnail != null && Regex.IsMatch(embed.Thumbnail, patternAttachment))) {
+                        var thumbnail = Path.Combine(folder, embed.Thumbnail.Replace(replace, "").Replace(replace2, ""));
+                        var thumbnailBytes = File.ReadAllBytes(thumbnail);
+                        var thumbnailStream = new MemoryStream(thumbnailBytes);
+                        var fileName = Path.GetFileName(thumbnail);
+                        embed.WithThumbnail($"attachment://{fileName}");
+                        response.AddFile(fileName, thumbnailStream);
+                    }
+
+                    return response
+                        .AddEmbed(embed.Build());
+                } else return response;
+
+            } catch (Exception ex) {
+                throw new CommandException($"Embed.CheckIfLocalImage: {ex.Message}", ex);
+            }
+        }
+
         public static string BuildEventDesciption(Message message) {
             var embed = message.Embed;
             if (embed is not null) {
@@ -290,7 +329,7 @@ namespace APP.Utils {
                     new DiscordSelectComponentOption("Remove field message", Identity.SELECTION_FIELD_REMOVE, "Remove field message.", emoji: new DiscordComponentEmoji("❌"))};
 
             List<DiscordComponent> selectComponents = new() {
-                new DiscordSelectComponent(Identity.COMPONENT_SELECT, "Select default embed component", selectOptions)};
+                new DiscordSelectComponent(Identity.SELECTION_EMBED, "Select default embed component", selectOptions)};
 
             List<DiscordActionRowComponent> results = new() {
                 new DiscordActionRowComponent(selectComponents)};
@@ -318,74 +357,13 @@ namespace APP.Utils {
             var selectOptions = new List<DiscordSelectComponentOption>() {
                     new DiscordSelectComponentOption("Use from template", Identity.SELECTION_TEMPLATE_USE, "Choose an existing template.", emoji: new DiscordComponentEmoji("🗂")),
                     new DiscordSelectComponentOption("Save to template", Identity.SELECTION_TEMPLATE_ADD, "Save this embed to be a template.", emoji: new DiscordComponentEmoji("🗃️")),
-                    new DiscordSelectComponentOption("Delete template", Identity.MODAL_COMP_TEMPLATE_REMOVE, "Remove saved templates.", emoji: new DiscordComponentEmoji("❌"))};
+                    new DiscordSelectComponentOption("Delete template", Identity.MODAL_DATA_TEMPLATE_REMOVE, "Remove saved templates.", emoji: new DiscordComponentEmoji("❌"))};
 
             List<DiscordComponent> selectComponents = new() {
-                new DiscordSelectComponent(Identity.COMPONENT_TEMPLATE, "Choose from template options", selectOptions)};
+                new DiscordSelectComponent(Identity.SELECTION_TEMPLATE, "Choose from template options", selectOptions)};
 
             List<DiscordActionRowComponent> results = new() {
                 new DiscordActionRowComponent(selectComponents)};
-
-            return results;
-        }
-
-        public static List<DiscordActionRowComponent> PermissionComponent(Message message) {
-
-            var embed = message.Embed;
-            var selectPermissionOption = new List<DiscordSelectComponentOption>();
-            var buttonEditOption = new List<DiscordActionRowComponent>();
-            var hideButtons = message.Data.ContainsKey(Identity.SELECTION_PERMS);
-            var commandPermissions = Enum.GetValues(typeof(CommandEnum)).Cast<CommandEnum>().ToList();
-
-            foreach (var cmd in commandPermissions) {
-                string title = cmd.ToString().ToUpper();
-                string id = $"{Identity.SELECTION_PERMS}.{cmd.ToString().ToLower()}";
-                string desc = $"Edit permissions for command /{cmd.ToString().ToLower()}";
-                selectPermissionOption.Add(new DiscordSelectComponentOption(title, id, desc));
-            }
-
-            List<DiscordComponent> buttonComponents = new() {
-                new DiscordButtonComponent(ButtonStyle.Success, Identity.BUTTON_PERMISSION_USERS, "Users", !hideButtons),
-                new DiscordButtonComponent(ButtonStyle.Success, Identity.BUTTON_PERMISSION_ROLES, "Roles", !hideButtons),
-                new DiscordButtonComponent(ButtonStyle.Success, Identity.BUTTON_PERMISSION_CHANNELS, "Channels", !hideButtons),
-                new DiscordButtonComponent(ButtonStyle.Primary, Identity.BUTTON_PERMISSION_SETTINGS, "Settings", !hideButtons),
-                new DiscordButtonComponent(ButtonStyle.Danger, Identity.BUTTON_PERMISSION_RESET, "Reset", !hideButtons)};
-
-            List<DiscordComponent> selectComponents = new() {
-                new DiscordSelectComponent(Identity.SELECTION_PERMS, "Choose which permission you want to edit...", selectPermissionOption)};
-
-            List<DiscordActionRowComponent> results = new() {
-                new DiscordActionRowComponent(selectComponents),
-                new DiscordActionRowComponent(buttonComponents)};
-
-            return results;
-        }
-
-        public static List<DiscordActionRowComponent> ChangelogComponent(Message message) {
-
-            var selectPermissionOption = new List<DiscordSelectComponentOption>();
-            var buttonEditOption = new List<DiscordActionRowComponent>();
-            var hideButtons = message.Data.ContainsKey(Identity.SELECTION_PERMS);
-            var commandPermissions = Enum.GetValues(typeof(CommandEnum)).Cast<CommandEnum>().ToList();
-
-            foreach (var cmd in commandPermissions) {
-                string title = cmd.ToString().ToUpper();
-                string id = $"{Identity.SELECTION_PERMS}.{cmd.ToString().ToLower()}";
-                string desc = $"Edit permissions for command /{cmd.ToString().ToLower()}";
-                selectPermissionOption.Add(new DiscordSelectComponentOption(title, id, desc));
-            }
-
-            List<DiscordComponent> buttonComponents = new() {
-                new DiscordButtonComponent(ButtonStyle.Success, Identity.BUTTON_CHANGELOG_CREATE, "Create"),
-                new DiscordButtonComponent(ButtonStyle.Danger, Identity.BUTTON_CHANGELOG_REMOVE, "Delete"),
-                new DiscordButtonComponent(ButtonStyle.Secondary, Identity.BUTTON_CANCEL, "Cancel")};
-
-            List<DiscordComponent> selectComponents = new() {
-                new DiscordSelectComponent(Identity.SELECTION_PERMS, "Select from existing changelogs...", selectPermissionOption)};
-
-            List<DiscordActionRowComponent> results = new() {
-                new DiscordActionRowComponent(selectComponents),
-                new DiscordActionRowComponent(buttonComponents)};
 
             return results;
         }
@@ -402,7 +380,7 @@ namespace APP.Utils {
             };
 
             List<DiscordComponent> selectComponents = new() {
-                new DiscordSelectComponent(Identity.COMPONENT_EVENT, "Select event specific component", selectEventComponents)};
+                new DiscordSelectComponent(Identity.SELECTION_EVENT, "Select event specific component", selectEventComponents)};
 
             List<DiscordActionRowComponent> results = new() {
                 new DiscordActionRowComponent(selectComponents)};
@@ -432,30 +410,20 @@ namespace APP.Utils {
             } else throw new UtilException($"No channel with id \"{channelId}\" found.");
         }
 
-        public static async Task<string> CreatePingRoles(Message message, DiscordGuild guild) {
-
-            string pingRoles = string.Empty;
-
-            if (message.Roles is not null && message.Roles.Any()) {
-
-                // List of roles to be kept
-                List<DiscordRole> roles = new();
-
-                // Translate each id in to roles
-                foreach (var roleId in message.Roles) {
-                    roles.Add(await GetRolesByIdAsync(guild, roleId));
-                }
-
-                // Extract the mention property from each role.
+        public static async Task<string> AddPingRolesToContentAsync(Message message, DiscordGuild guild) {
+            string result = message.Content is null ? "" : $"{message.Content}\n";
+            if (message.Roles.Count > 0) {
+                var tasks = message.Roles.Select(async x => await GetRolesByIdAsync(guild, x));
+                var roles = await Task.WhenAll(tasks);
+                var pings = string.Empty;
                 foreach (var role in roles) {
                     if (role.Name == "@everyone") {
-                        pingRoles += "@everyone";
-                    } else pingRoles += role.Mention + " ";
+                        pings += "@everyone "; 
+                    } else pings += role.Mention + " ";
                 }
-
+                result += pings;
             }
-
-            return pingRoles;
+            return result;
         }
 
         public static Task<bool> ExistTimeZone(string timeZoneId) {

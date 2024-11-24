@@ -10,23 +10,34 @@
             "timestamp": true
         }
     },
-    "TEMPLATE_USE": {
+    "TEMPLATES": {
         "embed": {
-            "description": "**Select** an existing **template** below this message! You can overwrite default built-in templates by saving under these names:\n- {data.list.templates}\n\nCustom Templates:\n{template.list.custom}",
-            "author": "Using Template",
+            "description": "**Select** an existing **template** below this message! You can overwrite default built-in templates by saving under these names:",
+            "author": "Templates Overview",
             "author_url": "https://cdn-icons-png.flaticon.com/512/580/580259.png",
             "image": "local://template_template.png",
-            "color": "#0681cd",
-            "timestamp": false
+            "color": "#ed9955",
+            "fields": [
+                {
+                    "Item1": "Default Templates",
+                    "Item2": "- {data.list.templates}",
+                    "Item3": false
+                },
+                {
+                    "Item1": "Custom Templates",
+                    "Item2": "- {data.list.templates.custom}",
+                    "Item3": false
+                }
+            ]
         },
         "ephemeral": true
     },
-    "TEMPLATE_CREATE": {
+    "TEMPLATES_SAVE": {
         "embed": {
             "description": "Template **`{template.name}`** has been saved.",
-            "author": "Template Creation",
+            "author": "Template Saved",
             "author_url": "https://cdn-icons-png.flaticon.com/512/580/580259.png",
-            "color": "#0681cd",
+            "color": "#ed9955",
             "timestamp": true
         },
         "ephemeral": true

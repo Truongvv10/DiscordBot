@@ -48,20 +48,23 @@
         #endregion
 
         #region Buttons
-        // Button Component
-        private const string BUTTON_EMBED = $"{PREFIX}.button.embed";
+        // Button Embed
+        public const string BUTTON_EMBED = $"{PREFIX}.button.embed";
         public const string BUTTON_CHANNEL = $"{BUTTON_EMBED}.channel";
         public const string BUTTON_TEMPLATE = $"{BUTTON_EMBED}.template";
         public const string BUTTON_UPDATE = $"{BUTTON_EMBED}.update";
         public const string BUTTON_CANCEL = $"{BUTTON_EMBED}.cancel";
 
-        // Button Component Permission
-        private const string BUTTON_TEMPLATES = $"{PREFIX}.button.template";
+        // Button Templates
+        public const string BUTTON_TEMPLATES = $"{PREFIX}.button.template";
         public const string BUTTON_TEMPLATES_SELECT = $"{BUTTON_TEMPLATES}.select";
         public const string BUTTON_TEMPLATES_ADD = $"{BUTTON_TEMPLATES}.save";
         public const string BUTTON_TEMPLATES_DELETE =  $"{BUTTON_TEMPLATES}.delete";
         public const string BUTTON_TEMPLATES_CANCEL = $"{BUTTON_TEMPLATES}.cancel";
         public const string BUTTON_TEMPLATES_CONFIRM = $"{BUTTON_TEMPLATES}.confirm";
+
+        // Button Nitro
+        public const string BUTTON_NITRO = $"{PREFIX}.button.nitro";
         #endregion
 
         #region Modals

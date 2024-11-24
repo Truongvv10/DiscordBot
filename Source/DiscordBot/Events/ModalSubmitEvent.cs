@@ -34,7 +34,7 @@ namespace APP.Events {
                     await UseEvent(e);
 
                 // Check if the custom ID contains "template modal"
-                if (e.Interaction.Data.CustomId.Contains(Identity.MODAL_TEMPLATE)) { };
+                if (e.Interaction.Data.CustomId.Contains(Identity.MODAL_TEMPLATES)) { };
                 //await UseTemplate(e);
 
                 // Check if the custom ID contains "timestamp modal"
@@ -58,24 +58,24 @@ namespace APP.Events {
                 switch (selection) {
 
                     case Identity.SELECTION_TITLE:
-                        embed.Title = data[Identity.MODAL_COMP_TITLE];
-                        embed.TitleUrl = data[Identity.MODAL_COMP_TITLE_LINK];
+                        embed.Title = data[Identity.MODAL_DATA_TITLE];
+                        embed.TitleUrl = data[Identity.MODAL_DATA_TITLE_LINK];
                         message = await dataService.UpdateMessageAsync(message, selection);
                         break;
 
                     case Identity.SELECTION_DESCRIPTION:
-                        embed.Description = data[Identity.MODAL_COMP_DESCRIPTION];
+                        embed.Description = data[Identity.MODAL_DATA_DESCRIPTION];
                         message = await dataService.UpdateMessageAsync(message, selection);
                         break;
 
                     case Identity.SELECTION_CONTENT:
-                        message.Content = data[Identity.MODAL_COMP_CONTENT];
+                        message.Content = data[Identity.MODAL_DATA_CONTENT];
                         message = await dataService.UpdateMessageAsync(message, selection);
                         break;
 
                     case Identity.SELECTION_FOOTER:
-                        embed.Footer = data[Identity.MODAL_COMP_FOOTER];
-                        embed.FooterUrl = data[Identity.MODAL_COMP_FOOTER_URL];
+                        embed.Footer = data[Identity.MODAL_DATA_FOOTER];
+                        embed.FooterUrl = data[Identity.MODAL_DATA_FOOTER_URL];
                         message = await dataService.UpdateMessageAsync(message, selection);
                         break;
 
@@ -85,26 +85,26 @@ namespace APP.Events {
                             embed.AuthorLink = e.Interaction.User.DefaultAvatarUrl;
                             embed.AuthorUrl = e.Interaction.User.AvatarUrl;
                         } else {
-                            embed.Author = data[Identity.MODAL_COMP_AUTHOR];
-                            embed.AuthorLink = data[Identity.MODAL_COMP_AUTHOR_LINK];
-                            embed.AuthorUrl = data[Identity.MODAL_COMP_AUTHOR_URL];
+                            embed.Author = data[Identity.MODAL_DATA_AUTHOR];
+                            embed.AuthorLink = data[Identity.MODAL_DATA_AUTHOR_LINK];
+                            embed.AuthorUrl = data[Identity.MODAL_DATA_AUTHOR_URL];
                         }
                         message = await dataService.UpdateMessageAsync(message, selection);
                         break;
 
                     case Identity.SELECTION_COLOR:
-                        embed.Color = data[Identity.MODAL_COMP_COLOR];
+                        embed.Color = data[Identity.MODAL_DATA_COLOR];
                         await dataService.UpdateMessageAsync(message, selection);
                         break;
 
                     case Identity.SELECTION_IMAGE:
-                        embed.Image = data[Identity.MODAL_COMP_IMAGE];
+                        embed.Image = data[Identity.MODAL_DATA_IMAGE];
                         await e.Interaction.CreateResponseAsync(InteractionResponseType.DeferredMessageUpdate);
                         await DiscordUtil.ModifyMessageAsync(message.Type, e.Interaction, message, (ulong)message.ChannelId!, message.IsEphemeral);
                         return;
 
                     case Identity.SELECTION_THUMBNAIL:
-                        embed.Thumbnail = data[Identity.MODAL_COMP_THUMBNAIL];
+                        embed.Thumbnail = data[Identity.MODAL_DATA_THUMBNAIL];
                         await e.Interaction.CreateResponseAsync(InteractionResponseType.DeferredMessageUpdate);
                         await DiscordUtil.ModifyMessageAsync(message.Type, e.Interaction, message, (ulong)message.ChannelId!, message.IsEphemeral);
                         return;
@@ -130,12 +130,12 @@ namespace APP.Events {
                         break;
 
                     case Identity.SELECTION_FIELD_ADD:
-                        embed.AddField(e.Values[Identity.MODAL_COMP_FIELD_TITLE], e.Values[Identity.MODAL_COMP_FIELD_TEXT], bool.Parse(e.Values[Identity.MODAL_COMP_FIELD_INLINE]));
+                        embed.AddField(e.Values[Identity.MODAL_DATA_FIELD_TITLE], e.Values[Identity.MODAL_DATA_FIELD_TEXT], bool.Parse(e.Values[Identity.MODAL_DATA_FIELD_INLINE]));
                         await dataService.UpdateMessageAsync(message, selection);
                         break;
 
                     case Identity.SELECTION_FIELD_REMOVE:
-                        if (int.TryParse(e.Values[Identity.MODAL_COMP_FIELD_INDEX], out int index)) {
+                        if (int.TryParse(e.Values[Identity.MODAL_DATA_FIELD_INDEX], out int index)) {
                             if ((index - 1) >= e.Values.Count() - 1) {
                                 embed.RemoveFieldAt(index - 1);
                             }
@@ -144,7 +144,7 @@ namespace APP.Events {
                         break;
 
                     case Identity.SELECTION_TEMPLATE_ADD:
-                        string name = data[Identity.MODAL_COMP_TEMPLATE_ADD];
+                        string name = data[Identity.MODAL_DATA_TEMPLATE_ADD];
                         if (!string.IsNullOrWhiteSpace(name)) {
                             var clone = message.DeepClone();
                             //await CacheData.SaveTemplate(guildId, name.ToUpper().Replace(" ", "_"), clone);
@@ -289,64 +289,64 @@ namespace APP.Events {
             }
         }
 
-        //private async Task UseTemplate(ModalSubmitEventArgs e) {
-        //    try {
-        //        // Variables
-        //        var data = e.Values;
-        //        var selection = e.Interaction.Data.CustomId.Split(";")[1];
-        //        var messageId = ulong.Parse(e.Interaction.Data.CustomId.Split(";")[2]);
-        //        var guildId = e.Interaction.Guild.Id;
-        //        var message = await CacheData.GetMessageAsync(guildId, messageId);
-        //        var embed = message.Embed;
+        private async Task UseTemplate(ModalSubmitEventArgs e) {
+            try {
+                //// Variables
+                //var data = e.Values;
+                //var selection = e.Interaction.Data.CustomId.Split(";")[1];
+                //var messageId = ulong.Parse(e.Interaction.Data.CustomId.Split(";")[2]);
+                //var guildId = e.Interaction.Guild.Id;
+                //var message = await dataService.GetMessageAsync(guildId, messageId);
+                //var embed = message.Embed;
 
-        //        // Check modals
-        //        switch (selection) {
+                //// Check modals
+                //switch (selection) {
 
-        //            case Identity.SELECTION_TEMPLATE_INPUT:
+                //    case Identity.SELECTION_TEMPLATE_INPUT:
 
-        //                string templateUseName = data[Identity.TEMPLATE_NAME].ToUpper().Replace(" ", "_");
-        //                var templateMessage = await CacheData.GetTemplateAsync(e.Interaction.Guild.Id, templateUseName);
-        //                var templateUseEmbed = templateMessage.Embed;
-        //                var templateMessageOriginal = await CacheData.GetMessageAsync(e.Interaction.Guild.Id, messageId);
-        //                var templateUseEmbedOriginal = templateMessageOriginal.Embed;
+                //        string templateUseName = data[Identity.TEMPLATE_NAME].ToUpper().Replace(" ", "_");
+                //        var templateMessage = await dataService.GetTemplateAsync(e.Interaction.Guild.Id, templateUseName);
+                //        var templateUseEmbed = templateMessage.Message.Embed;
+                //        var templateMessageOriginal = await dataService.GetMessageAsync(e.Interaction.Guild.Id, messageId);
+                //        var templateUseEmbedOriginal = templateMessageOriginal.Embed;
 
-        //                templateUseEmbed.Type = templateUseEmbedOriginal.Type;
-        //                templateMessage.ChannelId = templateMessageOriginal.ChannelId;
-        //                templateMessage.Sender = templateMessageOriginal.Sender;
-        //                templateMessage.IsEphemeral = templateMessageOriginal.IsEphemeral;
-        //                templateMessage.Roles = templateMessageOriginal.Roles;
-        //                templateUseEmbed.AddData(Identity.TEMPLATE_REPLACE_MESSAGE_ID, messageId);
+                //        templateUseEmbed.Type = templateUseEmbedOriginal.Type;
+                //        templateMessage.ChannelId = templateMessageOriginal.ChannelId;
+                //        templateMessage.Sender = templateMessageOriginal.Sender;
+                //        templateMessage.IsEphemeral = templateMessageOriginal.IsEphemeral;
+                //        templateMessage.Roles = templateMessageOriginal.Roles;
+                //        templateUseEmbed.AddData(Identity.TEMPLATE_REPLACE_MESSAGE_ID, messageId);
 
-        //                await DiscordUtil.ModifyMessageAsync(templateUseEmbed.Type, e.Interaction, templateMessage, (ulong)templateMessage.ChannelId!, templateMessage.IsEphemeral);
+                //        await DiscordUtil.ModifyMessageAsync(templateUseEmbed.Type, e.Interaction, templateMessage, (ulong)templateMessage.ChannelId!, templateMessage.IsEphemeral);
 
-        //                return;
+                //        return;
 
-        //            default:
-        //                break;
-        //        }
+                //    default:
+                //        break;
+                //}
 
-        //        // Create the response
-        //        await DiscordUtil.UpdateMessageAsync(e.Interaction, message);
+                //// Create the response
+                //await DiscordUtil.UpdateMessageAsync(e.Interaction, message);
 
-        //    } catch (UtilException ex) {
-        //        throw new EventException(ex.Message);
+            } catch (UtilException ex) {
+                throw new EventException(ex.Message);
 
-        //    } catch (Exception ex) {
-        //        throw new EventException($"An error has occured while submitting modal", ex);
-        //    }
-        //}
+            } catch (Exception ex) {
+                throw new EventException($"An error has occured while submitting modal", ex);
+            }
+        }
 
         private async Task UseTimestamp(ModalSubmitEventArgs e) {
             try {
                 // Variables
                 var data = e.Values;
-                var template = await dataService.GetTemplateAsync(e.Interaction.Guild.Id, Identity.TDATA_TEMPLATE);
+                var template = await dataService.GetTemplateAsync(e.Interaction.Guild.Id, Identity.TDATA_TIMESTAMP);
                 var message = template.Message;
                 var embed = message.Embed;
 
                 // Check modals
-                var timeZone = data[Identity.MODAL_COMP_TIMESTAMP_TIMEZONE];
-                var time = data[Identity.MODAL_COMP_TIMESTAMP_TIME];
+                var timeZone = data[Identity.MODAL_DATA_TIMESTAMPS_TIMEZONE];
+                var time = data[Identity.MODAL_DATA_TIMESTAMPS_TIME];
 
                 // Check if the time zone exists & time format is correct
                 if (!await DiscordUtil.ExistTimeZone(timeZone))
@@ -392,9 +392,7 @@ namespace APP.Events {
                 { Identity.EVENT_START, startDate },
                 { Identity.EVENT_END, endDate },
                 { Identity.EVENT_START_R, startDateRelative },
-                { Identity.EVENT_END_R, endDateRelative },
-                { Identity.REACTION_1, "✅" },
-                { Identity.REACTION_2, "❌" }
+                { Identity.EVENT_END_R, endDateRelative }
 
             };
 

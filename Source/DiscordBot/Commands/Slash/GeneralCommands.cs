@@ -16,6 +16,7 @@ namespace APP.Commands.Slash {
         #region Fields
         private const string TIMESTAMP = "TIMESTAMP";
         private const string NITRO = "NITRO";
+        private const string TEMPLATES = "TEMPLATES";
         #endregion
 
         #region Properties
@@ -30,8 +31,8 @@ namespace APP.Commands.Slash {
                 // Build the embed message with default values
                 var modal = new DiscordInteractionResponseBuilder();
                 modal.WithTitle($"TIMESTAMP").WithCustomId(Identity.MODAL_TIMESTAMP)
-                    .AddComponents(new TextInputComponent("TIMEZONE", Identity.MODAL_COMP_TIMESTAMP_TIMEZONE, "Europe/Brussels", timeZone.ToString(), true, TextInputStyle.Short))
-                    .AddComponents(new TextInputComponent("TIMEZONE", Identity.MODAL_COMP_TIMESTAMP_TIME, "DD/MM/YYYY hh:mm", DateTime.Now.ToString("dd/MM/yyyy HH:mm"), true, TextInputStyle.Short, 16, 16));
+                    .AddComponents(new TextInputComponent("TIMEZONE", Identity.MODAL_DATA_TIMESTAMPS_TIMEZONE, "Europe/Brussels", timeZone.ToString(), true, TextInputStyle.Short))
+                    .AddComponents(new TextInputComponent("TIMEZONE", Identity.MODAL_DATA_TIMESTAMPS_TIME, "DD/MM/YYYY hh:mm", DateTime.Now.ToString("dd/MM/yyyy HH:mm"), true, TextInputStyle.Short, 16, 16));
 
                 // Create response model
                 await ctx.Interaction.CreateResponseAsync(InteractionResponseType.Modal, modal);
@@ -57,6 +58,22 @@ namespace APP.Commands.Slash {
 
             } catch (Exception ex) {
                 throw new CommandException($"An error occured using the command: /{NITRO}", ex);
+            }
+        }
+
+        [SlashCommand(TEMPLATES, "View all available templates")]
+        [RequirePermission(CommandEnum.TEMPLATES)]
+        public async Task Templates(InteractionContext ctx) {
+            try {
+                // Build the embed message with default values
+                var template = await DataService.GetTemplateAsync(ctx.Guild.Id, Identity.TDATA_TEMPLATES);
+                var message = template!.Message;
+
+                // Create embed message
+                await DiscordUtil.CreateMessageAsync(CommandEnum.TEMPLATES, ctx.Interaction, message, ctx.Channel.Id);
+
+            } catch (Exception ex) {
+                throw new CommandException($"An error occured using the command: /{TEMPLATES}", ex);
             }
         }
     }

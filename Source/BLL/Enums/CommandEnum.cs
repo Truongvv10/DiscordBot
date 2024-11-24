@@ -19,10 +19,13 @@ namespace BLL.Enums {
         EMBED_CREATE = 1,
         [Description("/embed-edit")]
         EMBED_EDIT = 2,
+        [Description("/embed-templates")]
+        EMBED_TEMPLATES = 3,
+
 
 
         [Description("/embed-template")]
-        TEMPLATE = 50,
+        TEMPLATES = 50,
         [Description("/embed-template-create")]
         TEMPLATE_CREATE = 51,
         [Description("/embed-template-edit")]

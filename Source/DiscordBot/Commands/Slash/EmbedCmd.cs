@@ -19,6 +19,7 @@ namespace APP.Commands.Slash {
         private const string EMBED = "EMBED";
         private const string EMBED_CREATE = "CREATE";
         private const string EMBED_EDIT = "EDIT";
+        private const string EMBED_TEMPLATES = "TEMPLATES";
         #endregion
 
         #region Properties
@@ -74,6 +75,24 @@ namespace APP.Commands.Slash {
                 throw new CommandException($"An error occured using the command: /{EMBED} {EMBED_EDIT}", ex);
             }
         }
+
+        #region Command: /embed templates
+        [SlashCommand(EMBED_TEMPLATES, "View all available templates")]
+        [RequirePermission(CommandEnum.EMBED_TEMPLATES)]
+        public async Task Templates(InteractionContext ctx) {
+            try {
+                // Build the embed message with default values
+                var template = await DataService.GetTemplateAsync(ctx.Guild.Id, Identity.TDATA_TEMPLATES);
+                var message = template!.Message;
+
+                // Create embed message
+                await DiscordUtil.CreateMessageAsync(CommandEnum.TEMPLATES, ctx.Interaction, message, ctx.Channel.Id);
+
+            } catch (Exception ex) {
+                throw new CommandException($"An error occured using the command: /{EMBED_TEMPLATES}", ex);
+            }
+        }
+        #endregion
         #endregion
     }
 }
