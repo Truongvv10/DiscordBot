@@ -35,7 +35,7 @@ namespace BLL.Services {
                 throw new ServiceException($"Message Id can not be null.");
             await dataContext.Messages.AddAsync(message);
             await dataContext.SaveChangesAsync();
-            cacheData.Messages.Add((message.GuildId, message.MessageId), message);
+            cacheData.AddMessage(message.GuildId, message);
             return message;
         }
 
@@ -158,7 +158,6 @@ namespace BLL.Services {
             await RemoveMessageAsync(message);
             cacheData.DeleteMessage(message.GuildId, message.MessageId);
             await AddMessageAsync(message);
-            cacheData.AddMessage(message.GuildId, message);
             return message;
 
 
