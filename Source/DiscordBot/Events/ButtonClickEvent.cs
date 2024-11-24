@@ -39,7 +39,7 @@ namespace APP.Events {
 
         public async Task UseEmbed(DiscordClient discordClient, ComponentInteractionCreateEventArgs e) {
             try {
-
+                // Get the message
                 var messageId = e.Message.Id;
                 var guildId = e.Guild.Id;
                 var message = await dataService.GetMessageAsync(e.Guild.Id, messageId) ?? throw new Exception($"nawinwinr");
@@ -49,6 +49,7 @@ namespace APP.Events {
                 await translated.TranslatePlaceholders();
                 var embed = translated.Embed;
 
+                // Roles to ping
                 string pingRoles = await DiscordUtil.AddPingRolesToContentAsync(translated, e.Guild);
 
                 switch (e.Id) {
@@ -60,11 +61,11 @@ namespace APP.Events {
                         if (!string.IsNullOrWhiteSpace(pingRoles)) response.WithContent(pingRoles);
                         var sentMessage = await channel.SendMessageAsync(response);
                         message.AddChild(sentMessage.Id, sentMessage.Channel.Id);
-                        var saveMessage = message.DeepClone();
-                        saveMessage.MessageId = sentMessage.Id;
-                        saveMessage.ChannelId = sentMessage.Channel.Id;
-                        saveMessage.ClearChilds();
-                        await dataService.AddMessageAsync(saveMessage);
+                        var sentMessageClone = message.DeepClone();
+                        sentMessageClone.MessageId = sentMessage.Id;
+                        sentMessageClone.ChannelId = sentMessage.Channel.Id;
+                        sentMessageClone.ClearChilds();
+                        await dataService.AddMessageAsync(sentMessageClone);
                         break;
 
                     case Identity.BUTTON_TEMPLATE:
@@ -81,10 +82,9 @@ namespace APP.Events {
                             if (childChannel != null) {
                                 var oldMessage = await childChannel.GetMessageAsync(m.Key);
                                 if (oldMessage != null) {
-                                    await oldMessage.ModifyAsync(msg => {
-                                        msg.Content = pingRoles;
-                                        msg.Embed = embed.Build();
-                                    });
+                                    var newResponse = DiscordUtil.ResolveImageAttachment(translated);
+                                    newResponse.WithContent(pingRoles);
+                                    await oldMessage.ModifyAsync(newResponse);
                                 }
                             }
                         }
