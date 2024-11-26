@@ -27,10 +27,10 @@ namespace APP.Services {
         public DiscordService(Config config, CacheData cache) {
 
             // Initialize fields
-            if (config.DatabaseType == DatabaseSaveType.SqlServer) {
-                dataService = new SqlServerService(cache);
+            if (config.DatabaseType == DatabaseSaveType.SqlServer && config.ConnectionString != null) {
+                dataService = new SqlServerService(cache, config.ConnectionString);
             } else {
-                dataService = new SqlServerService(cache);
+                throw new ServiceException($"Connection can not be established");
             }
 
             this.cache = cache;

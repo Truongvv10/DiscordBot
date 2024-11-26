@@ -1,27 +1,27 @@
-﻿using BLL.Contexts;
-using BLL.Exceptions;
+﻿using BLL.Exceptions;
 using BLL.Interfaces;
 using BLL.Model;
+using BLL.Services;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Protocols;
+using SQLServer.Contexts;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BLL.Services {
-    public class DataService : IDataService {
+namespace SQLServer.Services {
+    public class SqlServerService : IDataService {
 
         #region Fields
-        private DataContext dataContext;
         private CacheData cacheData;
+        private SqlServerDataContext dataContext;
         #endregion
 
         #region Constructors
-        public DataService(DataContext dataContext, CacheData cacheData) {
-            this.dataContext = dataContext;
+        public SqlServerService(CacheData cacheData, string connectionString) {
             this.cacheData = cacheData;
+            dataContext = new SqlServerDataContext(connectionString);
         }
         #endregion
 
