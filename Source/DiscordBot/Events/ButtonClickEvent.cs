@@ -16,11 +16,13 @@ namespace APP.Events {
 
         #region Fields
         private readonly IDataService dataService;
+        public readonly DiscordUtil discordUtil;
         #endregion
 
         #region Constructors
-        public ButtonClickEvent(IDataService dataService) {
+        public ButtonClickEvent(IDataService dataService, DiscordUtil discordUtil) {
             this.dataService = dataService;
+            this.discordUtil = discordUtil;
         }
         #endregion
 
@@ -50,14 +52,14 @@ namespace APP.Events {
                 var embed = translated.Embed;
 
                 // Roles to ping
-                string pingRoles = await DiscordUtil.AddPingRolesToContentAsync(translated, e.Guild);
+                string pingRoles = await discordUtil.AddPingRolesToContentAsync(translated, e.Guild);
 
                 switch (e.Id) {
 
                     case Identity.BUTTON_CHANNEL:
                         await e.Interaction.CreateResponseAsync(InteractionResponseType.DeferredMessageUpdate);
-                        var channel = await DiscordUtil.GetChannelByIdAsync(e.Guild, message.ChannelId!);
-                        var response = DiscordUtil.ResolveImageAttachment(translated);
+                        var channel = await discordUtil.GetChannelByIdAsync(e.Guild, message.ChannelId!);
+                        var response = discordUtil.ResolveImageAttachment(translated);
                         if (!string.IsNullOrWhiteSpace(pingRoles)) response.WithContent(pingRoles);
                         var sentMessage = await channel.SendMessageAsync(response);
                         message.AddChild(sentMessage.Id, sentMessage.Channel.Id);
@@ -82,7 +84,7 @@ namespace APP.Events {
                             if (childChannel != null) {
                                 var oldMessage = await childChannel.GetMessageAsync(m.Key);
                                 if (oldMessage != null) {
-                                    var newResponse = DiscordUtil.ResolveImageAttachment(translated);
+                                    var newResponse = discordUtil.ResolveImageAttachment(translated);
                                     newResponse.WithContent(pingRoles);
                                     await oldMessage.ModifyAsync(newResponse);
                                 }
@@ -226,7 +228,7 @@ namespace APP.Events {
                 template.AddData(Placeholder.TEMPLATE, JsonConvert.SerializeObject(message));
                 message = template;
             }
-            await DiscordUtil.ModifyMessageAsync(CommandEnum.TEMPLATE_USE, interaction, message, interaction.Channel.Id);
+            await discordUtil.ModifyMessageAsync(CommandEnum.TEMPLATE_USE, interaction, message, interaction.Channel.Id);
         }
 
         #endregion

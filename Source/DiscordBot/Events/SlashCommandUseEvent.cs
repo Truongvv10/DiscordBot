@@ -11,11 +11,13 @@ namespace APP.Events {
 
         #region Fields
         private readonly IDataService dataService;
+        private readonly DiscordUtil discordUtil;
         #endregion
 
         #region Constructors
-        public SlashCommandUseEvent(IDataService dataService) {
+        public SlashCommandUseEvent(IDataService dataService, DiscordUtil discordUtil) {
             this.dataService = dataService;
+            this.discordUtil = discordUtil;
         }
         #endregion
 
@@ -29,7 +31,7 @@ namespace APP.Events {
                     if (check is RequirePermissionAttribute att) {
                         var interaction = e.Context.Interaction;
                         var message = (await dataService.GetTemplateAsync(interaction.Guild.Id, Identity.TDATA_NO_PERMISSION)).Message;
-                        await DiscordUtil.CreateMessageAsync(CommandEnum.NONE, interaction, message, interaction.Channel.Id, message.IsEphemeral);
+                        await discordUtil.CreateMessageAsync(CommandEnum.NONE, interaction, message, interaction.Channel.Id, message.IsEphemeral);
                     }
                 }
             } else Console.WriteLine($"Error executing command {e.Context}:\n{e.Exception}");

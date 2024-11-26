@@ -8,9 +8,11 @@ using APP.Commands.Slash;
 using APP.Events;
 using BLL.Model;
 using Microsoft.Extensions.DependencyInjection;
-using BLL.Contexts;
 using APP.Utils;
 using BLL.Interfaces;
+using BLL.Enums;
+using SQLServer.Services;
+using BLL.Services;
 
 namespace APP.Services {
     public class DiscordService {
@@ -19,16 +21,26 @@ namespace APP.Services {
         private Config config;
         private DiscordClient client;
         private SlashCommandsExtension commands;
+        private CacheData cache;
+        private DiscordUtil discordUtil;
 
-        public DiscordService(IDataService dataService, Config config) {
+        public DiscordService(Config config, CacheData cache) {
 
             // Initialize fields
-            this.dataService = dataService;
+            if (config.DatabaseType == DatabaseSaveType.SqlServer) {
+                dataService = new SqlServerService(cache);
+            } else {
+                dataService = new SqlServerService(cache);
+            }
+
+            this.cache = cache;
             this.config = config;
+            discordUtil = new DiscordUtil(dataService);
 
             // Set up services
             var services = new ServiceCollection()
                 .AddSingleton(dataService)
+                .AddSingleton(discordUtil)
                 .BuildServiceProvider();
 
             // Set up bot configuration
@@ -95,19 +107,19 @@ namespace APP.Services {
             client.MessageReactionAdded += reactionHandel.ReactionAdd;
 
             // Register component interaction event button
-            var buttonHandler = new ButtonClickEvent(dataService);
+            var buttonHandler = new ButtonClickEvent(dataService, discordUtil);
             client.ComponentInteractionCreated += buttonHandler.ButtonClick;
 
             // Register component interaction event selection
-            var selectHandler = new SelectComponentEvent(dataService);
+            var selectHandler = new SelectComponentEvent(dataService, discordUtil);
             client.ComponentInteractionCreated += selectHandler.ComponentSelect;
 
             // Register modal event handler
-            var modalHandler = new ModalSubmitEvent(dataService);
+            var modalHandler = new ModalSubmitEvent(dataService, discordUtil);
             client.ModalSubmitted += modalHandler.ModalSubmit;
 
             // Subscribe to the SlashCommandErrored event
-            var slashCommandUseEvent = new SlashCommandUseEvent(dataService);
+            var slashCommandUseEvent = new SlashCommandUseEvent(dataService, discordUtil);
             commands.SlashCommandErrored += slashCommandUseEvent.OnSlashCommandErrored;
         }
     }

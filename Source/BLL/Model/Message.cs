@@ -18,10 +18,10 @@ namespace BLL.Model {
         private ulong? sender;
         private bool isEphemeral;
         private DateTime? creationDate;
-        private Embed embed;
         private Dictionary<string, string> data = new();
         private Dictionary<ulong, ulong> childs = new();
         private List<ulong> roles = new();
+        private Embed embed;
         #endregion
 
         #region Constructors
@@ -103,12 +103,6 @@ namespace BLL.Model {
             set => creationDate = value;
         }
 
-        [JsonProperty("embed", NullValueHandling = NullValueHandling.Ignore)]
-        public Embed Embed {
-            get => embed;
-            set => embed = value != null ? value : new Embed();
-        }
-
         [Column("data", TypeName = "nvarchar(max)")]
         [JsonProperty("data", NullValueHandling = NullValueHandling.Ignore)]
         public Dictionary<string, string> Data {
@@ -136,6 +130,12 @@ namespace BLL.Model {
             get => type;
             set => type = value;
         }
+
+        [JsonProperty("embed", NullValueHandling = NullValueHandling.Ignore)]
+        public Embed Embed {
+            get => embed;
+            set => embed = value != null ? value : new Embed();
+        }
         #endregion
 
         #region Methods
@@ -149,10 +149,6 @@ namespace BLL.Model {
         }
         public Message SetEphemeral(bool isEphemeral) {
             this.isEphemeral = isEphemeral;
-            return this;
-        }
-        public Message WithEmbed(Embed embed) {
-            this.embed = embed;
             return this;
         }
         public Message WithOwner(ulong sender) {
@@ -222,6 +218,10 @@ namespace BLL.Model {
         }
         public Message ClearRoles() {
             roles.Clear();
+            return this;
+        }
+        public Message WithEmbed(Embed embed) {
+            this.embed = embed;
             return this;
         }
         public Message DeepClone() {

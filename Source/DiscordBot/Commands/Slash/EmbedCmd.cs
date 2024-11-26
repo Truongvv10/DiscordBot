@@ -24,6 +24,7 @@ namespace APP.Commands.Slash {
 
         #region Properties
         public required IDataService DataService { private get; set; }
+        public required DiscordUtil DiscordUtil { private get; set; }
         #endregion
 
         #region Command: /embed

@@ -3,7 +3,6 @@ using APP.Services;
 using AnsiColor = APP.Utils.AnsiColor;
 using BLL.Interfaces;
 using BLL.Managers;
-using BLL.Contexts;
 using BLL.Services;
 
 namespace APP {
@@ -11,11 +10,9 @@ namespace APP {
         static async Task Main(string[] args) {
             try {
                 // Initialize the Discord bot
-                DataContext dataContext = new DataContext();
-                CacheData cacheData = new CacheData();
-                IDataService dataService = new DataService(dataContext, cacheData);
                 DiscordManager manager = new DiscordManager();
-                var discordService = new DiscordService(dataService, await manager.GetDiscordBotConfig());
+                CacheData cache = new CacheData();
+                var discordService = new DiscordService(await manager.GetDiscordBotConfig(), cache);
 
                 // Initialize the Discord bot
                 await discordService.InitializeAsync();

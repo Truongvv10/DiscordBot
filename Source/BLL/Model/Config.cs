@@ -70,6 +70,7 @@ namespace BLL.Model {
             set => connectionString = value;
         }
 
+        [JsonProperty("prefix", NullValueHandling = NullValueHandling.Ignore)]
         public string Prefix {
             get => prefix;
             set {

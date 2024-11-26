@@ -12,11 +12,13 @@ namespace APP.Events {
 
         #region Fields
         private readonly IDataService dataService;
+        private readonly DiscordUtil discordUtil;
         #endregion
 
         #region Constructors
-        public ModalSubmitEvent(IDataService dataService) {
+        public ModalSubmitEvent(IDataService dataService, DiscordUtil discordUtil) {
             this.dataService = dataService;
+            this.discordUtil = discordUtil;
         }
         #endregion
 
@@ -100,13 +102,13 @@ namespace APP.Events {
                     case Identity.SELECTION_IMAGE:
                         embed.Image = data[Identity.MODAL_DATA_IMAGE];
                         await e.Interaction.CreateResponseAsync(InteractionResponseType.DeferredMessageUpdate);
-                        await DiscordUtil.ModifyMessageAsync(message.Type, e.Interaction, message, (ulong)message.ChannelId!, message.IsEphemeral);
+                        await discordUtil.ModifyMessageAsync(message.Type, e.Interaction, message, (ulong)message.ChannelId!, message.IsEphemeral);
                         return;
 
                     case Identity.SELECTION_THUMBNAIL:
                         embed.Thumbnail = data[Identity.MODAL_DATA_THUMBNAIL];
                         await e.Interaction.CreateResponseAsync(InteractionResponseType.DeferredMessageUpdate);
-                        await DiscordUtil.ModifyMessageAsync(message.Type, e.Interaction, message, (ulong)message.ChannelId!, message.IsEphemeral);
+                        await discordUtil.ModifyMessageAsync(message.Type, e.Interaction, message, (ulong)message.ChannelId!, message.IsEphemeral);
                         return;
 
                     case Identity.SELECTION_PINGROLE:
@@ -121,7 +123,7 @@ namespace APP.Events {
                             }
                             // Check if the input is a valid ulong (role ID)
                             else if (ulong.TryParse(trimmedItem, out ulong roleid)) {
-                                var role = await DiscordUtil.GetRolesByIdAsync(e.Interaction.Guild, roleid);
+                                var role = await discordUtil.GetRolesByIdAsync(e.Interaction.Guild, roleid);
                                 pingIds.Add(role.Id);
                             }
                         }
@@ -153,7 +155,7 @@ namespace APP.Events {
                         var tempalateAddMessage = await dataService.GetTemplateAsync(e.Interaction.Guild.Id, Identity.TDATA_CREATE);
                         var templateAddEmbed = tempalateAddMessage.Message.Embed!;
                         templateAddEmbed.Description = templateAddEmbed.Description.Replace($"{{{Identity.TEMPLATE_NAME}}}", name);
-                        await DiscordUtil.CreateMessageAsync(CommandEnum.TEMPLATE_CREATE, e.Interaction, tempalateAddMessage.Message, e.Interaction.Channel.Id, tempalateAddMessage.Message.IsEphemeral);
+                        await discordUtil.CreateMessageAsync(CommandEnum.TEMPLATE_CREATE, e.Interaction, tempalateAddMessage.Message, e.Interaction.Channel.Id, tempalateAddMessage.Message.IsEphemeral);
                         await dataService.UpdateMessageAsync(message, selection);
                         return;
 
@@ -162,7 +164,7 @@ namespace APP.Events {
                 }
 
                 // Create the response
-                await DiscordUtil.UpdateMessageAsync(e.Interaction, message);
+                await discordUtil.UpdateMessageAsync(e.Interaction, message);
 
             } catch (UtilException ex) {
                 Console.WriteLine(ex);
@@ -254,8 +256,8 @@ namespace APP.Events {
                         break;
 
                     case Identity.SELECTION_EVENT_CREATION:
-                        var components = DiscordUtil.EventComponent();
-                        var channel = await DiscordUtil.GetChannelByIdAsync(e.Interaction.Guild, (ulong)message.ChannelId!);
+                        var components = discordUtil.EventComponent();
+                        var channel = await discordUtil.GetChannelByIdAsync(e.Interaction.Guild, (ulong)message.ChannelId!);
                         var hidden = message.IsEphemeral;
                         message = (await dataService.GetTemplateAsync(guildId, "EVENT_CREATE")).Message;
                         message.AddData(Identity.EVENT_NAME, e.Values[Identity.EVENT_NAME]);
@@ -271,7 +273,7 @@ namespace APP.Events {
                         message.Type = CommandEnum.EVENTS_EDIT;
                         message.ChannelId = channel.Id;
 
-                        await DiscordUtil.CreateMessageAsync(CommandEnum.EVENTS_EDIT, e.Interaction, message, channel.Id, hidden);
+                        await discordUtil.CreateMessageAsync(CommandEnum.EVENTS_EDIT, e.Interaction, message, channel.Id, hidden);
                         return;
 
                     default:
@@ -279,7 +281,7 @@ namespace APP.Events {
                 }
 
                 // Create the response
-                await DiscordUtil.UpdateMessageAsync(e.Interaction, message);
+                await discordUtil.UpdateMessageAsync(e.Interaction, message);
 
             } catch (UtilException ex) {
                 throw new EventException(ex.Message);
@@ -349,7 +351,7 @@ namespace APP.Events {
                 var time = data[Identity.MODAL_DATA_TIMESTAMPS_TIME];
 
                 // Check if the time zone exists & time format is correct
-                if (!await DiscordUtil.ExistTimeZone(timeZone))
+                if (!await discordUtil.ExistTimeZone(timeZone))
                     throw new EventException($"Time zone \"{timeZone}\" can not be found.");
                 if (!DateTime.TryParseExact(time, "dd/MM/yyyy HH:mm", null, System.Globalization.DateTimeStyles.None, out DateTime parsedTime))
                     throw new EventException($"Time \"{time}\" has an incorrect frmat.");
@@ -357,7 +359,7 @@ namespace APP.Events {
                 message.AddData(Placeholder.TIMEZONE, timeZone);
                 message.AddData(Placeholder.DATE_START, parsedTime.ToString("dd/MM/yyyy HH:mm"));
 
-                await DiscordUtil.CreateMessageAsync(CommandEnum.TIMESTAMP, e.Interaction, message, e.Interaction.Channel.Id, message.IsEphemeral);
+                await discordUtil.CreateMessageAsync(CommandEnum.TIMESTAMP, e.Interaction, message, e.Interaction.Channel.Id, message.IsEphemeral);
 
             } catch (UtilException ex) {
                 throw new EventException(ex.Message);
@@ -382,10 +384,10 @@ namespace APP.Events {
                 message.SetData(Identity.EVENT_END, end);
             } else throw new EventException($"Time \"{end}\" has incorrect format");
 
-            string startDate = await DiscordUtil.TranslateToDynamicTimestamp(parsedStartDateTime, time, TimestampEnum.LONG_DATE_AND_SHORT_TIME);
-            string endDate = await DiscordUtil.TranslateToDynamicTimestamp(parsedEndDateTime, time, TimestampEnum.LONG_DATE_AND_SHORT_TIME);
-            string startDateRelative = await DiscordUtil.TranslateToDynamicTimestamp(parsedStartDateTime, time, TimestampEnum.RELATIVE);
-            string endDateRelative = await DiscordUtil.TranslateToDynamicTimestamp(parsedEndDateTime, time, TimestampEnum.RELATIVE);
+            string startDate = await discordUtil.TranslateToDynamicTimestamp(parsedStartDateTime, time, TimestampEnum.LONG_DATE_AND_SHORT_TIME);
+            string endDate = await discordUtil.TranslateToDynamicTimestamp(parsedEndDateTime, time, TimestampEnum.LONG_DATE_AND_SHORT_TIME);
+            string startDateRelative = await discordUtil.TranslateToDynamicTimestamp(parsedStartDateTime, time, TimestampEnum.RELATIVE);
+            string endDateRelative = await discordUtil.TranslateToDynamicTimestamp(parsedEndDateTime, time, TimestampEnum.RELATIVE);
 
             Dictionary<string, string> placeholders = new() {
                 { Identity.EVENT_NAME, name },

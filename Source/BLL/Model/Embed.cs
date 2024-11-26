@@ -45,6 +45,26 @@ namespace BLL.Model {
         #endregion
 
         #region Properties
+        [Column("message_id", TypeName = "decimal(20, 0)")]
+        [JsonIgnore]
+        public ulong MessageId {
+            get;
+            set;
+        }
+
+        [Column("guild_id", TypeName = "decimal(20, 0)")]
+        [JsonIgnore]
+        public ulong GuildId {
+            get;
+            set;
+        }
+            
+        [JsonIgnore]
+        public Message Message {
+            get;
+            set;
+        }
+
         [Column("embed_title")]
         [MaxLength(250)]
         [JsonProperty("title", NullValueHandling = NullValueHandling.Ignore)]
@@ -143,7 +163,7 @@ namespace BLL.Model {
 
         [Column("embed_fields", TypeName = "nvarchar(max)")]
         [JsonProperty("fields", NullValueHandling = NullValueHandling.Ignore)]
-        public IReadOnlyList<(string, string, bool)> Fields {
+        public List<(string, string, bool)> Fields {
             get => fields;
             set {
                 foreach (var item in value) { AddField(item.Item1, item.Item2, item.Item3); } 

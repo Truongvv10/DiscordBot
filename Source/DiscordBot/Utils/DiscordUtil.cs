@@ -9,18 +9,23 @@ using BLL.Enums;
 using BLL.Model;
 using APP.Enums;
 using BLL.Services;
-using BLL.Contexts;
 using BLL.Interfaces;
 using Microsoft.VisualBasic;
 
 namespace APP.Utils {
-    public static class DiscordUtil {
+    public class DiscordUtil {
 
-        private static CacheData cacheData = new();
-        private static DataContext dataContext = new();
-        private static IDataService dataService = new DataService(dataContext, cacheData);
+        #region Fields
+        private IDataService dataService;
+        #endregion
 
-        public static async Task CreateMessageAsync(CommandEnum type, DiscordInteraction interaction, Message message, ulong channelId, bool hidden = false) {
+        #region Constructor
+        public DiscordUtil(IDataService dataService) {
+            this.dataService = dataService;
+        }
+        #endregion
+
+        public async Task CreateMessageAsync(CommandEnum type, DiscordInteraction interaction, Message message, ulong channelId, bool hidden = false) {
             try {
                 // Start the stopwatch
                 Stopwatch stopwatch = Stopwatch.StartNew();
@@ -55,7 +60,7 @@ namespace APP.Utils {
             }
         }
 
-        public static async Task UpdateMessageAsync(DiscordInteraction interaction, Message message, bool isDeferMessageUpdate = true) {
+        public async Task UpdateMessageAsync(DiscordInteraction interaction, Message message, bool isDeferMessageUpdate = true) {
             try {
                 if (message.MessageId != null) {
                     // Start the stopwatch
@@ -91,7 +96,7 @@ namespace APP.Utils {
             }
         }
 
-        public static async Task ModifyMessageAsync(CommandEnum type, DiscordInteraction interaction, Message message, ulong channelId, bool hidden = false) {
+        public async Task ModifyMessageAsync(CommandEnum type, DiscordInteraction interaction, Message message, ulong channelId, bool hidden = false) {
             try {
                 // Start the stopwatch
                 Stopwatch stopwatch = Stopwatch.StartNew();
@@ -126,7 +131,7 @@ namespace APP.Utils {
             }
         }
 
-        private static async Task<DiscordInteractionResponseBuilder> CreateResponseAsync(CommandEnum type, DiscordInteraction interaction, Message message, ulong toChannelId, bool hidden = false) {
+        private async Task<DiscordInteractionResponseBuilder> CreateResponseAsync(CommandEnum type, DiscordInteraction interaction, Message message, ulong toChannelId, bool hidden = false) {
             try {
 
                 // Get discord channel through channel id
@@ -212,7 +217,7 @@ namespace APP.Utils {
             }
         }
 
-        private static DiscordInteractionResponseBuilder ResolveImageAttachment(Embed embed) {
+        private DiscordInteractionResponseBuilder ResolveImageAttachment(Embed embed) {
             var response = new DiscordInteractionResponseBuilder();
             var folder = Path.Combine(Environment.CurrentDirectory, "Saves", "Images");
             var pattern = @"^local:\/\/.*";
@@ -248,7 +253,7 @@ namespace APP.Utils {
             }
         }
 
-        public static DiscordMessageBuilder ResolveImageAttachment(Message message) {
+        public DiscordMessageBuilder ResolveImageAttachment(Message message) {
             var embed = message.Embed;
             var response = new DiscordMessageBuilder();
             var folder = Path.Combine(Environment.CurrentDirectory, "Saves", "Images");
@@ -286,7 +291,7 @@ namespace APP.Utils {
             }
         }
 
-        public static string BuildEventDesciption(Message message) {
+        public string BuildEventDesciption(Message message) {
             var embed = message.Embed;
             if (embed is not null) {
 
@@ -312,7 +317,7 @@ namespace APP.Utils {
 
         }
 
-        public static List<DiscordActionRowComponent> DefaultComponent() {
+        public List<DiscordActionRowComponent> DefaultComponent() {
 
             var selectOptions = new List<DiscordSelectComponentOption>() {
                     new DiscordSelectComponentOption("Edit title", Identity.SELECTION_TITLE, "Edit your embed title & url.", emoji: new DiscordComponentEmoji("✏️")),
@@ -337,7 +342,7 @@ namespace APP.Utils {
             return results;
         }
 
-        public static List<DiscordActionRowComponent> DefaultButtonComponent(DiscordChannel channel) {
+        public List<DiscordActionRowComponent> DefaultButtonComponent(DiscordChannel channel) {
 
             // Define button components with corresponding actions
             var buttonComponent = new List<DiscordComponent> {
@@ -352,7 +357,7 @@ namespace APP.Utils {
             return results;
         }
 
-        public static List<DiscordActionRowComponent> TemplateComponent() {
+        public List<DiscordActionRowComponent> TemplateComponent() {
 
             var selectOptions = new List<DiscordSelectComponentOption>() {
                     new DiscordSelectComponentOption("Use from template", Identity.SELECTION_TEMPLATE_USE, "Choose an existing template.", emoji: new DiscordComponentEmoji("🗂")),
@@ -368,7 +373,7 @@ namespace APP.Utils {
             return results;
         }
 
-        public static List<DiscordActionRowComponent> EventComponent() {
+        public List<DiscordActionRowComponent> EventComponent() {
 
             var selectEventComponents = new List<DiscordSelectComponentOption>() {
                 new DiscordSelectComponentOption("Properties", Identity.SELECTION_EVENT_PROPERTIES, "Edit properties of the event.", emoji: new DiscordComponentEmoji("🔶")),
@@ -388,7 +393,7 @@ namespace APP.Utils {
             return results;
         }
 
-        public static async Task<DiscordMessage?> GetMessageByIdAsync(DiscordChannel channel, ulong? messageId) {
+        public async Task<DiscordMessage?> GetMessageByIdAsync(DiscordChannel channel, ulong? messageId) {
             try {
                 if (messageId != null) return await channel.GetMessageAsync((ulong)messageId);
                 else return null;
@@ -397,20 +402,20 @@ namespace APP.Utils {
             }
         }
 
-        public static async Task<DiscordRole> GetRolesByIdAsync(DiscordGuild guild, ulong roleId) {
+        public async Task<DiscordRole> GetRolesByIdAsync(DiscordGuild guild, ulong roleId) {
             if (guild.Roles.TryGetValue(roleId, out var role)) {
                 var test = role;
                 return await Task.FromResult(role);
             } else throw new UtilException($"No roles with id \"{roleId}\" found.");
         }
 
-        public static async Task<DiscordChannel> GetChannelByIdAsync(DiscordGuild guild, ulong channelId) {
+        public async Task<DiscordChannel> GetChannelByIdAsync(DiscordGuild guild, ulong channelId) {
             if (guild.Channels.TryGetValue(channelId, out var channel)) {
                 return await Task.FromResult(channel);
             } else throw new UtilException($"No channel with id \"{channelId}\" found.");
         }
 
-        public static async Task<string> AddPingRolesToContentAsync(Message message, DiscordGuild guild) {
+        public async Task<string> AddPingRolesToContentAsync(Message message, DiscordGuild guild) {
             string result = message.Content is null ? "" : $"{message.Content}\n";
             if (message.Roles.Count > 0) {
                 var tasks = message.Roles.Select(async x => await GetRolesByIdAsync(guild, x));
@@ -426,12 +431,12 @@ namespace APP.Utils {
             return result;
         }
 
-        public static Task<bool> ExistTimeZone(string timeZoneId) {
+        public Task<bool> ExistTimeZone(string timeZoneId) {
             var test = Task.FromResult(DateTimeZoneProviders.Tzdb.GetZoneOrNull(TranslateCustomTimezone(timeZoneId)) is null ? false : true);
             return test;
         }
 
-        public static async Task<string> TranslateToDynamicTimestamp(DateTime localDateTime, string timeZoneId, TimestampEnum timestampType) {
+        public async Task<string> TranslateToDynamicTimestamp(DateTime localDateTime, string timeZoneId, TimestampEnum timestampType) {
             try {
                 // Translate custom timezones to Discord timezones
                 timeZoneId = TranslateCustomTimezone(timeZoneId);
@@ -473,7 +478,7 @@ namespace APP.Utils {
             }
         }
 
-        private static string TranslateCustomTimezone(string timeZone) {
+        private string TranslateCustomTimezone(string timeZone) {
 
             var copy = timeZone.ToUpper();
 

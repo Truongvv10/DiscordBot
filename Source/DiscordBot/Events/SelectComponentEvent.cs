@@ -12,11 +12,13 @@ namespace APP.Events {
 
         #region Fields
         private readonly IDataService dataService;
+        private readonly DiscordUtil discordUtil;
         #endregion
 
         #region Constructors
-        public SelectComponentEvent(IDataService dataService) {
+        public SelectComponentEvent(IDataService dataService, DiscordUtil discordUtil) {
             this.dataService = dataService;
+            this.discordUtil = discordUtil;
         }
         #endregion
 
@@ -94,7 +96,7 @@ namespace APP.Events {
                             break;
                         case Identity.SELECTION_TIMESTAMP:
                             embed.HasTimeStamp = !embed.HasTimeStamp;
-                            await DiscordUtil.UpdateMessageAsync(e.Interaction, message);
+                            await discordUtil.UpdateMessageAsync(e.Interaction, message);
                             break;
                         case Identity.SELECTION_FIELD_ADD:
                             modal.WithTitle($"ADDING FIELD TEXT").WithCustomId($"{Identity.MODAL_EMBED};{option};{messageId}");
@@ -159,7 +161,7 @@ namespace APP.Events {
                             //    templateUseEmbed.Description!.Replace($"{{{Identity.TEMPLATE_LIST_CUSTOM}}}", guildTemplates.Keys.Aggregate("", (current, next) => current + "\n- `" + next + "`"));
 
                             templateUseMessage.AddData(Identity.TEMPLATE_REPLACE_MESSAGE_ID, messageId.ToString());
-                            await DiscordUtil.CreateMessageAsync(CommandEnum.TEMPLATE_USE, e.Interaction, templateUseMessage, e.Interaction.Channel.Id, templateUseMessage.IsEphemeral);
+                            await discordUtil.CreateMessageAsync(CommandEnum.TEMPLATE_USE, e.Interaction, templateUseMessage, e.Interaction.Channel.Id, templateUseMessage.IsEphemeral);
                             break;
 
                         default:
