@@ -8,20 +8,15 @@ namespace BLL.Model {
 
         #region Fields
         private ulong guildId;
-        private Config config;
         private ICollection<Message>? messages;
         private ICollection<Template>? templates;
         #endregion
 
         #region Constructors
         public Guild() {
-            config = new Config();
         }
         public Guild(ulong guildId) : this() {
             this.guildId = guildId;
-        }
-        public Guild(ulong guildId, Config config) : this(guildId) {
-            this.config = config;
         }
         #endregion
 
@@ -31,14 +26,6 @@ namespace BLL.Model {
         public ulong GuildId {
             get => guildId;
             set => guildId = value;
-        }
-
-        public Config Config {
-            get => config;
-            set {
-                if (value == null) throw new DomainException("Server.Config: value can not be null.");
-                config = value;
-            }
         }
 
         public ICollection<Message>? Messages {

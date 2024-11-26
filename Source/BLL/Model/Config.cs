@@ -1,5 +1,6 @@
 ﻿using BLL.Enums;
 using BLL.Exceptions;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -14,6 +15,8 @@ namespace BLL.Model {
 
         #region Private Properties
         private string? token;
+        private DatabaseSaveType databaseType;
+        private string? connectionString;
         private string prefix;
         private bool hasAutoReconnect;
         private bool hasEnableMentionPrefix;
@@ -22,7 +25,6 @@ namespace BLL.Model {
         private bool logUnknownEvents;
         private ulong? logChannel;
         private ulong? changelogChannel;
-        private DatabaseSaveType databaseType;
         #endregion
 
         #region Constructors
@@ -50,21 +52,24 @@ namespace BLL.Model {
         #endregion
 
         #region Getter & Setter
-        [Key]
-        [Column("ServerId")]
-        public ulong ServerId {
-            get;
-            set;
-        }
-
-        [Column("BotToken")]
+        [JsonProperty("token", NullValueHandling = NullValueHandling.Ignore)]
         public string? Token {
             get => token;
             set => token = value;
         }
 
-        [MaxLength(1)]
-        [Column("CommandPrefix")]
+        [JsonProperty("database", NullValueHandling = NullValueHandling.Ignore)]
+        public DatabaseSaveType DatabaseType {
+            get => databaseType;
+            set => databaseType = value;
+        }
+
+        [JsonProperty("connection", NullValueHandling = NullValueHandling.Ignore)]
+        public string? ConnectionString {
+            get => connectionString;
+            set => connectionString = value;
+        }
+
         public string Prefix {
             get => prefix;
             set {
@@ -73,52 +78,46 @@ namespace BLL.Model {
             }
         }
 
-        [Column("Reconnect")]
+        [JsonProperty("has_reconnect", NullValueHandling = NullValueHandling.Ignore)]
         public bool HasAutoReconnect {
             get => hasAutoReconnect;
             set => hasAutoReconnect = value;
         }
 
-        [Column("MentionPrefix")]
+        [JsonProperty("has_prefix", NullValueHandling = NullValueHandling.Ignore)]
         public bool HasEnableMentionPrefix {
             get => hasEnableMentionPrefix;
             set => hasEnableMentionPrefix = value;
         }
 
-        [Column("Dms")]
+        [JsonProperty("has_dms", NullValueHandling = NullValueHandling.Ignore)]
         public bool HasEnableDms {
             get => hasEnableDms;
             set => hasEnableDms = value;
         }
 
-        [Column("DefaultHelp")]
+        [JsonProperty("has_default_help", NullValueHandling = NullValueHandling.Ignore)]
         public bool HasEnableDefaultHelp {
             get => hasEnableDefaultHelp;
             set => hasEnableDefaultHelp = value;
         }
 
-        [Column("LogUnknownEvents")]
+        [JsonProperty("log_unknown_events", NullValueHandling = NullValueHandling.Ignore)]
         public bool LogUnknownEvents {
             get => logUnknownEvents;
             set => logUnknownEvents = value;
         }
 
-        [Column("LogChannel")]
+        [JsonProperty("log_channel", NullValueHandling = NullValueHandling.Ignore)]
         public ulong? LogChannel {
             get => logChannel;
             set => logChannel = value;
         }
 
-        [Column("ChangelogChannel")]
+        [JsonProperty("changelog_channel", NullValueHandling = NullValueHandling.Ignore)]
         public ulong? ChangelogChannel {
-            get => logChannel;
-            set => logChannel = value;
-        }
-
-        [Column("DatabaseType")]
-        public DatabaseSaveType DatabaseType {
-            get => databaseType;
-            set => databaseType = value;
+            get => changelogChannel;
+            set => changelogChannel = value;
         }
     }
     #endregion
