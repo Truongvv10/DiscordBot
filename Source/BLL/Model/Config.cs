@@ -1,4 +1,5 @@
-﻿using BLL.Exceptions;
+﻿using BLL.Enums;
+using BLL.Exceptions;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -20,6 +21,8 @@ namespace BLL.Model {
         private bool hasEnableDefaultHelp;
         private bool logUnknownEvents;
         private ulong? logChannel;
+        private ulong? changelogChannel;
+        private DatabaseSaveType databaseType;
         #endregion
 
         #region Constructors
@@ -32,10 +35,12 @@ namespace BLL.Model {
             HasEnableDefaultHelp = true;
             LogUnknownEvents = false;
             logChannel = null;
+            changelogChannel = null;
         }
-        public Config(string token, string prefix = "!", bool autoReconnect = true, bool enableMentionPrefix = true, bool enableDms = false, bool enableDefaultHelp = false, bool logUnknownEvents = false) {
-            Token = token;
-            Prefix = prefix;
+        public Config(string token, DatabaseSaveType databaseType, string prefix = "!", bool autoReconnect = true, bool enableMentionPrefix = true, bool enableDms = false, bool enableDefaultHelp = false, bool logUnknownEvents = false) {
+            this.token = token;
+            this.databaseType = databaseType;
+            this.prefix = prefix;
             HasAutoReconnect = autoReconnect;
             HasEnableMentionPrefix = enableMentionPrefix;
             HasEnableDms = enableDms;
@@ -102,6 +107,18 @@ namespace BLL.Model {
         public ulong? LogChannel {
             get => logChannel;
             set => logChannel = value;
+        }
+
+        [Column("ChangelogChannel")]
+        public ulong? ChangelogChannel {
+            get => logChannel;
+            set => logChannel = value;
+        }
+
+        [Column("DatabaseType")]
+        public DatabaseSaveType DatabaseType {
+            get => databaseType;
+            set => databaseType = value;
         }
     }
     #endregion
