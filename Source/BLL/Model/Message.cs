@@ -17,6 +17,7 @@ namespace BLL.Model {
         private string? content;
         private ulong? sender;
         private bool isEphemeral;
+        private DateTime? creationDate;
         private Embed embed;
         private Dictionary<string, string> data = new();
         private Dictionary<ulong, ulong> childs = new();
@@ -93,6 +94,13 @@ namespace BLL.Model {
         public bool IsEphemeral {
             get => isEphemeral;
             set => isEphemeral = value;
+        }
+
+        [Column("creation")]
+        [JsonProperty("creation", NullValueHandling = NullValueHandling.Ignore)]
+        public DateTime? CreationDate {
+            get => creationDate;
+            set => creationDate = value;
         }
 
         [JsonProperty("embed", NullValueHandling = NullValueHandling.Ignore)]
