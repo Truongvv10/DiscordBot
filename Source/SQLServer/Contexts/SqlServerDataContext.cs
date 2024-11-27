@@ -87,11 +87,11 @@ namespace SQLServer.Contexts {
             // Embed
             builder.Entity<Embed>().ToTable("Embeds");
             builder.Entity<Embed>()
-                .HasKey(e => new { e.MessageId, e.GuildId });
+                .HasKey(e => new { e.GuildId, e.MessageId  });
             builder.Entity<Embed>()
                 .HasOne(e => e.Message)
                 .WithOne(m => m.Embed)
-                .HasForeignKey<Embed>(e => new { e.MessageId, e.GuildId })
+                .HasForeignKey<Embed>(e => new { e.GuildId, e.MessageId })
                 .OnDelete(DeleteBehavior.Cascade); ;
             builder.Entity<Embed>()
                 .Property(e => e.Fields)
@@ -107,11 +107,12 @@ namespace SQLServer.Contexts {
             // Template
             builder.Entity<Template>().ToTable("Templates");
             builder.Entity<Template>(entity => {
-                entity.HasKey(t => new { t.MessageId, t.GuildId });
-                entity.HasOne(t => t.Message)
-                    .WithOne(m => m.Template)
-                    .HasForeignKey<Template>(t => new { t.MessageId, t.GuildId })
-                    .OnDelete(DeleteBehavior.Cascade);
+                entity.HasKey(t => new { t.GuildId, t.Name });
+                entity.Property(t => t.GuildId).ValueGeneratedNever();
+                entity.Property(t => t.Name).ValueGeneratedNever();
+                entity.Property(t => t.Message).HasConversion(
+                    v => JsonConvert.SerializeObject(v),
+                    v => JsonConvert.DeserializeObject<Message>(v));
                 entity.Property(t => t.Name)
                     .HasMaxLength(32);
             });
