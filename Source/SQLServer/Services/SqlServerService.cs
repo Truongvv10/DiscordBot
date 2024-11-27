@@ -75,6 +75,13 @@ namespace SQLServer.Services {
                 .ToListAsync();
         }
 
+        public Task<List<Template>> GetAllTemplatesAsync(ulong guildId) {
+            return dataContext.Templates
+                .Where(t => t.GuildId == guildId)
+                .AsNoTracking()
+                .ToListAsync();
+        }
+
         public async Task<Message?> GetMessageAsync(ulong guildId, ulong messageId) {
             if (cacheData.Messages.TryGetValue((guildId, messageId), out var message)) {
                 return message;
@@ -155,8 +162,6 @@ namespace SQLServer.Services {
             cacheData.DeleteMessage(message.GuildId, message.MessageId);
             await AddMessageAsync(message);
             return message;
-
-
         }
 
         public async Task<Message> UpdateMessageAsync(Message message, string component) {

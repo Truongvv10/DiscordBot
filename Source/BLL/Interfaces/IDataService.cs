@@ -28,6 +28,7 @@ namespace BLL.Interfaces {
         // Template
         public Task<Template> AddTemplateAsync(Template template);
         public Task<Template?> GetTemplateAsync(ulong guildId, string name);
+        public Task<List<Template>> GetAllTemplatesAsync(ulong guildId);
         public Task<Template> UpdateTemplateAsync(Template template);
         public Task RemoveTemplateAsync(Template template);
         public Task<bool> AnyTemplateAsync(ulong guildId, string name);
