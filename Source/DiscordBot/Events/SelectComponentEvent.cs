@@ -125,6 +125,12 @@ namespace APP.Events {
                             await e.Interaction.CreateResponseAsync(InteractionResponseType.Modal, modal);
                             break;
 
+                        case Identity.SELECTION_TEMPLATE_LIST:
+                            var template = await dataService.GetTemplateAsync(e.Guild.Id, Identity.TDATA_TEMPLATES);
+                            var templateMessage = template!.Message;
+                            await discordUtil.CreateMessageAsync(CommandEnum.TEMPLATES, e.Interaction, templateMessage, e.Channel.Id, true);
+                            break;
+
                         default:
                             await SendNotAFeatureYet(e.Interaction);
                             break;
