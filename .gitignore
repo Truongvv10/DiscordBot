@@ -401,4 +401,5 @@ FodyWeavers.xsd
 Source/DiscordBot/Saves/Servers
 Source/DiscordBot/Saves/Config.json
 Source/ConsoleTestApp
-Source/SQLServer/Migrations
+Source/DLLSQLServer/Migrations
+Source/DLLSQLite/Migrations
