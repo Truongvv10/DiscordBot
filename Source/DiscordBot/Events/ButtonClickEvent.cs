@@ -72,8 +72,8 @@ namespace APP.Events {
 
                     case Identity.BUTTON_TEMPLATE:
                         var modal = new DiscordInteractionResponseBuilder();
-                        modal.WithTitle("TEMPLATE SELECT").WithCustomId($"{Identity.MODAL_TEMPLATES};{Identity.SELECTION_EVENT_CREATION};{messageId}");
-                        modal.AddComponents(new TextInputComponent("TEMPLATE NAME", Identity.MODAL_DATA_TEMPLATES_ADD_NAME, "/templates to view the available ones", null, true, TextInputStyle.Short, 1, 32));
+                        modal.WithTitle("TEMPLATE SELECT").WithCustomId($"{Identity.MODAL_EMBED};{Identity.SELECTION_TEMPLATE_USE};{messageId}");
+                        modal.AddComponents(new TextInputComponent("TEMPLATE NAME", Identity.MODAL_DATA_TEMPLATE_USE, "/templates to view the available ones", null, true, TextInputStyle.Short, 1, 32));
                         await e.Interaction.CreateResponseAsync(InteractionResponseType.Modal, modal);
                         break;
 

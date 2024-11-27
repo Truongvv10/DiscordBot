@@ -147,8 +147,7 @@ namespace APP.Events {
 
                     case Identity.SELECTION_TEMPLATE_ADD:
                         await e.Interaction.CreateResponseAsync(InteractionResponseType.DeferredMessageUpdate);
-                        string newTemplateName = data[Identity.MODAL_DATA_TEMPLATE_ADD];
-                        newTemplateName = newTemplateName.TrimStart().TrimEnd().Replace(" ", "_").ToUpper();
+                        string newTemplateName = data[Identity.MODAL_DATA_TEMPLATE_ADD].TrimStart().TrimEnd().Replace(" ", "_").ToUpper();
                         if (string.IsNullOrWhiteSpace(newTemplateName)) throw new EventException($"Template \"{newTemplateName}\" can not be empty or null!");
                         var clone = message.DeepClone();
                         clone.GuildId = 0;
@@ -163,11 +162,25 @@ namespace APP.Events {
 
                     case Identity.SELECTION_TEMPLATE_REMOVE:
                         await e.Interaction.CreateResponseAsync(InteractionResponseType.DeferredMessageUpdate);
-                        string oldTemplateName = data[Identity.MODAL_DATA_TEMPLATE_ADD];
-                        oldTemplateName = oldTemplateName.TrimStart().TrimEnd().Replace(" ", "_").ToUpper();
+                        string oldTemplateName = data[Identity.MODAL_DATA_TEMPLATE_ADD].TrimStart().TrimEnd().Replace(" ", "_").ToUpper();
                         var oldTemplate = await dataService.GetTemplateAsync(guildId, oldTemplateName) 
                             ?? throw new EventException($"There is no template with the name \"{data[Identity.MODAL_DATA_TEMPLATE_ADD]}\"");
                         await dataService.RemoveTemplateAsync(oldTemplate);
+                        return;
+
+                    case Identity.SELECTION_TEMPLATE_USE:
+                        await e.Interaction.CreateResponseAsync(InteractionResponseType.DeferredMessageUpdate);
+                        var templateUseName = data[Identity.MODAL_DATA_TEMPLATE_USE].TrimStart().TrimEnd().Replace(" ", "_").ToUpper();
+                        var templateUse = await dataService.GetTemplateAsync(e.Interaction.Guild.Id, templateUseName)
+                            ?? throw new EventException($"There is no template with the name \"{data[Identity.MODAL_DATA_TEMPLATE_ADD]}\"");
+                        var templateUseMessage = templateUse.Message;
+                        templateUseMessage.Type = message.Type;
+                        templateUseMessage.GuildId = message.GuildId;
+                        templateUseMessage.MessageId = message.MessageId;
+                        templateUseMessage.ChannelId = message.ChannelId;
+                        templateUseMessage.IsEphemeral = message.IsEphemeral;
+                        templateUseMessage.Childs = message.Childs;
+                        await discordUtil.ModifyMessageAsync(templateUseMessage.Type, e.Interaction, templateUseMessage, templateUseMessage.ChannelId, templateUseMessage.IsEphemeral);
                         return;
 
                     default:
@@ -178,12 +191,10 @@ namespace APP.Events {
                 await discordUtil.UpdateMessageAsync(e.Interaction, message);
 
             } catch (UtilException ex) {
-                Console.WriteLine(ex);
                 throw new EventException(ex.Message);
 
             } catch (Exception ex) {
-                Console.WriteLine(ex);
-                throw new EventException($"An error has occured while submitting modal", ex);
+                 throw new EventException($"An error has occured while submitting modal", ex);
             }
 
         }

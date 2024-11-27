@@ -106,7 +106,7 @@ namespace APP.Utils {
                 await translated.TranslatePlaceholders(interaction, dataService);
                 var embed = translated.Embed;
 
-                var response = await CreateResponseAsync(type, interaction, translated, (ulong)message.ChannelId!, message.IsEphemeral);
+                var response = await CreateResponseAsync(type, interaction, translated, message.ChannelId!, message.IsEphemeral);
                 var original = await interaction.GetOriginalResponseAsync();
                 await original.ModifyAsync(new DiscordMessageBuilder()
                     .WithContent(response.Content)
@@ -161,15 +161,6 @@ namespace APP.Utils {
                         components.Add(new DiscordActionRowComponent(buttonEventPost));
                         break;
 
-                    case CommandEnum.TEMPLATES:
-                        var buttonTemplateUse = new List<DiscordComponent> {
-                            new DiscordButtonComponent(ButtonStyle.Success, Identity.BUTTON_TEMPLATES_ADD, "Add Template"),
-                            new DiscordButtonComponent(ButtonStyle.Primary, Identity.BUTTON_TEMPLATES_SELECT, "Use Template"),
-                            new DiscordButtonComponent(ButtonStyle.Secondary, Identity.BUTTON_TEMPLATES_DELETE, "Delete"),
-                            new DiscordButtonComponent(ButtonStyle.Danger, Identity.BUTTON_TEMPLATES_CANCEL, "Cancel")};
-                        components.Add(new DiscordActionRowComponent(buttonTemplateUse));
-                        break;
-
                     case CommandEnum.NITRO:
                         var buttonNitroClaim = new List<DiscordComponent> {
                             new DiscordButtonComponent(ButtonStyle.Primary, Identity.BUTTON_NITRO, "Claim Nitro")};
@@ -179,7 +170,6 @@ namespace APP.Utils {
                     case CommandEnum.EVENTS_EDIT:
                         components.Add(EventComponent().First());
                         components.Add(DefaultComponent().First());
-                        components.Add(TemplateComponent().First());
                         components.Add(new DiscordActionRowComponent(buttonComponent));
                         break;
 
@@ -357,22 +347,6 @@ namespace APP.Utils {
 
             List<DiscordActionRowComponent> results = new() {
                 new DiscordActionRowComponent(buttonComponent)};
-
-            return results;
-        }
-
-        public List<DiscordActionRowComponent> TemplateComponent() {
-
-            var selectOptions = new List<DiscordSelectComponentOption>() {
-                    new DiscordSelectComponentOption("Use from template", Identity.SELECTION_TEMPLATE_USE, "Choose an existing template.", emoji: new DiscordComponentEmoji("🗂")),
-                    new DiscordSelectComponentOption("Save to template", Identity.SELECTION_TEMPLATE_ADD, "Save this embed to be a template.", emoji: new DiscordComponentEmoji("🗃️")),
-                    new DiscordSelectComponentOption("Delete template", Identity.MODAL_DATA_TEMPLATE_REMOVE, "Remove saved templates.", emoji: new DiscordComponentEmoji("❌"))};
-
-            List<DiscordComponent> selectComponents = new() {
-                new DiscordSelectComponent(Identity.SELECTION_TEMPLATE, "Choose from template options", selectOptions)};
-
-            List<DiscordActionRowComponent> results = new() {
-                new DiscordActionRowComponent(selectComponents)};
 
             return results;
         }

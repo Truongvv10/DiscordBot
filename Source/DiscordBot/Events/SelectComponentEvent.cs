@@ -131,6 +131,12 @@ namespace APP.Events {
                             await discordUtil.CreateMessageAsync(CommandEnum.TEMPLATES, e.Interaction, templateMessage, e.Channel.Id, true);
                             break;
 
+                        case Identity.SELECTION_TEMPLATE_USE:
+                            modal.WithTitle("SELECT TEMPLATE").WithCustomId($"{Identity.MODAL_EMBED};{option};{messageId}");
+                            modal.AddComponents(new TextInputComponent("TEMPLATE NAME", Identity.MODAL_DATA_TEMPLATE_USE, "/templates to view the available ones", null, true, TextInputStyle.Short, 3, 24));
+                            await e.Interaction.CreateResponseAsync(InteractionResponseType.Modal, modal);
+                            break;
+
                         default:
                             await SendNotAFeatureYet(e.Interaction);
                             break;

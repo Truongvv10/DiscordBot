@@ -71,7 +71,7 @@ namespace APP.Commands.Slash {
                 var message = template!.Message;
 
                 // Create embed message
-                await DiscordUtil.CreateMessageAsync(CommandEnum.TEMPLATES, ctx.Interaction, message, ctx.Channel.Id);
+                await DiscordUtil.CreateMessageAsync(CommandEnum.TEMPLATES, ctx.Interaction, message, ctx.Channel.Id, true);
 
             } catch (Exception ex) {
                 throw new CommandException($"An error occured using the command: /{TEMPLATES}", ex);
