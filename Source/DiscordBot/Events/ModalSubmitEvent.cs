@@ -146,17 +146,28 @@ namespace APP.Events {
                         break;
 
                     case Identity.SELECTION_TEMPLATE_ADD:
-                        string name = data[Identity.MODAL_DATA_TEMPLATE_ADD];
-                        if (!string.IsNullOrWhiteSpace(name)) {
-                            var clone = message.DeepClone();
-                            //await CacheData.SaveTemplate(guildId, name.ToUpper().Replace(" ", "_"), clone);
-                        } else throw new EventException($"Template \"{name}\" can not be empty or null!");
+                        await e.Interaction.CreateResponseAsync(InteractionResponseType.DeferredMessageUpdate);
+                        string newTemplateName = data[Identity.MODAL_DATA_TEMPLATE_ADD];
+                        newTemplateName = newTemplateName.TrimStart().TrimEnd().Replace(" ", "_").ToUpper();
+                        if (string.IsNullOrWhiteSpace(newTemplateName)) throw new EventException($"Template \"{newTemplateName}\" can not be empty or null!");
+                        var clone = message.DeepClone();
+                        clone.GuildId = 0;
+                        clone.MessageId = 0;
+                        clone.ChannelId = 0;
+                        clone.Sender = null;
+                        clone.CreationDate = null;
+                        clone.IsEphemeral = false;
+                        clone.ClearChilds();
+                        await dataService.AddTemplateAsync(new Template(guildId, newTemplateName, clone));
+                        return;
 
-                        var tempalateAddMessage = await dataService.GetTemplateAsync(e.Interaction.Guild.Id, Identity.TDATA_CREATE);
-                        var templateAddEmbed = tempalateAddMessage.Message.Embed!;
-                        templateAddEmbed.Description = templateAddEmbed.Description.Replace($"{{{Identity.TEMPLATE_NAME}}}", name);
-                        await discordUtil.CreateMessageAsync(CommandEnum.TEMPLATE_CREATE, e.Interaction, tempalateAddMessage.Message, e.Interaction.Channel.Id, tempalateAddMessage.Message.IsEphemeral);
-                        await dataService.UpdateMessageAsync(message, selection);
+                    case Identity.SELECTION_TEMPLATE_REMOVE:
+                        await e.Interaction.CreateResponseAsync(InteractionResponseType.DeferredMessageUpdate);
+                        string oldTemplateName = data[Identity.MODAL_DATA_TEMPLATE_ADD];
+                        oldTemplateName = oldTemplateName.TrimStart().TrimEnd().Replace(" ", "_").ToUpper();
+                        var oldTemplate = await dataService.GetTemplateAsync(guildId, oldTemplateName) 
+                            ?? throw new EventException($"There is no template with the name \"{data[Identity.MODAL_DATA_TEMPLATE_ADD]}\"");
+                        await dataService.RemoveTemplateAsync(oldTemplate);
                         return;
 
                     default:

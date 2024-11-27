@@ -67,13 +67,6 @@ namespace BLL.Model {
             set;
         }
 
-        [Column("template")]
-        [JsonIgnore]
-        public Template Template {
-            get;
-            set;
-        }
-
         [Column("content")]
         [MaxLength(4000)]
         [JsonProperty("content", NullValueHandling = NullValueHandling.Ignore)]

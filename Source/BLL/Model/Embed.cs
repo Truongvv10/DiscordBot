@@ -65,7 +65,7 @@ namespace BLL.Model {
             set;
         }
 
-        [Column("embed_title")]
+        [Column("title")]
         [MaxLength(250)]
         [JsonProperty("title", NullValueHandling = NullValueHandling.Ignore)]
         public string? Title {
@@ -73,7 +73,7 @@ namespace BLL.Model {
             set => title = value;
         }
 
-        [Column("embed_title_link")]
+        [Column("title_link")]
         [MaxLength(250)]
         [JsonProperty("title_link", NullValueHandling = NullValueHandling.Ignore)]
         public string? TitleUrl {
@@ -81,7 +81,7 @@ namespace BLL.Model {
             set => titleLink = value;
         }
 
-        [Column("embed_description")]
+        [Column("description")]
         [MaxLength(4000)]
         [JsonProperty("description", NullValueHandling = NullValueHandling.Ignore)]
         public string? Description {
@@ -89,7 +89,7 @@ namespace BLL.Model {
             set => description = value;
         }
 
-        [Column("embed_footer")]
+        [Column("footer")]
         [MaxLength(250)]
         [JsonProperty("footer", NullValueHandling = NullValueHandling.Ignore)]
         public string? Footer {
@@ -97,7 +97,7 @@ namespace BLL.Model {
             set => footer = value;
         }
 
-        [Column("embed_footer_url")]
+        [Column("footer_url")]
         [MaxLength(250)]
         [JsonProperty("footer_url", NullValueHandling = NullValueHandling.Ignore)]
         public string? FooterUrl {
@@ -105,7 +105,7 @@ namespace BLL.Model {
             set => footerUrl = value;
         }
 
-        [Column("embed_author")]
+        [Column("author")]
         [MaxLength(250)]
         [JsonProperty("author", NullValueHandling = NullValueHandling.Ignore)]
         public string? Author {
@@ -113,7 +113,7 @@ namespace BLL.Model {
             set => author = value;
         }
 
-        [Column("embed_author_link")]
+        [Column("author_link")]
         [MaxLength(250)]
         [JsonProperty("author_link", NullValueHandling = NullValueHandling.Ignore)]
         public string? AuthorLink {
@@ -121,7 +121,7 @@ namespace BLL.Model {
             set => authorLink = value;
         }
 
-        [Column("embed_author_url")]
+        [Column("author_url")]
         [MaxLength(250)]
         [JsonProperty("author_url", NullValueHandling = NullValueHandling.Ignore)]
         public string? AuthorUrl {
@@ -129,7 +129,7 @@ namespace BLL.Model {
             set => authorUrl = value;
         }
 
-        [Column("embed_image")]
+        [Column("image")]
         [MaxLength(250)]
         [JsonProperty("image", NullValueHandling = NullValueHandling.Ignore)]
         public string? Image {
@@ -137,7 +137,7 @@ namespace BLL.Model {
             set => image = value;
         }
 
-        [Column("embed_thumbnail")]
+        [Column("thumbnail")]
         [MaxLength(250)]
         [JsonProperty("thumbnail", NullValueHandling = NullValueHandling.Ignore)]
         public string? Thumbnail {
@@ -145,7 +145,7 @@ namespace BLL.Model {
             set => thumbnail = value;
         }
 
-        [Column("embed_color")]
+        [Column("color")]
         [MaxLength(10)]
         [JsonProperty("color", NullValueHandling = NullValueHandling.Ignore)]
         public string? Color {
@@ -153,7 +153,7 @@ namespace BLL.Model {
             set { if (value != null && Regex.IsMatch(value, @"#[a-fA-F0-9]{6}")) color = value; }
         }
 
-        [Column("embed_timestamp")]
+        [Column("timestamp")]
         [Required]
         [JsonProperty("timestamp", NullValueHandling = NullValueHandling.Ignore)]
         public bool HasTimeStamp {
@@ -161,7 +161,7 @@ namespace BLL.Model {
             set => hasTimeStamp = value;
         }
 
-        [Column("embed_fields", TypeName = "nvarchar(max)")]
+        [Column("fields", TypeName = "nvarchar(max)")]
         [JsonProperty("fields", NullValueHandling = NullValueHandling.Ignore)]
         public List<(string, string, bool)> Fields {
             get => fields;

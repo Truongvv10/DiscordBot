@@ -196,7 +196,6 @@ namespace APP.Events {
                         modal.WithTitle("TEMPLATE DELETE").WithCustomId($"{Identity.MODAL_TEMPLATES};{Identity.SELECTION_EVENT_CREATION};{messageId}");
                         modal.AddComponents(new TextInputComponent("TEMPLATE NAME", Identity.MODAL_DATA_TEMPLATES_REMOVE_NAME, "/templates to view the available ones", null, true, TextInputStyle.Short, 1, 32));
                         await e.Interaction.CreateResponseAsync(InteractionResponseType.Modal, modal);
-                        await dataService.RemoveTemplateAsync(message.Template);
                         break;
 
                     case Identity.BUTTON_TEMPLATES_CANCEL:

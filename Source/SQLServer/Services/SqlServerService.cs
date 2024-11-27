@@ -45,7 +45,6 @@ namespace SQLServer.Services {
         }
 
         public async Task<Template> AddTemplateAsync(Template template) {
-            var message = await AddMessageAsync(template.Message);
             await dataContext.Templates.AddAsync(template);
             await dataContext.SaveChangesAsync();
             return template;
@@ -102,15 +101,12 @@ namespace SQLServer.Services {
         public async Task<Template?> GetTemplateAsync(ulong guildId, string name) {
             var template = await dataContext.Templates
                 .Where(t => t.GuildId == guildId && t.Name == name)
-                .Include(t => t.Message)
-                    .ThenInclude(m => m.Embed)
                 .AsNoTracking()
                 .FirstOrDefaultAsync();
             if (template == null) {
                 return cacheData.GetTemplate(name);
             } else {
-                var message = template.Message.DeepClone();
-                return new Template(name, message);
+                return new Template(template.GuildId, template.Name, template.Message.DeepClone());
             }
         }
 

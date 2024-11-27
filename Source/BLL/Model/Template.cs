@@ -25,13 +25,12 @@ namespace BLL.Model
             this.name = name;
             this.message = message;
         }
+        public Template(ulong guildId, string name, Message message) : this(name, message) {
+            GuildId = guildId;
+        }
         #endregion
 
         #region Properties
-        [Column("message_id", TypeName = "decimal(20, 0)")]
-        [JsonIgnore]
-        public ulong MessageId { get; set; }
-
         [Column("guild_id", TypeName = "decimal(20, 0)")]
         [JsonIgnore]
         public ulong GuildId { get; set; }
@@ -47,6 +46,7 @@ namespace BLL.Model
             }
         }
 
+        [Column("message")]
         [Required]
         [JsonProperty("message", NullValueHandling = NullValueHandling.Ignore)]
         public Message Message {

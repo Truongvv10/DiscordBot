@@ -20,10 +20,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Saves\Servers\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\BLL\BLL.csproj" />
     <ProjectReference Include="..\SQLServer\SQLServer.csproj" />
   </ItemGroup>

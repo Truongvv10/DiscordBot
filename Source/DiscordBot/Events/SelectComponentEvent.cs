@@ -112,6 +112,19 @@ namespace APP.Events {
                                 await e.Interaction.CreateResponseAsync(InteractionResponseType.Modal, modal);
                             }
                             break;
+
+                        case Identity.SELECTION_TEMPLATE_ADD:
+                            modal.WithTitle("SAVE TEMPLATE").WithCustomId($"{Identity.MODAL_EMBED};{option};{messageId}");
+                            modal.AddComponents(new TextInputComponent("TEMPLATE NAME", Identity.MODAL_DATA_TEMPLATE_ADD, text, null, true, TextInputStyle.Short, 3, 24));
+                            await e.Interaction.CreateResponseAsync(InteractionResponseType.Modal, modal);
+                            break;
+
+                        case Identity.SELECTION_TEMPLATE_REMOVE:
+                            modal.WithTitle("REMOVE TEMPLATE").WithCustomId($"{Identity.MODAL_EMBED};{option};{messageId}");
+                            modal.AddComponents(new TextInputComponent("TEMPLATE NAME", Identity.MODAL_DATA_TEMPLATE_ADD, text, null, true, TextInputStyle.Short, 3, 24));
+                            await e.Interaction.CreateResponseAsync(InteractionResponseType.Modal, modal);
+                            break;
+
                         default:
                             await SendNotAFeatureYet(e.Interaction);
                             break;

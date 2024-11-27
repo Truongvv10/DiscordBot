@@ -26,7 +26,7 @@
         public const string SELECTION_FIELD_REMOVE = $"{SELECTION_EMBED}.field.remove";
         public const string SELECTION_TEMPLATE_ADD = $"{SELECTION_EMBED}.template.add";
         public const string SELECTION_TEMPLATE_USE = $"{SELECTION_EMBED}.template.use";
-        public const string SELECTION_TEMPLATE_INPUT = $"{SELECTION_EMBED}.template.input";
+        public const string SELECTION_TEMPLATE_LIST = $"{SELECTION_EMBED}.template.list";
         public const string SELECTION_TEMPLATE_REMOVE = $"{SELECTION_EMBED}.template.remove";
 
         // Selection Event

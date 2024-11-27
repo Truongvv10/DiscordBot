@@ -331,7 +331,11 @@ namespace APP.Utils {
                     new DiscordSelectComponentOption("Edit plain text", Identity.SELECTION_CONTENT, "Edit plain text to the message.", emoji: new DiscordComponentEmoji("💭")),
                     new DiscordSelectComponentOption("Toggle timestamp", Identity.SELECTION_TIMESTAMP, "Toggle embed timestamp.", emoji: new DiscordComponentEmoji("🕙")),
                     new DiscordSelectComponentOption("Add field message", Identity.SELECTION_FIELD_ADD, "Add field message.", emoji: new DiscordComponentEmoji("📕")),
-                    new DiscordSelectComponentOption("Remove field message", Identity.SELECTION_FIELD_REMOVE, "Remove field message.", emoji: new DiscordComponentEmoji("❌"))};
+                    new DiscordSelectComponentOption("Remove field message", Identity.SELECTION_FIELD_REMOVE, "Remove field message.", emoji: new DiscordComponentEmoji("❌")),
+                    new DiscordSelectComponentOption("Save to templates", Identity.SELECTION_TEMPLATE_ADD, "Save this message to your templates.", emoji: new DiscordComponentEmoji("📂")),
+                    new DiscordSelectComponentOption("Use from templates", Identity.SELECTION_TEMPLATE_USE, "Change this message using your templates.", emoji: new DiscordComponentEmoji("📑")),
+                    new DiscordSelectComponentOption("List of templates", Identity.SELECTION_TEMPLATE_LIST, "Have an overview of available templates.", emoji: new DiscordComponentEmoji("📰")),
+                    new DiscordSelectComponentOption("Remove a template", Identity.SELECTION_TEMPLATE_REMOVE, "Remove a template from your templates.", emoji: new DiscordComponentEmoji("❌"))};
 
             List<DiscordComponent> selectComponents = new() {
                 new DiscordSelectComponent(Identity.SELECTION_EMBED, "Select default embed component", selectOptions)};
