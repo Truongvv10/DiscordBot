@@ -2,6 +2,7 @@
 using BLL.Enums;
 using BLL.Exceptions;
 using BLL.Services;
+using DSharpPlus.Entities;
 using NodaTime;
 using System.Text.RegularExpressions;
 
@@ -30,7 +31,7 @@ namespace APP.Utils {
                 ID, CUSTOM, TIMEZONE, DATE_START, DATE_END, USER_NAME, USER_AVATARURL, LIST_USERS, LIST_REACTIONS, LIST_TEMPLATES, LIST_TEMPLATES_GUILD});
         }
 
-        public static async Task<string> Translate(string input, Dictionary<string, string> data) {
+        public static async Task<string> Translate(string input, Dictionary<string, string> data, DiscordInteraction interaction) {
             var replacements = ExtractPlaceholders(input);
 
             foreach (var placeholder in replacements) {
@@ -63,6 +64,14 @@ namespace APP.Utils {
                     var cache = new CacheData();
                     await cache.LoadTemplates();
                     input = input.Replace(toReplace, cache.Templates.Keys.Aggregate("", (current, next) => current + "`" + next + "`, "));
+                }
+
+                if (placeholder == USER_NAME) {
+                    input = input.Replace(toReplace, interaction.User.Username);
+                }
+
+                if (placeholder == USER_AVATARURL) {
+                    input = input.Replace(toReplace, interaction.User.AvatarUrl);
                 }
             }
 
