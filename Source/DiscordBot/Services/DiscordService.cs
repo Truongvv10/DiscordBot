@@ -11,7 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 using APP.Utils;
 using BLL.Interfaces;
 using BLL.Enums;
-using SQLServer.Services;
+using DLLSQLServer.Services;
 using BLL.Services;
 
 namespace APP.Services {

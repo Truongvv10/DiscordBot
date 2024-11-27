@@ -21,7 +21,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\BLL\BLL.csproj" />
-    <ProjectReference Include="..\SQLServer\SQLServer.csproj" />
+    <ProjectReference Include="..\DLLSQLite\DLLSQLite.csproj" />
+    <ProjectReference Include="..\DLLSQLServer\DLLSQLServer.csproj" />
   </ItemGroup>
 
 </Project>

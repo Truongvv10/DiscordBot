@@ -1,14 +1,14 @@
-﻿using BLL.Model;
+﻿using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BLL.Model;
+using Newtonsoft.Json;
 
-namespace SQLServer.Contexts {
+namespace DLLSQLServer.Contexts {
     public class SqlServerDataContext : DbContext {
 
         #region Fields
@@ -87,7 +87,7 @@ namespace SQLServer.Contexts {
             // Embed
             builder.Entity<Embed>().ToTable("Embeds");
             builder.Entity<Embed>()
-                .HasKey(e => new { e.GuildId, e.MessageId  });
+                .HasKey(e => new { e.GuildId, e.MessageId });
             builder.Entity<Embed>()
                 .HasOne(e => e.Message)
                 .WithOne(m => m.Embed)

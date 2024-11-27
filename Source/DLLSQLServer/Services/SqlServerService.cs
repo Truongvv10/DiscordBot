@@ -2,15 +2,15 @@
 using BLL.Interfaces;
 using BLL.Model;
 using BLL.Services;
+using DLLSQLServer.Contexts;
 using Microsoft.EntityFrameworkCore;
-using SQLServer.Contexts;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SQLServer.Services {
+namespace DLLSQLServer.Services {
     public class SqlServerService : IDataService {
 
         #region Fields
@@ -258,6 +258,6 @@ namespace SQLServer.Services {
             return existingTemplate;
         }
         #endregion
-
     }
+
 }
