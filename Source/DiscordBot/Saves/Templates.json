@@ -25,7 +25,7 @@
                 },
                 {
                     "Item1": "Custom Templates",
-                    "Item2": "- {data.list.templates.custom}",
+                    "Item2": "- {data.list.templates.guild}",
                     "Item3": false
                 }
             ]

@@ -32,7 +32,7 @@ namespace APP.Utils {
 
                 // Translate the placeholders
                 var translated = message.DeepClone();
-                await translated.TranslatePlaceholders();
+                await translated.TranslatePlaceholders(interaction, dataService);
 
                 // Create the response
                 var response = await CreateResponseAsync(type, interaction, translated, channelId, hidden);
@@ -68,7 +68,7 @@ namespace APP.Utils {
 
                     // Translate the placeholders
                     var translated = message.DeepClone();
-                    await translated.TranslatePlaceholders();
+                    await translated.TranslatePlaceholders(interaction, dataService);
                     var embed = translated.Embed.Build();
 
                     // Create the response
@@ -103,7 +103,7 @@ namespace APP.Utils {
 
                 // Translate the placeholders
                 var translated = message.DeepClone();
-                await translated.TranslatePlaceholders();
+                await translated.TranslatePlaceholders(interaction, dataService);
                 var embed = translated.Embed;
 
                 var response = await CreateResponseAsync(type, interaction, translated, (ulong)message.ChannelId!, message.IsEphemeral);

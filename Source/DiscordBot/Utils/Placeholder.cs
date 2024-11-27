@@ -1,6 +1,7 @@
 ﻿using APP.Enums;
 using BLL.Enums;
 using BLL.Exceptions;
+using BLL.Interfaces;
 using BLL.Services;
 using DSharpPlus.Entities;
 using NodaTime;
@@ -31,7 +32,7 @@ namespace APP.Utils {
                 ID, CUSTOM, TIMEZONE, DATE_START, DATE_END, USER_NAME, USER_AVATARURL, LIST_USERS, LIST_REACTIONS, LIST_TEMPLATES, LIST_TEMPLATES_GUILD});
         }
 
-        public static async Task<string> Translate(string input, Dictionary<string, string> data, DiscordInteraction interaction) {
+        public static async Task<string> Translate(string input, Dictionary<string, string> data, DiscordInteraction interaction, IDataService dataService) {
             var replacements = ExtractPlaceholders(input);
 
             foreach (var placeholder in replacements) {
@@ -72,6 +73,12 @@ namespace APP.Utils {
 
                 if (placeholder == USER_AVATARURL) {
                     input = input.Replace(toReplace, interaction.User.AvatarUrl);
+                }
+
+                if (placeholder == LIST_TEMPLATES_GUILD) {
+                    var templates = await dataService.GetAllTemplatesAsync(interaction.Guild.Id);
+                    string templateList = templates.Count() == 0 ? "`No templates saved yet...`" : templates.Select(x => x.Name).Aggregate("", (current, next) => current + "`" + next + "`, ");
+                    input = input.Replace(toReplace, templateList);
                 }
             }
 

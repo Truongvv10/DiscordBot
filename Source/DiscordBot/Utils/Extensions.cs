@@ -1,6 +1,7 @@
 ﻿using BLL.Model;
 using BLL.Exceptions;
 using DSharpPlus.Entities;
+using BLL.Interfaces;
 
 namespace APP.Utils {
     public static class Extensions {
@@ -35,48 +36,48 @@ namespace APP.Utils {
                 throw new DomainException("An error occurred while building embed", ex);
             }
         }
-        public static async Task<Message> TranslatePlaceholders(this Message message) {
+        public static async Task<Message> TranslatePlaceholders(this Message message, DiscordInteraction interaction, IDataService data) {
             try {
 
                 var embed = message.Embed;
 
                 if (!string.IsNullOrWhiteSpace(message.Content))
-                    message.Content = await Placeholder.Translate(message.Content, message.Data);
+                    message.Content = await Placeholder.Translate(message.Content, message.Data, interaction, data);
 
                 if (!string.IsNullOrWhiteSpace(embed.Title))
-                    embed.Title = await Placeholder.Translate(embed.Title, message.Data);
+                    embed.Title = await Placeholder.Translate(embed.Title, message.Data, interaction, data);
 
                 if (!string.IsNullOrWhiteSpace(embed.TitleUrl))
-                    embed.TitleUrl = await Placeholder.Translate(embed.TitleUrl, message.Data);
+                    embed.TitleUrl = await Placeholder.Translate(embed.TitleUrl, message.Data, interaction, data);
 
                 if (!string.IsNullOrWhiteSpace(embed.Author))
-                    embed.Author = await Placeholder.Translate(embed.Author, message.Data);
+                    embed.Author = await Placeholder.Translate(embed.Author, message.Data, interaction, data);
 
                 if (!string.IsNullOrWhiteSpace(embed.AuthorUrl))
-                    embed.AuthorUrl = await Placeholder.Translate(embed.AuthorUrl, message.Data);
+                    embed.AuthorUrl = await Placeholder.Translate(embed.AuthorUrl, message.Data, interaction, data);
 
                 if (!string.IsNullOrWhiteSpace(embed.AuthorLink))
-                    embed.AuthorLink = await Placeholder.Translate(embed.AuthorLink, message.Data);
+                    embed.AuthorLink = await Placeholder.Translate(embed.AuthorLink, message.Data, interaction, data);
 
                 if (!string.IsNullOrWhiteSpace(embed.Author))
-                    embed.Author = await Placeholder.Translate(embed.Author, message.Data);
+                    embed.Author = await Placeholder.Translate(embed.Author, message.Data, interaction, data);
 
                 if (!string.IsNullOrWhiteSpace(embed.Description))
-                    embed.Description = await Placeholder.Translate(embed.Description, message.Data);
+                    embed.Description = await Placeholder.Translate(embed.Description, message.Data, interaction, data);
 
                 if (!string.IsNullOrWhiteSpace(embed.Footer))
-                    embed.Footer = await Placeholder.Translate(embed.Footer, message.Data);
+                    embed.Footer = await Placeholder.Translate(embed.Footer, message.Data, interaction, data);
 
                 if (!string.IsNullOrWhiteSpace(embed.FooterUrl))
-                    embed.FooterUrl = await Placeholder.Translate(embed.FooterUrl, message.Data);
+                    embed.FooterUrl = await Placeholder.Translate(embed.FooterUrl, message.Data, interaction, data);
 
                 if (embed.Fields.Count > 0) {
                     var fields = embed.Fields.ToList();
                     embed.ClearFields();
-                    foreach (var field in fields) { 
+                    foreach (var field in fields) {
                         embed.AddField(
-                            await Placeholder.Translate(field.Item1, message.Data), 
-                            await Placeholder.Translate(field.Item2, message.Data), 
+                            await Placeholder.Translate(field.Item1, message.Data, interaction, data),
+                            await Placeholder.Translate(field.Item2, message.Data, interaction, data),
                             field.Item3);
                     }
                 }
@@ -87,6 +88,5 @@ namespace APP.Utils {
                 throw new DomainException("An error occurred while building embed", ex);
             }
         }
-
     }
 }

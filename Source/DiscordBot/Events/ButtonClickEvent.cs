@@ -48,7 +48,7 @@ namespace APP.Events {
 
                 // Translate the placeholders
                 var translated = message.DeepClone();
-                await translated.TranslatePlaceholders();
+                await translated.TranslatePlaceholders(e.Interaction, dataService);
                 var embed = translated.Embed;
 
                 // Roles to ping
@@ -135,7 +135,7 @@ namespace APP.Events {
 
                 // Translate the placeholders
                 var translated = message.DeepClone();
-                await translated.TranslatePlaceholders();
+                await translated.TranslatePlaceholders(e.Interaction, dataService);
                 var embed = translated.Embed;
 
                 // Initialize the modal
@@ -166,7 +166,7 @@ namespace APP.Events {
 
                 // Translate the placeholders
                 var translated = message.DeepClone();
-                await translated.TranslatePlaceholders();
+                await translated.TranslatePlaceholders(e.Interaction, dataService);
                 var embed = translated.Embed;
 
                 // Initialize the modal
