@@ -22,6 +22,8 @@ namespace APP {
 
             } catch (ServiceException ex) {
                 Console.WriteLine($"{AnsiColor.RESET}[{DateTime.Now}] {AnsiColor.BRIGHT_RED}[Error] Service error occurred: {ex.Message}");
+            } catch (EventException ex) {
+                Console.WriteLine($"{AnsiColor.RESET}[{DateTime.Now}] {AnsiColor.BRIGHT_RED}[Error] Event error occurred: {ex.Message}");
             } catch (Exception ex) {
                 Console.WriteLine($"{AnsiColor.RESET}[{DateTime.Now}] {AnsiColor.BRIGHT_RED}[Error] An unexpected error occurred: {ex.Message}");
             }

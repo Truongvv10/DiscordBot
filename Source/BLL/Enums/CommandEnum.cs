@@ -48,6 +48,8 @@ namespace BLL.Enums {
         EVENTS_REMINDER = 203,
         [Description("/events-winners")]
         EVENTS_WINNERS = 204,
+        [Description("/events-setup")]
+        EVENTS_SETUP = 205,
 
 
         [Description("/timestamp")]

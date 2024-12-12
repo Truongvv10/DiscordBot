@@ -11,6 +11,7 @@ using APP.Enums;
 using BLL.Services;
 using BLL.Interfaces;
 using Microsoft.VisualBasic;
+using System.Xml;
 
 namespace APP.Utils {
     public class DiscordUtil {
@@ -151,14 +152,14 @@ namespace APP.Utils {
 
                     case CommandEnum.EMBED_CREATE:
                         components.Add(DefaultComponent().First());
+                        components.Add(PlaceholderComponent(message).First());
                         components.Add(new DiscordActionRowComponent(buttonComponent));
                         break;
 
                     case CommandEnum.EVENTS_CREATE:
-                        var buttonEventPost = new List<DiscordComponent> {
-                            new DiscordButtonComponent(ButtonStyle.Success, "embedButtonEventPostCreate", "Create Event"),
-                            new DiscordButtonComponent(ButtonStyle.Danger, "embedButtonCancel", "Cancel", hidden)};
-                        components.Add(new DiscordActionRowComponent(buttonEventPost));
+                        components.Add(DefaultComponent().First());
+                        components.Add(PlaceholderComponent(message).First());
+                        components.Add(new DiscordActionRowComponent(buttonComponent));
                         break;
 
                     case CommandEnum.NITRO:
@@ -167,10 +168,11 @@ namespace APP.Utils {
                         components.Add(new DiscordActionRowComponent(buttonNitroClaim));
                         break;
 
-                    case CommandEnum.EVENTS_EDIT:
-                        components.Add(EventComponent().First());
-                        components.Add(DefaultComponent().First());
-                        components.Add(new DiscordActionRowComponent(buttonComponent));
+                    case CommandEnum.EVENTS_SETUP:
+                        var buttonEventSetup = new List<DiscordComponent> {
+                            new DiscordButtonComponent(ButtonStyle.Primary, Identity.BUTTON_EVENT_SETUP, "Setup Event"),
+                            new DiscordButtonComponent(ButtonStyle.Danger, Identity.BUTTON_CANCEL, "Cancel", hidden)};
+                        components.Add(new DiscordActionRowComponent(buttonEventSetup));
                         break;
 
                     case CommandEnum.BROADCAST:
@@ -187,7 +189,6 @@ namespace APP.Utils {
                 var response = ResolveImageAttachment(message.Embed)
                     .AsEphemeral(hidden)
                     .AddComponents(components.ToList());
-
 
                 // Check for any roles to mention
                 if (message.Roles is not null && message.Roles.Count > 0) {
@@ -310,25 +311,25 @@ namespace APP.Utils {
         public List<DiscordActionRowComponent> DefaultComponent() {
 
             var selectOptions = new List<DiscordSelectComponentOption>() {
-                    new DiscordSelectComponentOption("Edit title", Identity.SELECTION_TITLE, "Edit your embed title & url.", emoji: new DiscordComponentEmoji("✏️")),
-                    new DiscordSelectComponentOption("Edit description", Identity.SELECTION_DESCRIPTION, "Edit your embed description.", emoji: new DiscordComponentEmoji("📄")),
-                    new DiscordSelectComponentOption("Edit footer", Identity.SELECTION_FOOTER, "Edit your embed footer & image.", emoji: new DiscordComponentEmoji("🧩")),
-                    new DiscordSelectComponentOption("Edit author", Identity.SELECTION_AUTHOR, "Edit your embed author text, link & url.", emoji: new DiscordComponentEmoji("👤")),
-                    new DiscordSelectComponentOption("Edit main image", Identity.SELECTION_IMAGE, "Edit your embed image.", emoji: new DiscordComponentEmoji("🪪")),
-                    new DiscordSelectComponentOption("Edit thumbnail image", Identity.SELECTION_THUMBNAIL, "Edit your embed tumbnail.", emoji: new DiscordComponentEmoji("🖼")),
-                    new DiscordSelectComponentOption("Edit color", Identity.SELECTION_COLOR, "Edit your embed color.", emoji: new DiscordComponentEmoji("🎨")),
-                    new DiscordSelectComponentOption("Edit roles to ping", Identity.SELECTION_PINGROLE, "Edit roles to ping on message sent.", emoji: new DiscordComponentEmoji("🔔")),
-                    new DiscordSelectComponentOption("Edit plain text", Identity.SELECTION_CONTENT, "Edit plain text to the message.", emoji: new DiscordComponentEmoji("💭")),
-                    new DiscordSelectComponentOption("Toggle timestamp", Identity.SELECTION_TIMESTAMP, "Toggle embed timestamp.", emoji: new DiscordComponentEmoji("🕙")),
-                    new DiscordSelectComponentOption("Add field message", Identity.SELECTION_FIELD_ADD, "Add field message.", emoji: new DiscordComponentEmoji("📕")),
-                    new DiscordSelectComponentOption("Remove field message", Identity.SELECTION_FIELD_REMOVE, "Remove field message.", emoji: new DiscordComponentEmoji("❌")),
-                    new DiscordSelectComponentOption("Save to templates", Identity.SELECTION_TEMPLATE_ADD, "Save this message to your templates.", emoji: new DiscordComponentEmoji("📂")),
-                    new DiscordSelectComponentOption("Use from templates", Identity.SELECTION_TEMPLATE_USE, "Change this message using your templates.", emoji: new DiscordComponentEmoji("📑")),
-                    new DiscordSelectComponentOption("List of templates", Identity.SELECTION_TEMPLATE_LIST, "Have an overview of available templates.", emoji: new DiscordComponentEmoji("📰")),
-                    new DiscordSelectComponentOption("Remove a template", Identity.SELECTION_TEMPLATE_REMOVE, "Remove a template from your templates.", emoji: new DiscordComponentEmoji("❌"))};
+                    new DiscordSelectComponentOption("Edit Title", Identity.SELECTION_TITLE, "Edit your embed title & url.", emoji: new DiscordComponentEmoji("✏️")),
+                    new DiscordSelectComponentOption("Edit Description", Identity.SELECTION_DESCRIPTION, "Edit your embed description.", emoji: new DiscordComponentEmoji("📄")),
+                    new DiscordSelectComponentOption("Edit Footer", Identity.SELECTION_FOOTER, "Edit your embed footer & image.", emoji: new DiscordComponentEmoji("🧩")),
+                    new DiscordSelectComponentOption("Edit Author", Identity.SELECTION_AUTHOR, "Edit your embed author text, link & url.", emoji: new DiscordComponentEmoji("👤")),
+                    new DiscordSelectComponentOption("Edit Main Image", Identity.SELECTION_IMAGE, "Edit your embed image.", emoji: new DiscordComponentEmoji("🪪")),
+                    new DiscordSelectComponentOption("Edit Thumbnail Image", Identity.SELECTION_THUMBNAIL, "Edit your embed tumbnail.", emoji: new DiscordComponentEmoji("🖼")),
+                    new DiscordSelectComponentOption("Edit Color", Identity.SELECTION_COLOR, "Edit your embed color.", emoji: new DiscordComponentEmoji("🎨")),
+                    new DiscordSelectComponentOption("Edit Roles To Ping", Identity.SELECTION_PINGROLE, "Edit roles to ping on message sent.", emoji: new DiscordComponentEmoji("🔔")),
+                    new DiscordSelectComponentOption("Edit Plain Message", Identity.SELECTION_CONTENT, "Edit plain text to the message.", emoji: new DiscordComponentEmoji("💭")),
+                    new DiscordSelectComponentOption("Toggle Timestamp", Identity.SELECTION_TIMESTAMP, "Toggle embed timestamp.", emoji: new DiscordComponentEmoji("🕙")),
+                    new DiscordSelectComponentOption("Add Field Message", Identity.SELECTION_FIELD_ADD, "Add field message.", emoji: new DiscordComponentEmoji("📕")),
+                    new DiscordSelectComponentOption("Remove Field Message", Identity.SELECTION_FIELD_REMOVE, "Remove field message.", emoji: new DiscordComponentEmoji("❌")),
+                    new DiscordSelectComponentOption("Save To Templates", Identity.SELECTION_TEMPLATE_ADD, "Save this message to your templates.", emoji: new DiscordComponentEmoji("📂")),
+                    new DiscordSelectComponentOption("Use From Templates", Identity.SELECTION_TEMPLATE_USE, "Change this message using your templates.", emoji: new DiscordComponentEmoji("📑")),
+                    new DiscordSelectComponentOption("List Of Templates", Identity.SELECTION_TEMPLATE_LIST, "Have an overview of available templates.", emoji: new DiscordComponentEmoji("📰")),
+                    new DiscordSelectComponentOption("Remove A Template", Identity.SELECTION_TEMPLATE_REMOVE, "Remove a template from your templates.", emoji: new DiscordComponentEmoji("❌"))};
 
             List<DiscordComponent> selectComponents = new() {
-                new DiscordSelectComponent(Identity.SELECTION_EMBED, "Select default embed component", selectOptions)};
+                new DiscordSelectComponent(Identity.SELECTION_EMBED, "Select message builder components to edit", selectOptions)};
 
             List<DiscordActionRowComponent> results = new() {
                 new DiscordActionRowComponent(selectComponents)};
@@ -347,6 +348,56 @@ namespace APP.Utils {
 
             List<DiscordActionRowComponent> results = new() {
                 new DiscordActionRowComponent(buttonComponent)};
+
+            return results;
+        }
+
+        public List<DiscordActionRowComponent> PlaceholderComponent(Message message) {
+
+            var selectOptions = new List<DiscordSelectComponentOption>() {
+                    new DiscordSelectComponentOption("Edit name", Identity.SELECTION_PLACEHOLDER_ID, "Edit the name of this message.", emoji: new DiscordComponentEmoji("🏷️")),
+                    new DiscordSelectComponentOption("Edit time", Identity.SELECTION_PLACEHOLDER_TIME, "Edit the time of this message.", emoji: new DiscordComponentEmoji("🕙")),
+                    new DiscordSelectComponentOption("Edit urls", Identity.SELECTION_PLACEHOLDER_URLS, "Edit the urls of this message.", emoji: new DiscordComponentEmoji("🔗"))};
+
+            // Split into nested dictionary
+            var nestedData = new Dictionary<string, List<string>>();
+            List<string> emojis = new() { "🟥", "🟧", "🟨", "🟩", "🟦", "🟪", "⬜", "⬛", "🟫" };
+
+            foreach (var kvp in message.Data) {
+                if (kvp.Key.StartsWith("data.custom")) {
+                    // Split the key into segments
+                    var segments = kvp.Key.Split('.');
+                    if (!nestedData.TryAdd(segments[2], new() { segments[3] })) {
+                        nestedData[segments[2]].Add(segments[3]);
+                    }
+                }
+            }
+
+            var availableEmojis = new List<string>(emojis);
+            int index = 0;
+
+            foreach (var item in nestedData) {
+                string property = item.Key;
+
+                // Pick a random emoji from the available ones
+                string selectedEmoji = availableEmojis[index];
+                index++;
+
+                selectOptions.Add(new DiscordSelectComponentOption(
+                    $"Edit {property}",
+                    $"{Identity.SELECTION_PLACEHOLDER_CUSTOM}.{property}",
+                    $"Edit the {property} of this message.",
+                    emoji: new DiscordComponentEmoji(selectedEmoji)
+                ));
+            }
+
+            selectOptions.Add(new DiscordSelectComponentOption("Placeholder add", Identity.SELECTION_PLACEHOLDER_ADD, "Add a new custom placeholder.", emoji: new DiscordComponentEmoji("➕")));
+
+            List<DiscordComponent> selectComponents = new() {
+                new DiscordSelectComponent(Identity.SELECTION_PLACEHOLDER, "Select placeholder components to edit", selectOptions)};
+
+            List<DiscordActionRowComponent> results = new() {
+                new DiscordActionRowComponent(selectComponents)};
 
             return results;
         }
@@ -407,111 +458,6 @@ namespace APP.Utils {
                 result += pings;
             }
             return result;
-        }
-
-        public Task<bool> ExistTimeZone(string timeZoneId) {
-            var test = Task.FromResult(DateTimeZoneProviders.Tzdb.GetZoneOrNull(TranslateCustomTimezone(timeZoneId)) is null ? false : true);
-            return test;
-        }
-
-        public async Task<string> TranslateToDynamicTimestamp(DateTime localDateTime, string timeZoneId, TimestampEnum timestampType) {
-            try {
-                // Translate custom timezones to Discord timezones
-                timeZoneId = TranslateCustomTimezone(timeZoneId);
-
-                // Map TimestampEnum to Discord format characters
-                char timestampTypeChar = timestampType switch {
-                    TimestampEnum.SHORT_TIME => 't',
-                    TimestampEnum.LONG_TIME => 'T',
-                    TimestampEnum.SHORT_DATE => 'd',
-                    TimestampEnum.LONG_DATE => 'D',
-                    TimestampEnum.LONG_DATE_AND_SHORT_TIME => 'f',
-                    TimestampEnum.LONG_DATE_WITH_DAY_OF_WEEK_AND_SHORT_TIME => 'F',
-                    TimestampEnum.RELATIVE => 'R',
-                    _ => 'F',
-                };
-
-                // Convert the DateTime to NodaTime LocalDateTime
-                LocalDateTime localDateTimeValue = LocalDateTime.FromDateTime(localDateTime);
-
-                // Get the time zone
-                DateTimeZone timeZone = DateTimeZoneProviders.Tzdb[timeZoneId];
-
-                // Convert LocalDateTime to ZonedDateTime in the specified time zone
-                ZonedDateTime zonedDateTime = timeZone.AtLeniently(localDateTimeValue);
-
-                // Convert ZonedDateTime to Instant
-                Instant instantFromZonedDateTime = zonedDateTime.ToInstant();
-
-                // Convert to Unix Timestamp
-                long unixTimestamp = instantFromZonedDateTime.ToUnixTimeSeconds();
-
-                // Format the timestamp for Discord
-                string discordTimestamp = $"<t:{unixTimestamp}:{timestampTypeChar}>";
-
-                return await Task.FromResult(discordTimestamp);
-
-            } catch (Exception ex) {
-                throw new UtilException($"Could not translate {localDateTime} to Discord timestamp.", ex);
-            }
-        }
-
-        private string TranslateCustomTimezone(string timeZone) {
-
-            var copy = timeZone.ToUpper();
-
-            if (copy == TimeZoneEnum.BST.ToString())
-                return "Europe/London";
-
-            if (copy == TimeZoneEnum.MSK.ToString())
-                return "Europe/Moscow";
-
-            if (copy == TimeZoneEnum.GST.ToString())
-                return "Etc/GMT+4";
-
-            if (copy == TimeZoneEnum.PKT.ToString())
-                return "Etc/GMT+5";
-
-            if (copy == TimeZoneEnum.IST.ToString())
-                return "Etc/GMT+5";
-
-            if (copy == TimeZoneEnum.BST.ToString())
-                return "Etc/GMT+6";
-
-            if (copy == TimeZoneEnum.WIB.ToString())
-                return "Etc/GMT+7";
-
-            if (copy == TimeZoneEnum.JST.ToString())
-                return "Japan";
-
-            if (copy == TimeZoneEnum.BST.ToString())
-                return "Japan";
-
-            if (copy == TimeZoneEnum.AEST.ToString())
-                return "Etc/GMT+10";
-
-            if (copy == TimeZoneEnum.NZST.ToString())
-                return "Etc/GMT+12";
-
-            if (copy == TimeZoneEnum.HST.ToString())
-                return "US/Hawaii";
-
-            if (copy == TimeZoneEnum.AKST.ToString())
-                return "US/Alaska";
-
-            if (copy == TimeZoneEnum.PST.ToString())
-                return "US/Pacific";
-
-            if (copy == TimeZoneEnum.MST.ToString())
-                return "US/Mountain";
-
-            if (copy == TimeZoneEnum.CST.ToString())
-                return "US/Central";
-
-            if (copy == TimeZoneEnum.AST.ToString())
-                return "Canada/Atlantic";
-
-            return timeZone;
         }
     }
 }

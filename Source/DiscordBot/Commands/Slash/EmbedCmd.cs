@@ -76,6 +76,7 @@ namespace APP.Commands.Slash {
                 throw new CommandException($"An error occured using the command: /{EMBED} {EMBED_EDIT}", ex);
             }
         }
+        #endregion
 
         #region Command: /embed templates
         [SlashCommand(EMBED_TEMPLATES, "View all available templates")]
@@ -93,7 +94,6 @@ namespace APP.Commands.Slash {
                 throw new CommandException($"An error occured using the command: /{EMBED_TEMPLATES}", ex);
             }
         }
-        #endregion
         #endregion
     }
 }

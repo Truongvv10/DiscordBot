@@ -2,7 +2,7 @@
     public class Identity {
 
         // Prefix
-        private const string PREFIX = "";
+        private const string PREFIX = "triumph";
 
 
         #region Selections
@@ -10,6 +10,7 @@
         public const string SELECTION_TEMPLATE = $"{PREFIX}.selection.template";
         public const string SELECTION_EVENT = $"{PREFIX}.selection.event";
         public const string SELECTION_PERMISSION = $"{PREFIX}.selection.permission";
+        public const string SELECTION_PLACEHOLDER = $"{PREFIX}.selection.placeholder";
 
         // Selection Embed
         public const string SELECTION_TITLE = $"{SELECTION_EMBED}.title";
@@ -28,6 +29,13 @@
         public const string SELECTION_TEMPLATE_USE = $"{SELECTION_EMBED}.template.use";
         public const string SELECTION_TEMPLATE_LIST = $"{SELECTION_EMBED}.template.list";
         public const string SELECTION_TEMPLATE_REMOVE = $"{SELECTION_EMBED}.template.remove";
+
+        // Selection Properties
+        public const string SELECTION_PLACEHOLDER_ID = $"{SELECTION_PLACEHOLDER}.id";
+        public const string SELECTION_PLACEHOLDER_TIME = $"{SELECTION_PLACEHOLDER}.time";
+        public const string SELECTION_PLACEHOLDER_URLS = $"{SELECTION_PLACEHOLDER}.urls";
+        public const string SELECTION_PLACEHOLDER_CUSTOM = $"{SELECTION_PLACEHOLDER}.custom";
+        public const string SELECTION_PLACEHOLDER_ADD = $"{SELECTION_PLACEHOLDER}.add";
 
         // Selection Event
         public const string SELECTION_EVENT_CREATION = $"{SELECTION_EVENT}.create";
@@ -65,6 +73,10 @@
 
         // Button Nitro
         public const string BUTTON_NITRO = $"{PREFIX}.button.nitro";
+
+        // Button Event
+        public const string BUTTON_EVENT = $"{PREFIX}.button.event";
+        public const string BUTTON_EVENT_SETUP = $"{BUTTON_EVENT}.setup";
         #endregion
 
         #region Modals
@@ -72,6 +84,7 @@
         public const string MODAL_EVENT = $"{PREFIX}.modal.event";
         public const string MODAL_TEMPLATES = $"{PREFIX}.modal.templates";
         public const string MODAL_TIMESTAMP = $"{PREFIX}.modal.timestamp";
+        public const string MODAL_PLACEHOLDER = $"{PREFIX}.modal.placeholder";
 
         // Modal Default
         private const string MODAL_DATA = $"{MODAL_EMBED}.component";
@@ -97,6 +110,21 @@
         public const string MODAL_DATA_TEMPLATE_REMOVE = $"{MODAL_DATA}.template.remove";
         public const string MODAL_DATA_TEMPLATE_USE = $"{MODAL_DATA}.template.use";
 
+        // Modal Placeholder
+        private const string MODAL_DATA_PLACEHOLDER = $"{MODAL_PLACEHOLDER}.component";
+        public const string MODAL_DATA_PLACEHOLDER_ID = $"{MODAL_DATA_PLACEHOLDER}.id";
+        public const string MODAL_DATA_PLACEHOLDER_TIMEZONE = $"{MODAL_DATA_PLACEHOLDER}.timzone";
+        public const string MODAL_DATA_PLACEHOLDER_DATE_START = $"{MODAL_DATA_PLACEHOLDER}.date.start";
+        public const string MODAL_DATA_PLACEHOLDER_DATE_END = $"{MODAL_DATA_PLACEHOLDER}.date.end";
+        public const string MODAL_DATA_PLACEHOLDER_URL1 = $"{MODAL_DATA_PLACEHOLDER}.url.1";
+        public const string MODAL_DATA_PLACEHOLDER_URL2 = $"{MODAL_DATA_PLACEHOLDER}.url.2";
+        public const string MODAL_DATA_PLACEHOLDER_URL3 = $"{MODAL_DATA_PLACEHOLDER}.url.3";
+        public const string MODAL_DATA_PLACEHOLDER_URL4 = $"{MODAL_DATA_PLACEHOLDER}.url.4";
+        public const string MODAL_DATA_PLACEHOLDER_ADD_GROUP = $"{MODAL_DATA_PLACEHOLDER}.add.group";
+        public const string MODAL_DATA_PLACEHOLDER_ADD_ID = $"{MODAL_DATA_PLACEHOLDER}.add.id";
+        public const string MODAL_DATA_PLACEHOLDER_ADD_VALUE = $"{MODAL_DATA_PLACEHOLDER}.add.value";
+        public const string MODAL_DATA_PLACEHOLDER_CUSTOM = $"{MODAL_DATA_PLACEHOLDER}.custom";
+
         // Modal Event
         private const string MODAL_DATA_EVENT = $"{MODAL_EVENT}.component";
         public const string MODAL_DATA_EVENT_TITLE = $"{MODAL_DATA_EVENT}.title";
@@ -105,6 +133,7 @@
         public const string MODAL_DATA_EVENT_REWARD = $"{MODAL_DATA_EVENT}.reward";
         public const string MODAL_DATA_EVENT_TIMEZONE = $"{MODAL_DATA_EVENT}.timezone";
         public const string MODAL_DATA_EVENT_TIME_TITLE = $"{MODAL_DATA_EVENT}.time.title";
+        public const string MODAL_DATA_EVENT_NAME = $"{MODAL_DATA_EVENT}.name";
         public const string MODAL_DATA_EVENT_START = $"{MODAL_DATA_EVENT}.start";
         public const string MODAL_DATA_EVENT_END = $"{MODAL_DATA_EVENT}.end";
 

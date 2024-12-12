@@ -243,6 +243,11 @@ namespace DLLSQLServer.Services {
                         dataContext.Entry(fetched.Embed).Property(e => e.Fields).IsModified = true;
                         break;
 
+                    case Identity.SELECTION_PLACEHOLDER:
+                        fetched.Data = message.Data;
+                        dataContext.Entry(fetched).Property(m => m.Data).IsModified = true;
+                        break;
+
                     default:
                         return message;
                 }

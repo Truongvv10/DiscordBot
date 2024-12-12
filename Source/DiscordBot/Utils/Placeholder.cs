@@ -1,7 +1,9 @@
 ﻿using APP.Enums;
+using Azure.Core;
 using BLL.Enums;
 using BLL.Exceptions;
 using BLL.Interfaces;
+using BLL.Model;
 using BLL.Services;
 using DSharpPlus.Entities;
 using NodaTime;
@@ -16,8 +18,11 @@ namespace APP.Utils {
         public const string ID = PREFIX + "data.id";
         public const string CUSTOM = PREFIX + "data.custom";
         public const string TIMEZONE = PREFIX + "data.timezone";
-        public const string TEMPLATE = PREFIX + "data.template";
         public const string DATE_START = PREFIX + "data.date.start";
+        public const string URL1 = PREFIX + "data.url.1";
+        public const string URL2 = PREFIX + "data.url.2";
+        public const string URL3 = PREFIX + "data.url.3";
+        public const string URL4 = PREFIX + "data.url.4";
         public const string DATE_END = PREFIX + "data.date.end";
         public const string USER_NAME = PREFIX + "data.user.name";
         public const string USER_AVATARURL = PREFIX + "data.user.avatarurl";
@@ -29,11 +34,13 @@ namespace APP.Utils {
 
         static Placeholder() {
             placeholders.AddRange(new[] {
-                ID, CUSTOM, TIMEZONE, DATE_START, DATE_END, USER_NAME, USER_AVATARURL, LIST_USERS, LIST_REACTIONS, LIST_TEMPLATES, LIST_TEMPLATES_GUILD});
+                ID, CUSTOM, TIMEZONE, DATE_START, DATE_END, URL1, URL2, URL3, URL4, USER_NAME, USER_AVATARURL, LIST_USERS, LIST_REACTIONS, LIST_TEMPLATES, LIST_TEMPLATES_GUILD});
         }
 
         public static async Task<string> Translate(string input, Dictionary<string, string> data, DiscordInteraction interaction, IDataService dataService) {
+
             var replacements = ExtractPlaceholders(input);
+            replacements.OrderBy(x => !x.StartsWith(CUSTOM));
 
             foreach (var placeholder in replacements) {
                 string toReplace = $"{{{placeholder}}}";
@@ -44,15 +51,16 @@ namespace APP.Utils {
                         DateTime date = DateTime.ParseExact(data[DATE_START], "dd/MM/yyyy HH:mm", null);
                         var timestamp = await TranslateTime(date, timezone, placeholder);
                         input = input.Replace(toReplace, timestamp);
-                    }
-                    if (Regex.IsMatch(placeholder, @"^data\.date\.end(\.\d+)?$")) {
+                    } else if (Regex.IsMatch(placeholder, @"^data\.date\.end(\.\d+)?$")) {
                         string timezone = data[TIMEZONE] ?? "CET";
                         DateTime date = DateTime.ParseExact(data[DATE_END], "dd/MM/yyyy HH:mm", null);
                         var timestamp = await TranslateTime(date, timezone, placeholder);
                         input = input.Replace(toReplace, timestamp);
-                    }
-                    if (placeholder.Equals(TIMEZONE)) 
+                    } else if (placeholder.Equals(TIMEZONE)) {
                         input = input.Replace(toReplace, data[TIMEZONE]);
+                    } else {
+                        input = input.Replace(toReplace, replacement);
+                    }
 
                 } else if (Regex.IsMatch(placeholder, @"^data\.date\.(start|end)(\.\d+)?$")) {
                     var timestamp = await TranslateTime(DateTime.Now, "CET", placeholder);
@@ -85,6 +93,18 @@ namespace APP.Utils {
             return input;
         }
 
+        public static bool IsSeperate(string key) {
+            if (Regex.IsMatch(key, @"data.custom\.\w+$"))
+                return true;
+            else return false;
+        }
+
+        public static bool IsGrouped(string key) {
+            if (Regex.IsMatch(key, @"data.custom\.(\w+\.\w+)$"))
+                return true;
+            else return false;
+        }
+
         private static List<string> ExtractPlaceholders(string input) {
             // Extract all placeholders from the input string using regex
             var matches = Regex.Matches(input, @"\{(.*?)\}");
@@ -96,6 +116,9 @@ namespace APP.Utils {
 
                 // Trim numeric sub-variants (e.g., ".1", ".2")
                 string trimmedPlaceholder = Regex.Replace(placeholder, @"(\.\d+)$", "");
+
+                // Trim custom sub-variants (e.g., "custom.1", "custom.2", "custom.2.test")
+                trimmedPlaceholder = Regex.Replace(trimmedPlaceholder, @"custom\.((\w+\.\w+)|\w+)$", "custom");
 
                 // Check if the trimmed placeholder exists in the list of known placeholders
                 if (placeholders.Contains(trimmedPlaceholder)) {

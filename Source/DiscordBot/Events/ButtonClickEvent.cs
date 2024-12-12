@@ -37,6 +37,9 @@ namespace APP.Events {
             if (e.Interaction.Data.ComponentType == ComponentType.Button) {
                 if (e.Id.Contains(Identity.BUTTON_NITRO)) await UseNitro(e);
             }
+            if (e.Interaction.Data.ComponentType == ComponentType.Button) {
+                if (e.Id.Contains(Identity.BUTTON_EVENT)) await UseEvent(e);
+            }
         }
 
         public async Task UseEmbed(DiscordClient discordClient, ComponentInteractionCreateEventArgs e) {
@@ -139,7 +142,6 @@ namespace APP.Events {
                 var embed = translated.Embed;
 
                 // Initialize the modal
-                var modal = new DiscordInteractionResponseBuilder();
                 var response = new DiscordInteractionResponseBuilder()
                     .AddEmbed(embed.Build())
                     .AsEphemeral(false);
@@ -214,22 +216,34 @@ namespace APP.Events {
             }
         }
 
-        private async Task TemplateButtonClick(DiscordInteraction interaction, Message message) {
-            var guildId = interaction.Guild.Id;
-            var templates = await dataService.GetTemplateAsync(guildId, Identity.TDATA_USE);
-            if (templates != null) {
-                var template = templates.Message;
-                template.MessageId = message.MessageId;
-                template.GuildId = message.GuildId;
-                template.ChannelId = message.ChannelId;
-                template.Sender = message.Sender;
-                template.IsEphemeral = message.IsEphemeral;
-                template.AddData(Placeholder.TEMPLATE, JsonConvert.SerializeObject(message));
-                message = template;
-            }
-            await discordUtil.ModifyMessageAsync(CommandEnum.TEMPLATE_USE, interaction, message, interaction.Channel.Id);
-        }
+        public async Task UseEvent(ComponentInteractionCreateEventArgs e) {
+            try {
 
+                // Get the message
+                var messageId = e.Message.Id;
+                var guildId = e.Guild.Id;
+                var message = await dataService.GetMessageAsync(e.Guild.Id, messageId);
+                var interaction = e.Interaction;
+
+                // Translate the placeholders
+                var translated = message.DeepClone();
+                await translated.TranslatePlaceholders(e.Interaction, dataService);
+                var embed = translated.Embed;
+
+                // Initialize the modal
+                string datePlaceholder = "DD/MM/YYYY hh:mm";
+                var modal = new DiscordInteractionResponseBuilder();
+                modal.WithTitle($"SETUP EVENT").WithCustomId($"{Identity.MODAL_EVENT};{Identity.BUTTON_EVENT_SETUP};{messageId}");
+                modal.AddComponents(new TextInputComponent("EVENT NAME", Identity.MODAL_DATA_EVENT_NAME, "Hide and Seek", null, true, TextInputStyle.Short));
+                modal.AddComponents(new TextInputComponent("EVENT TIMEZONE", Identity.MODAL_DATA_EVENT_TIMEZONE, "CET | BST | GMT", message.Data[Placeholder.TIMEZONE], true, TextInputStyle.Short));
+                modal.AddComponents(new TextInputComponent("EVENT START", Identity.MODAL_DATA_EVENT_START, datePlaceholder, message.Data[Placeholder.DATE_START], true, TextInputStyle.Short));
+                modal.AddComponents(new TextInputComponent("EVENT END", Identity.MODAL_DATA_EVENT_END, datePlaceholder, message.Data[Placeholder.DATE_END], true, TextInputStyle.Short));
+                await e.Interaction.CreateResponseAsync(InteractionResponseType.Modal, modal);
+
+            } catch (Exception ex) {
+                throw new EventException("An error occured using the button for event", ex);
+            }
+        }
         #endregion
 
         //private async Task<bool> CheckPermission(ComponentInteractionCreateEventArgs e, CommandEnum cmd, ulong ownerid) {

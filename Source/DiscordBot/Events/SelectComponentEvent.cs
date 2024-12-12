@@ -1,11 +1,13 @@
 ﻿using APP.Utils;
 using BLL.Enums;
+using BLL.Exceptions;
 using BLL.Interfaces;
 using BLL.Model;
 using DSharpPlus;
 using DSharpPlus.Entities;
 using DSharpPlus.EventArgs;
 using Newtonsoft.Json;
+using System.Diagnostics;
 
 namespace APP.Events {
     public class SelectComponentEvent {
@@ -22,14 +24,17 @@ namespace APP.Events {
         }
         #endregion
 
+        #region Events
         public async Task ComponentSelect(DiscordClient sender, ComponentInteractionCreateEventArgs e) {
             if (e.Interaction.Data.ComponentType == ComponentType.StringSelect) {
                 if (e.Id == Identity.SELECTION_EMBED) await HandleEmbedInteraction(sender, e);
                 if (e.Id == Identity.SELECTION_TEMPLATE) await HandleTemplateInteraction(sender, e);
-                if (e.Id == Identity.SELECTION_EVENT) await HandleEventInteraction(sender, e);
+                if (e.Id == Identity.SELECTION_PLACEHOLDER) await PlaceholderInteraction(sender, e);
             }
         }
+        #endregion
 
+        #region Methods
         public async Task HandleEmbedInteraction(DiscordClient client, ComponentInteractionCreateEventArgs e) {
 
             var messageId = e.Message.Id;
@@ -199,96 +204,90 @@ namespace APP.Events {
             }
         }
 
-        public async Task HandleEventInteraction(DiscordClient discordClient, ComponentInteractionCreateEventArgs e) {
-
-            var messageId = e.Message.Id;
-            var options = e.Values;
-            var message = await dataService.GetMessageAsync(e.Guild.Id, messageId);
-            var embed = message.Embed;
-
+        public async Task PlaceholderInteraction(DiscordClient discordClient, ComponentInteractionCreateEventArgs e) {
             try {
-                const string text = "Write something...";
-                var exampleUrl = @"https://example.com/";
-                var components = e.Message.Components;
+
+                var messageId = e.Message.Id;
+                var option = e.Values.First();
+                var message = await dataService.GetMessageAsync(e.Guild.Id, messageId) ?? throw new EventException($"Message could not be found");
+                var data = message.Data;
                 var modal = new DiscordInteractionResponseBuilder();
-                var response = new DiscordInteractionResponseBuilder()
-                    .AddEmbed(embed.Build())
-                    .AddComponents(components);
+                string placeholderText = "Write something...";
+                string placeholerUrl = @"https://example.com/";
+                string placeholderDate = "DD/MM/YYYY hh:mm";
 
-                foreach (var option in options) {
-                    switch (option) {
-
-                        case Identity.SELECTION_EVENT_PROPERTIES:
-                            modal.WithTitle("EVENT PROPERTIES").WithCustomId($"{Identity.MODAL_EVENT};{option};{messageId}");
-                            modal.AddComponents(new TextInputComponent("EVENT NAME", Identity.EVENT_NAME, "Amongus", message.Data[Identity.EVENT_NAME] as string, true, TextInputStyle.Short));
-                            modal.AddComponents(new TextInputComponent("TIME ZONE", Identity.EVENT_TIMEZONE, "Europe/Brussels", message.Data[Identity.EVENT_TIMEZONE] as string, true, TextInputStyle.Short));
-                            modal.AddComponents(new TextInputComponent("START DATE", Identity.EVENT_START, "DD/MM/YYYY hh:mm", message.Data[Identity.EVENT_START] as string, true, TextInputStyle.Short));
-                            modal.AddComponents(new TextInputComponent("END DATE", Identity.EVENT_END, "DD/MM/YYYY hh:mm", message.Data[Identity.EVENT_END] as string, true, TextInputStyle.Short));
-                            await e.Interaction.CreateResponseAsync(InteractionResponseType.Modal, modal);
-                            break;
-
-                        case Identity.SELECTION_EVENT_INTRODUCTION:
-                            modal.WithTitle("EVENT INTRODUCTION").WithCustomId($"{Identity.MODAL_EVENT};{option};{messageId}");
-                            modal.AddComponents(new TextInputComponent("TITLE", Identity.EVENT_TITLE, text, message.Data[Identity.EVENT_TITLE] as string, true, TextInputStyle.Short, 4, 32));
-                            modal.AddComponents(new TextInputComponent("INTRODUCTION", Identity.EVENT_INTRO, text, message.Data[Identity.EVENT_INTRO] as string, true, TextInputStyle.Paragraph, 0, 500));
-                            await e.Interaction.CreateResponseAsync(InteractionResponseType.Modal, modal);
-                            break;
-
-                        case Identity.SELECTION_EVENT_INFORMATION:
-                            modal.WithTitle("EVENT INFORMATION").WithCustomId($"{Identity.MODAL_EVENT};{option};{messageId}");
-                            modal.AddComponents(new TextInputComponent("TITLE", Identity.EVENT_INFO_TITLE, text, message.Data[Identity.EVENT_INFO_TITLE] as string, true, TextInputStyle.Short, 4, 32));
-                            modal.AddComponents(new TextInputComponent("INFORMATION", Identity.EVENT_INFO, text, message.Data[Identity.EVENT_INFO] as string, true, TextInputStyle.Paragraph, 0, 2048));
-                            await e.Interaction.CreateResponseAsync(InteractionResponseType.Modal, modal);
-                            break;
-
-                        case Identity.SELECTION_EVENT_REWARDS:
-                            modal.WithTitle("EVENT REWARDS").WithCustomId($"{Identity.MODAL_EVENT};{option};{messageId}");
-                            modal.AddComponents(new TextInputComponent("TITLE", Identity.EVENT_REWARD_TITLE, text, message.Data[Identity.EVENT_REWARD_TITLE] as string, true, TextInputStyle.Short, 4, 32));
-                            modal.AddComponents(new TextInputComponent("TOP REWARDS", Identity.EVENT_REWARD, text, message.Data[Identity.EVENT_REWARD] as string, true, TextInputStyle.Paragraph, 0, 1024));
-                            await e.Interaction.CreateResponseAsync(InteractionResponseType.Modal, modal);
-                            break;
-
-                        case Identity.SELECTION_EVENT_TIMESTAMP:
-                            modal.WithTitle("EVENT DATE FORMAT").WithCustomId($"{Identity.MODAL_EVENT};{option};{messageId}");
-                            modal.AddComponents(new TextInputComponent("TITLE", Identity.EVENT_TIME_TITLE, text, message.Data[Identity.EVENT_TIME_TITLE] as string, true, TextInputStyle.Short, 4, 32));
-                            modal.AddComponents(new TextInputComponent("FORMAT START DATE", Identity.EVENT_DESCRIPTION_START, text, message.Data[Identity.EVENT_DESCRIPTION_START] as string, false, TextInputStyle.Paragraph, 0, 128));
-                            modal.AddComponents(new TextInputComponent("FORMAT END DATE", Identity.EVENT_DESCRIPTION_END, text, message.Data[Identity.EVENT_DESCRIPTION_END] as string, false, TextInputStyle.Paragraph, 0, 128));
-                            await e.Interaction.CreateResponseAsync(InteractionResponseType.Modal, modal);
-                            break;
-
-                        case Identity.SELECTION_EVENT_REACTION:
-                            modal.WithTitle("EVENT REACTION FORMAT").WithCustomId($"{Identity.MODAL_EVENT};{option};{messageId}");
-                            modal.AddComponents(new TextInputComponent("FORMAT REACTION TEXT", Identity.EVENT_DESCRIPTION_REACTION, text, message.Data[Identity.EVENT_DESCRIPTION_REACTION] as string, false, TextInputStyle.Paragraph, 0, 1024));
-                            await e.Interaction.CreateResponseAsync(InteractionResponseType.Modal, modal);
-                            break;
-
-                        default:
-                            await SendNotAFeatureYet(e.Interaction);
-                            break;
+                if (option.StartsWith(Identity.SELECTION_PLACEHOLDER_CUSTOM)) {
+                    var group = option.Replace(Identity.SELECTION_PLACEHOLDER_CUSTOM, "");
+                    var values = data.Where(x => x.Key.StartsWith(Placeholder.CUSTOM + group)).ToDictionary(x => x.Key, y => y.Value);
+                    modal.WithTitle($"PLACEHOLDER {group.Replace(".", "").ToUpper()}").WithCustomId($"{Identity.MODAL_PLACEHOLDER};{option};{messageId}");
+                    foreach (var item in values) {
+                        var dataId = Placeholder.CUSTOM + group + item.Key.Substring(item.Key.LastIndexOf("."));
+                        var modelId = Identity.MODAL_DATA_PLACEHOLDER_CUSTOM + group + item.Key.Substring(item.Key.LastIndexOf("."));
+                        modal.AddComponents(new TextInputComponent(item.Key, modelId, null, data[dataId], false, TextInputStyle.Paragraph, 0, 1024));
                     }
+                    await e.Interaction.CreateResponseAsync(InteractionResponseType.Modal, modal);
+                    return;
                 }
+
+                switch (option) {
+
+                    case Identity.SELECTION_PLACEHOLDER_ID:
+
+                        var dataMessageId = data.ContainsKey(Placeholder.ID) ? data[Placeholder.ID] : "";
+
+                        modal.WithTitle("PLACEHOLDER NAME").WithCustomId($"{Identity.MODAL_PLACEHOLDER};{option};{messageId}");
+                        modal.AddComponents(new TextInputComponent(Placeholder.ID, Identity.MODAL_DATA_PLACEHOLDER_ID, string.IsNullOrWhiteSpace(dataMessageId) ? placeholderText : $"{dataMessageId} (current)", dataMessageId, false, TextInputStyle.Short, 0, 32));
+                        await e.Interaction.CreateResponseAsync(InteractionResponseType.Modal, modal);
+                        break;
+
+                    case Identity.SELECTION_PLACEHOLDER_TIME:
+
+                        var dataTimeZone = data.ContainsKey(Placeholder.TIMEZONE) ? data[Placeholder.TIMEZONE] : "";
+                        var dataDateStart = data.ContainsKey(Placeholder.DATE_START) ? data[Placeholder.DATE_START] : "";
+                        var dataDateEnd = data.ContainsKey(Placeholder.DATE_END) ? data[Placeholder.DATE_END] : "";
+
+                        modal.WithTitle("PLACEHOLDER DATES").WithCustomId($"{Identity.MODAL_PLACEHOLDER};{option};{messageId}");
+                        modal.AddComponents(new TextInputComponent(Placeholder.TIMEZONE, Identity.MODAL_DATA_PLACEHOLDER_TIMEZONE, $"Examples: CET, BST, GMT...", dataTimeZone, false, TextInputStyle.Short));
+                        modal.AddComponents(new TextInputComponent(Placeholder.DATE_START, Identity.MODAL_DATA_PLACEHOLDER_DATE_START, placeholderDate, dataDateStart, false, TextInputStyle.Short, 16, 16));
+                        modal.AddComponents(new TextInputComponent(Placeholder.DATE_END, Identity.MODAL_DATA_PLACEHOLDER_DATE_END, placeholderDate, dataDateEnd, false, TextInputStyle.Short, 16, 16));
+                        await e.Interaction.CreateResponseAsync(InteractionResponseType.Modal, modal);
+                        break;
+
+                    case Identity.SELECTION_PLACEHOLDER_URLS:
+
+                        var dataUrl1 = data.ContainsKey(Placeholder.URL1) ? data[Placeholder.URL1] : "";
+                        var dataUrl2 = data.ContainsKey(Placeholder.URL2) ? data[Placeholder.URL2] : "";
+                        var dataUrl3 = data.ContainsKey(Placeholder.URL3) ? data[Placeholder.URL3] : "";
+                        var dataUrl4 = data.ContainsKey(Placeholder.URL4) ? data[Placeholder.URL4] : "";
+
+                        modal.WithTitle("PLACEHOLDER URLS").WithCustomId($"{Identity.MODAL_PLACEHOLDER};{option};{messageId}");
+                        modal.AddComponents(new TextInputComponent(Placeholder.URL1, Identity.MODAL_DATA_PLACEHOLDER_URL1, placeholerUrl, dataUrl1, false, TextInputStyle.Short));
+                        modal.AddComponents(new TextInputComponent(Placeholder.URL2, Identity.MODAL_DATA_PLACEHOLDER_URL2, placeholerUrl, dataUrl2, false, TextInputStyle.Short));
+                        modal.AddComponents(new TextInputComponent(Placeholder.URL3, Identity.MODAL_DATA_PLACEHOLDER_URL3, placeholerUrl, dataUrl3, false, TextInputStyle.Short));
+                        modal.AddComponents(new TextInputComponent(Placeholder.URL4, Identity.MODAL_DATA_PLACEHOLDER_URL4, placeholerUrl, dataUrl4, false, TextInputStyle.Short));
+                        await e.Interaction.CreateResponseAsync(InteractionResponseType.Modal, modal);
+                        break;
+
+                    case Identity.SELECTION_PLACEHOLDER_ADD:
+
+                        modal.WithTitle("ADD PLACEHOLDER").WithCustomId($"{Identity.MODAL_PLACEHOLDER};{option};{messageId}");
+                        modal.AddComponents(new TextInputComponent($"GROUP", Identity.MODAL_DATA_PLACEHOLDER_ADD_GROUP, placeholderText, null, true, TextInputStyle.Short));
+                        modal.AddComponents(new TextInputComponent($"ID", Identity.MODAL_DATA_PLACEHOLDER_ADD_ID, placeholderText, null, true, TextInputStyle.Short));
+                        modal.AddComponents(new TextInputComponent($"VALUE", Identity.MODAL_DATA_PLACEHOLDER_ADD_VALUE, placeholderText, null, true, TextInputStyle.Paragraph));
+                        await e.Interaction.CreateResponseAsync(InteractionResponseType.Modal, modal);
+                        break;
+
+                    default:
+
+                        await SendNotAFeatureYet(e.Interaction);
+                        break;
+                }
+
+
             } catch (Exception ex) {
-                Console.WriteLine(ex.Message + string.Join(", ", options));
+                Console.WriteLine(ex);
             }
         }
-
-        //private async Task<bool> CheckPermission(ComponentInteractionCreateEventArgs e, CommandEnum cmd, ulong ownerid) {
-
-        //    var permission = await CacheData.GetPermission(e.Guild.Id, cmd);
-        //    var userid = e.User.Id;
-        //    var user = await e.Guild.GetMemberAsync(userid);
-        //    var roles = user.Roles;
-
-        //    if (user.Permissions.HasPermission(Permissions.All)) {
-        //        return true;
-        //    } else if (permission.AllowAdministrator) {
-        //        return true;
-        //    } else if (e.User.Id == ownerid) {
-        //        return true;
-        //    } else {
-        //        return false;
-        //    }
-        //}
 
         private async Task SendNotAFeatureYet(DiscordInteraction interaction) {
             var embedMessage = new DiscordEmbedBuilder()
@@ -299,17 +298,6 @@ namespace APP.Events {
                 .AddEmbed(embedMessage)
                 .AsEphemeral(true));
         }
-
-        private async Task ShowNoPermissionMessage(ComponentInteractionCreateEventArgs e) {
-            var embed = new DiscordEmbedBuilder();
-            embed.WithAuthor("You don't have permission!", null, e.User.AvatarUrl);
-            embed.WithColor(new DiscordColor("#e83b3b"));
-            embed.Build();
-            var ephemeral = new DiscordInteractionResponseBuilder()
-                .AddEmbed(embed)
-                .AsEphemeral(true);
-            await e.Interaction.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, ephemeral);
-        }
-
+        #endregion
     }
 }
