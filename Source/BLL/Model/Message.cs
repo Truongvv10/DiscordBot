@@ -96,7 +96,8 @@ namespace BLL.Model {
             set => creationDate = value;
         }
 
-        [Column("data", TypeName = "nvarchar(max)")]
+        [Column("data")]
+        [MaxLength]
         [JsonProperty("data", NullValueHandling = NullValueHandling.Ignore)]
         public Dictionary<string, string> Data {
             get => data;

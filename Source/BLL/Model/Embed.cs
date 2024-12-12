@@ -161,7 +161,8 @@ namespace BLL.Model {
             set => hasTimeStamp = value;
         }
 
-        [Column("fields", TypeName = "nvarchar(max)")]
+        [Column("fields")]
+        [MaxLength]
         [JsonProperty("fields", NullValueHandling = NullValueHandling.Ignore)]
         public List<(string, string, bool)> Fields {
             get => fields;

@@ -10,8 +10,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DLLSQLServer.Services {
-    public class SqlServerService : IDataService {
+namespace DLLSQLServer.Repositories {
+    public class SqlServerRepository : IDataService {
 
         #region Fields
         private CacheData cacheData;
@@ -19,7 +19,7 @@ namespace DLLSQLServer.Services {
         #endregion
 
         #region Constructors
-        public SqlServerService(CacheData cacheData, string connectionString) {
+        public SqlServerRepository(CacheData cacheData, string connectionString) {
             this.cacheData = cacheData;
             dataContext = new SqlServerDataContext(connectionString);
         }

@@ -11,7 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 using APP.Utils;
 using BLL.Interfaces;
 using BLL.Enums;
-using DLLSQLServer.Services;
+using DLLSQLServer.Repositories;
 using BLL.Services;
 
 namespace APP.Services {
@@ -28,7 +28,7 @@ namespace APP.Services {
 
             // Initialize fields
             if (config.DatabaseType == DatabaseSaveType.SqlServer && config.ConnectionString != null) {
-                dataService = new SqlServerService(cache, config.ConnectionString);
+                dataService = new SqlServerRepository(cache, config.ConnectionString);
             } else {
                 throw new ServiceException($"Connection can not be established");
             }
