@@ -9,6 +9,7 @@ using APP.Services;
 using BLL.Model;
 using BLL.Services;
 using BLL.Interfaces;
+using APP.Attributes;
 
 namespace APP.Commands.Slash {
     public class GeneralCommands : ApplicationCommandModule {
@@ -25,7 +26,7 @@ namespace APP.Commands.Slash {
         #endregion
 
         [SlashCommand(TIMESTAMP, "Generate dynamic discord timestamp")]
-        [RequirePermission(CommandEnum.TIMESTAMP)]
+        [RequirePermission(CommandEnum.TIMESTAMP, true)]
         public async Task Timestamp(InteractionContext ctx,
             [Option("time-zone", "The time zone you live in.")] TimeZoneEnum timeZone) {
             try {
@@ -44,7 +45,7 @@ namespace APP.Commands.Slash {
         }
 
         [SlashCommand(NITRO, "Create nitro giveaway")]
-        [RequirePermission(CommandEnum.NITRO)]
+        [RequirePermission(CommandEnum.NITRO, false, true)]
         public async Task Nitro(InteractionContext ctx,
             [Option("expire", "The expire time (in minutes) of this nitro.")] double expire) {
             try {
@@ -63,7 +64,7 @@ namespace APP.Commands.Slash {
         }
 
         [SlashCommand(TEMPLATES, "View all available templates")]
-        [RequirePermission(CommandEnum.TEMPLATES)]
+        [RequirePermission(CommandEnum.TEMPLATES, false, true)]
         public async Task Templates(InteractionContext ctx) {
             try {
                 // Build the embed message with default values

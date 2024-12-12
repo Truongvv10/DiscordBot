@@ -1,4 +1,5 @@
-﻿using APP.Services;
+﻿using APP.Attributes;
+using APP.Services;
 using APP.Utils;
 using BLL.Enums;
 using BLL.Exceptions;
@@ -29,7 +30,7 @@ namespace APP.Commands.Slash {
 
         #region Command: /embed
         [SlashCommand(EMBED_CREATE, "Send an editable embeded message to the current channel")]
-        [RequirePermission(CommandEnum.EMBED)]
+        [RequirePermission(CommandEnum.EMBED, false, true)]
         public async Task Create(InteractionContext ctx,
             [Option("sent_channel", "The channel where your embeded message will be sent to.")] DiscordChannel channel,
             [Option("hidden", "If only you can see this embeded message, default is false")] bool hidden = false,
@@ -61,7 +62,7 @@ namespace APP.Commands.Slash {
 
         #region Command: /embed edit
         [SlashCommand(EMBED_EDIT, "Edit an existing embeded message from the bot")]
-        [RequirePermission(CommandEnum.EMBED_EDIT)]
+        [RequirePermission(CommandEnum.EMBED_EDIT, false, true)]
         public async Task Edit(InteractionContext ctx,
             [Option("message-id", "The id of the embeded message you want to edit.")] string id,
             [Option("hidden", "If only you can see this embeded message, default is true")] bool hidden = true) {
@@ -80,7 +81,7 @@ namespace APP.Commands.Slash {
 
         #region Command: /embed templates
         [SlashCommand(EMBED_TEMPLATES, "View all available templates")]
-        [RequirePermission(CommandEnum.EMBED_TEMPLATES)]
+        [RequirePermission(CommandEnum.EMBED_TEMPLATES, false, true)]
         public async Task Templates(InteractionContext ctx) {
             try {
                 // Build the embed message with default values

@@ -2,9 +2,9 @@
 using DSharpPlus.SlashCommands;
 using BLL.Enums;
 using APP.Utils;
-using APP.Services;
 using BLL.Interfaces;
 using BLL.Model;
+using APP.Attributes;
 
 namespace APP.Events {
     public class SlashCommandUseEvent {

@@ -1,4 +1,5 @@
-﻿using APP.Services;
+﻿using APP.Attributes;
+using APP.Services;
 using BLL.Enums;
 using DSharpPlus.SlashCommands;
 
@@ -7,7 +8,7 @@ namespace APP.Commands.Slash {
 
 
         [SlashCommand("broadcast", "Send an embeded message to the current channel")]
-        [RequirePermission(CommandEnum.BROADCAST)]
+        [RequirePermission(CommandEnum.BROADCAST, true)]
         public async Task UseBroadcastCommand(InteractionContext ctx) {
         }
 

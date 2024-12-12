@@ -9,6 +9,7 @@ using BLL.Interfaces;
 using BLL.Model;
 using DSharpPlus;
 using System;
+using APP.Attributes;
 
 namespace APP.Commands.Slash {
 
@@ -30,7 +31,7 @@ namespace APP.Commands.Slash {
         #endregion
 
         [SlashCommand(EVENT_CREATE, "Send an embeded message to the current channel")]
-        [RequirePermission(CommandEnum.EVENTS)]
+        [RequirePermission(CommandEnum.EVENTS, false, true)]
         public async Task Create(InteractionContext ctx,
             [Option("time_zone", "The timezone of the date & time will be calculated to.")] TimeZoneEnum timeZone,
             [Option("sent_channel", "The channel where your event will be sent to.")] DiscordChannel channel,
@@ -61,34 +62,6 @@ namespace APP.Commands.Slash {
 
                 // Create the embed message
                 await DiscordUtil.CreateMessageAsync(CommandEnum.EVENTS_SETUP, ctx.Interaction, message, channel.Id, hidden);
-
-                //// Build the embed message with default values
-                //var template = await DataService.GetTemplateAsync(ctx.Guild.Id, $"{EVENT}_{EVENT_POST_CREATE}");
-                //var message = template!.Message;
-                //message.ChannelId = channel.Id;
-                //message.Sender = ctx.User.Id;
-                //message.IsEphemeral = hidden;
-                //message.Type = CommandEnum.EVENTS_CREATE;
-
-                //// Set the values
-                //message.Embed.Author = name.Replace(" Event", "").Replace("Event", "") + " Event";
-                //message.ChannelId = channel.Id;
-                //message.Sender = ctx.User.Id;
-
-                //// Set the custom data
-                //embed.AddCustomData(Identity.EVENT_NAME, name);
-                //embed.AddCustomData(Identity.EVENT_TIMEZONE, timeZone.ToString());
-                //embed.AddCustomData(Identity.EVENT_START, DateTime.Now.AddDays(1).ToString("dd/MM/yyyy HH:mm"));
-                //embed.AddCustomData(Identity.EVENT_END, DateTime.Now.AddDays(1).AddHours(1).ToString("dd/MM/yyyy HH:mm"));
-
-                //// Add the optional values
-                //if (image is not null) embed.Image = image.Url;
-                //if (thumbnail is not null) embed.Thumbnail = thumbnail.Url;
-                //if (pingrole is not null) embed.AddPingRole(pingrole.Id);
-
-                //// Create the embed message
-                //await DiscordUtil.CreateMessageAsync(CommandEnum.EVENTS_CREATE, ctx.Interaction, embed, channel.Id, hidden);
-
             } catch (Exception ex) {
                 throw new CommandException($"Embed.UseEmbedCommand: {ex}");
             }

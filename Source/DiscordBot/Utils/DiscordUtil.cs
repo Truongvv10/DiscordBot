@@ -282,32 +282,6 @@ namespace APP.Utils {
             }
         }
 
-        public string BuildEventDesciption(Message message) {
-            var embed = message.Embed;
-            if (embed is not null) {
-
-                string name = (string)message.Data[Identity.EVENT_NAME];
-                string title = (string)message.Data[Identity.EVENT_TITLE];
-                string intro = (string)message.Data[Identity.EVENT_INTRO];
-                string infoTitle = (string)message.Data[Identity.EVENT_INFO_TITLE];
-                string info = (string)message.Data[Identity.EVENT_INFO];
-                string rewardTitle = (string)message.Data[Identity.EVENT_REWARD_TITLE];
-                string reward = (string)message.Data[Identity.EVENT_REWARD];
-                string timeTitle = (string)message.Data[Identity.EVENT_TIME_TITLE];
-
-                return
-                    title + "\n" +
-                    intro + "\n" +
-                    infoTitle + "\n" +
-                    info + "\n" +
-                    rewardTitle + "\n" +
-                    reward + "\n" +
-                    timeTitle + "\n";
-
-            } else throw new UtilException("YEYSY EYWAAWRWA");
-
-        }
-
         public List<DiscordActionRowComponent> DefaultComponent() {
 
             var selectOptions = new List<DiscordSelectComponentOption>() {
