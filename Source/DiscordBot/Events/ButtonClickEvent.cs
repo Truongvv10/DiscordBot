@@ -31,9 +31,9 @@ namespace APP.Events {
             if (e.Interaction.Data.ComponentType == ComponentType.Button) {
                 if (e.Id.Contains(Identity.BUTTON_EMBED)) await UseEmbed(sender, e);
             }
-            if (e.Interaction.Data.ComponentType == ComponentType.Button) {
-                if (e.Id.Contains(Identity.BUTTON_TEMPLATES)) await UseTemplate(e);
-            }
+            //if (e.Interaction.Data.ComponentType == ComponentType.Button) {
+            //    if (e.Id.Contains(Identity.BUTTON_TEMPLATES)) await UseTemplate(e);
+            //}
             if (e.Interaction.Data.ComponentType == ComponentType.Button) {
                 if (e.Id.Contains(Identity.BUTTON_NITRO)) await UseNitro(e);
             }
@@ -106,21 +106,6 @@ namespace APP.Events {
                         break;
                 }
 
-                //if (e.Id == "embedButtonEventPostCreate") {
-                //    modal.WithTitle("EVENT CREATION").WithCustomId($"{Identity.MODAL_EVENT};{Identity.SELECTION_EVENT_CREATION};{messageId}");
-                //    modal.AddComponents(new TextInputComponent("EVENT NAME", Identity.EVENT_NAME, "Write something...", message.Data[Identity.EVENT_NAME] as string, true, TextInputStyle.Short, 4, 32));
-                //    modal.AddComponents(new TextInputComponent("TIME ZONE", Identity.EVENT_TIMEZONE, "Europe/Brussels", message.Data[Identity.EVENT_TIMEZONE] as string, true, TextInputStyle.Short));
-                //    modal.AddComponents(new TextInputComponent("START DATE", Identity.EVENT_START, "DD/MM/YYYY hh:mm", message.Data[Identity.EVENT_START] as string, true, TextInputStyle.Short));
-                //    modal.AddComponents(new TextInputComponent("END DATE", Identity.EVENT_END, "DD/MM/YYYY hh:mm", message.Data[Identity.EVENT_END] as string, true, TextInputStyle.Short));
-                //    await e.Interaction.CreateResponseAsync(InteractionResponseType.Modal, modal);
-                //}
-
-                //if (e.Id == "embedButtonTemplateUse") {
-                //    modal.WithTitle("USE TEMPLATE").WithCustomId($"{Identity.MODAL_TEMPLATES};{Identity.SELECTION_TEMPLATE_INPUT};{message.Data[Identity.TEMPLATE_REPLACE_MESSAGE_ID]}");
-                //    modal.AddComponents(new TextInputComponent("TEMPLATE", Identity.TEMPLATE_NAME, "The template you want to use", null, true, TextInputStyle.Short, 1, 64));
-                //    await e.Interaction.CreateResponseAsync(InteractionResponseType.Modal, modal);
-                //}
-
             } catch (Exception ex) {
                 Console.WriteLine(ex);
                 throw new EventException("An error occured using the button for embed", ex);
@@ -157,65 +142,6 @@ namespace APP.Events {
             }
         }
 
-        public async Task UseTemplate(ComponentInteractionCreateEventArgs e) {
-            try {
-
-                // Get the message
-                var messageId = e.Message.Id;
-                var guildId = e.Guild.Id;
-                var message = await dataService.GetMessageAsync(e.Guild.Id, messageId);
-                var interaction = e.Interaction;
-
-                // Translate the placeholders
-                var translated = message.DeepClone();
-                await translated.TranslatePlaceholders(e.Interaction, dataService);
-                var embed = translated.Embed;
-
-                // Initialize the modal
-                var modal = new DiscordInteractionResponseBuilder();
-                var response = new DiscordInteractionResponseBuilder()
-                    .AddEmbed(embed.Build())
-                    .AsEphemeral(false);
-
-
-                switch (e.Id) {
-
-                    case Identity.BUTTON_TEMPLATES_ADD:
-                        modal.WithTitle("TEMPLATE SAVE").WithCustomId($"{Identity.MODAL_TEMPLATES};{Identity.SELECTION_EVENT_CREATION};{messageId}");
-                        modal.AddComponents(new TextInputComponent("TEMPLATE NAME", Identity.MODAL_DATA_TEMPLATES_ADD_NAME, "Unique name id for saved template", null, true, TextInputStyle.Short, 1, 32));
-                        modal.AddComponents(new TextInputComponent("MESSAGE ID", Identity.MODAL_DATA_TEMPLATES_ADD_MESSAGE, "Id of the message that will be saved", null, true, TextInputStyle.Short, 1, 32));
-                        await e.Interaction.CreateResponseAsync(InteractionResponseType.Modal, modal);
-                        break;
-
-                    case Identity.BUTTON_TEMPLATES_SELECT:
-                        modal.WithTitle("TEMPLATE SELECT").WithCustomId($"{Identity.MODAL_TEMPLATES};{Identity.SELECTION_EVENT_CREATION};{messageId}");
-                        modal.AddComponents(new TextInputComponent("TEMPLATE NAME", Identity.MODAL_DATA_TEMPLATES_ADD_NAME, "/templates to view the available ones", null, true, TextInputStyle.Short, 1, 32));
-                        modal.AddComponents(new TextInputComponent("MESSAGE ID", Identity.MODAL_DATA_TEMPLATES_ADD_MESSAGE, "Message that will using this template", null, true, TextInputStyle.Short, 1, 32));
-                        await e.Interaction.CreateResponseAsync(InteractionResponseType.Modal, modal);
-                        break;
-
-                    case Identity.BUTTON_TEMPLATES_DELETE:
-                        modal.WithTitle("TEMPLATE DELETE").WithCustomId($"{Identity.MODAL_TEMPLATES};{Identity.SELECTION_EVENT_CREATION};{messageId}");
-                        modal.AddComponents(new TextInputComponent("TEMPLATE NAME", Identity.MODAL_DATA_TEMPLATES_REMOVE_NAME, "/templates to view the available ones", null, true, TextInputStyle.Short, 1, 32));
-                        await e.Interaction.CreateResponseAsync(InteractionResponseType.Modal, modal);
-                        break;
-
-                    case Identity.BUTTON_TEMPLATES_CANCEL:
-                        await e.Interaction.CreateResponseAsync(InteractionResponseType.DeferredMessageUpdate);
-                        var sentMessage = await e.Interaction.GetOriginalResponseAsync().ConfigureAwait(false);
-                        await sentMessage.DeleteAsync();
-                        await dataService.RemoveMessageAsync(message);
-                        break;
-
-                    default:
-                        break;
-                }
-
-            } catch (Exception ex) {
-                throw new EventException("An error occured using the button for templates", ex);
-            }
-        }
-
         public async Task UseEvent(ComponentInteractionCreateEventArgs e) {
             try {
 
@@ -245,24 +171,6 @@ namespace APP.Events {
             }
         }
         #endregion
-
-        //private async Task<bool> CheckPermission(ComponentInteractionCreateEventArgs e, CommandEnum cmd, ulong ownerid) {
-
-        //    var permission = await CacheData.GetPermission(e.Guild.Id, cmd);
-        //    var userid = e.User.Id;
-        //    var user = await e.Guild.GetMemberAsync(userid);
-        //    var roles = user.Roles;
-
-        //    if (user.Permissions.HasPermission(Permissions.All)) {
-        //        return true;
-        //    } else if (permission.AllowAdministrator) {
-        //        return true;
-        //    } else if (e.User.Id == ownerid) {
-        //        return true;
-        //    } else {
-        //        return false;
-        //    }
-        //}
 
     }
 }

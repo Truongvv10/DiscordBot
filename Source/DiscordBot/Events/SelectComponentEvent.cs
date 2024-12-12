@@ -28,7 +28,6 @@ namespace APP.Events {
         public async Task ComponentSelect(DiscordClient sender, ComponentInteractionCreateEventArgs e) {
             if (e.Interaction.Data.ComponentType == ComponentType.StringSelect) {
                 if (e.Id == Identity.SELECTION_EMBED) await HandleEmbedInteraction(sender, e);
-                if (e.Id == Identity.SELECTION_TEMPLATE) await HandleTemplateInteraction(sender, e);
                 if (e.Id == Identity.SELECTION_PLACEHOLDER) await PlaceholderInteraction(sender, e);
             }
         }
@@ -131,7 +130,7 @@ namespace APP.Events {
                             break;
 
                         case Identity.SELECTION_TEMPLATE_LIST:
-                            var template = await dataService.GetTemplateAsync(e.Guild.Id, Identity.TDATA_TEMPLATES);
+                            var template = await dataService.GetTemplateAsync(e.Guild.Id, Identity.TEMPLATE_TEMPLATES);
                             var templateMessage = template!.Message;
                             await discordUtil.CreateMessageAsync(CommandEnum.TEMPLATES, e.Interaction, templateMessage, e.Channel.Id, true);
                             break;
@@ -140,58 +139,6 @@ namespace APP.Events {
                             modal.WithTitle("SELECT TEMPLATE").WithCustomId($"{Identity.MODAL_EMBED};{option};{messageId}");
                             modal.AddComponents(new TextInputComponent("TEMPLATE NAME", Identity.MODAL_DATA_TEMPLATE_USE, "/templates to view the available ones", null, true, TextInputStyle.Short, 3, 24));
                             await e.Interaction.CreateResponseAsync(InteractionResponseType.Modal, modal);
-                            break;
-
-                        default:
-                            await SendNotAFeatureYet(e.Interaction);
-                            break;
-                    }
-                }
-            } catch (Exception ex) {
-                Console.WriteLine(ex.Message);
-            }
-        }
-
-        public async Task HandleTemplateInteraction(DiscordClient discordClient, ComponentInteractionCreateEventArgs e) {
-
-            var messageId = e.Message.Id;
-            var message = await dataService.GetMessageAsync(e.Guild.Id, messageId);
-            var embed = message.Embed;
-
-            try {
-                const string text = "Write something...";
-                var exampleUrl = @"https://example.com/";
-                var options = e.Values;
-                var components = e.Message.Components;
-                var modal = new DiscordInteractionResponseBuilder();
-                var response = new DiscordInteractionResponseBuilder()
-                    .AddEmbed(embed.Build())
-                    .AddComponents(components);
-
-                foreach (var option in options) {
-                    switch (option) {
-
-                        case Identity.SELECTION_TEMPLATE_ADD:
-                            modal.WithTitle("SAVE TEMPLATE").WithCustomId($"{Identity.MODAL_EMBED};{option};{messageId}");
-                            modal.AddComponents(new TextInputComponent("SAVE TEMPLATE", Identity.MODAL_DATA_TEMPLATE_ADD, text, null, true, TextInputStyle.Short, 3, 24));
-                            await e.Interaction.CreateResponseAsync(InteractionResponseType.Modal, modal);
-                            break;
-
-                        case Identity.SELECTION_TEMPLATE_USE:
-                            var templateUseMessage = (await dataService.GetTemplateAsync(e.Interaction.Guild.Id, Identity.TDATA_USE)).Message;
-                            using (StreamReader sr = new StreamReader(Path.Combine(Environment.CurrentDirectory, "Saves", "Templates.json"))) {
-                                var data = await sr.ReadToEndAsync();
-                                var json = JsonConvert.DeserializeObject<Dictionary<string, Embed>>(data)!;
-                                templateUseMessage.Embed.Description = templateUseMessage.Embed.Description!.Replace($"{{{Identity.TEMPLATE_LIST}}}", json.Keys.Aggregate("", (current, next) => current + "\n- `" + next + "`"));
-                            }
-                            //var guildTemplates = await CacheData.GetTemplateAll(e.Interaction.Guild.Id);
-                            //templateUseEmbed.Description =
-                            //    guildTemplates.Count == 0 ?
-                            //    templateUseEmbed.Description!.Replace($"{{{Identity.TEMPLATE_LIST_CUSTOM}}}", "- No templates saved yet...") :
-                            //    templateUseEmbed.Description!.Replace($"{{{Identity.TEMPLATE_LIST_CUSTOM}}}", guildTemplates.Keys.Aggregate("", (current, next) => current + "\n- `" + next + "`"));
-
-                            templateUseMessage.AddData(Identity.TEMPLATE_REPLACE_MESSAGE_ID, messageId.ToString());
-                            await discordUtil.CreateMessageAsync(CommandEnum.TEMPLATE_USE, e.Interaction, templateUseMessage, e.Interaction.Channel.Id, templateUseMessage.IsEphemeral);
                             break;
 
                         default:

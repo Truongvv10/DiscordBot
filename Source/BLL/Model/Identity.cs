@@ -37,15 +37,6 @@
         public const string SELECTION_PLACEHOLDER_CUSTOM = $"{SELECTION_PLACEHOLDER}.custom";
         public const string SELECTION_PLACEHOLDER_ADD = $"{SELECTION_PLACEHOLDER}.add";
 
-        // Selection Event
-        public const string SELECTION_EVENT_CREATION = $"{SELECTION_EVENT}.create";
-        public const string SELECTION_EVENT_PROPERTIES = $"{SELECTION_EVENT}.properties";
-        public const string SELECTION_EVENT_INTRODUCTION = $"{SELECTION_EVENT}.introduction";
-        public const string SELECTION_EVENT_INFORMATION = $"{SELECTION_EVENT}.information";
-        public const string SELECTION_EVENT_REWARDS = $"{SELECTION_EVENT}.rewards";
-        public const string SELECTION_EVENT_TIMESTAMP = $"{SELECTION_EVENT}.timestamp";
-        public const string SELECTION_EVENT_REACTION = $"{SELECTION_EVENT}.reaction";
-
         // Selection Permission
         public const string SELECTION_PERMS_PERMS = $"{SELECTION_PERMISSION}.permission";
         public const string SELECTION_PERMS_EMBED = $"{SELECTION_PERMISSION}.embed";
@@ -127,12 +118,7 @@
 
         // Modal Event
         private const string MODAL_DATA_EVENT = $"{MODAL_EVENT}.component";
-        public const string MODAL_DATA_EVENT_TITLE = $"{MODAL_DATA_EVENT}.title";
-        public const string MODAL_DATA_EVENT_INTRO = $"{MODAL_DATA_EVENT}.intro";
-        public const string MODAL_DATA_EVENT_INFO = $"{MODAL_DATA_EVENT}.info";
-        public const string MODAL_DATA_EVENT_REWARD = $"{MODAL_DATA_EVENT}.reward";
         public const string MODAL_DATA_EVENT_TIMEZONE = $"{MODAL_DATA_EVENT}.timezone";
-        public const string MODAL_DATA_EVENT_TIME_TITLE = $"{MODAL_DATA_EVENT}.time.title";
         public const string MODAL_DATA_EVENT_NAME = $"{MODAL_DATA_EVENT}.name";
         public const string MODAL_DATA_EVENT_START = $"{MODAL_DATA_EVENT}.start";
         public const string MODAL_DATA_EVENT_END = $"{MODAL_DATA_EVENT}.end";
@@ -151,57 +137,12 @@
         public const string MODAL_DATA_TIMESTAMPS_TIME = $"{MODAL_DATA_TIMESTAMPS}.time";
         #endregion
 
-        // Event
-        public const string EVENT_NAME = PREFIX + "event.name";
-        public const string EVENT_TITLE = PREFIX + "event.title";
-        public const string EVENT_INTRO = PREFIX + "event.intro";
-        public const string EVENT_INFO_TITLE = PREFIX + "event.info.title";
-        public const string EVENT_INFO = PREFIX + "event.info";
-        public const string EVENT_REWARD_TITLE = PREFIX + "event.reward.title";
-        public const string EVENT_REWARD = PREFIX + "event.reward";
-        public const string EVENT_TIMEZONE = PREFIX + "event.timezone";
-        public const string EVENT_TIME_TITLE = PREFIX + "event.time.title";
-        public const string EVENT_START = PREFIX + "event.start";
-        public const string EVENT_END = PREFIX + "event.end";
-        public const string EVENT_START_R = PREFIX + "event.start.relative";
-        public const string EVENT_END_R = PREFIX + "event.end.relative";
-        public const string EVENT_DESCRIPTION_START = PREFIX + "event.description.start";
-        public const string EVENT_DESCRIPTION_END = PREFIX + "event.description.end";
-        public const string EVENT_DESCRIPTION_REACTION = PREFIX + "event.description.reaction";
-
-        // Template
-        public const string TEMPLATE_NAME = PREFIX + "template.name";
-        public const string TEMPLATE_LIST = PREFIX + "template.list";
-        public const string TEMPLATE_LIST_CUSTOM = PREFIX + "template.list.custom";
-        public const string TEMPLATE_REPLACE_MESSAGE_ID = PREFIX + "template.replace.message";
-
-        // Template
-        public const string TDATA_EMBED_CREATE = "EMBED_CREATE";
-        public const string TDATA_EVENT_CREATE = "EVENT_CREATE";
-        public const string TDATA_EVENT_POST_CREATE = "EVENT_POST_CREATE";
-        public const string TDATA_CREATE = "TEMPLATE_CREATE";
-        public const string TDATA_USE = "TEMPLATE_USE";
-        public const string TDATA_TIMESTAMP = "TIMESTAMP";
-        public const string TDATA_TEMPLATES = "TEMPLATES";
-        public const string TDATA_TEMPLATES_SAVE = "TEMPLATES_SAVE";
-        public const string TDATA_NITRO = "NITRO";
-        public const string TDATA_NO_PERMISSION = "NO_PERMISSION";
-
-        // ========================================================================================================
-        //                                                                                                       //
-        //                                                  Data                                                 //
-        //                                                                                                       //
-        // ========================================================================================================
-
-        public const string DATA_CONTENT = PREFIX + "data.content";
-        public const string DATA_EMBED_TITLE = PREFIX + "data.embed.title";
-        public const string DATA_EMBED_TITLE_LINK = PREFIX + "data.embed.title.link";
-        public const string DATA_EMBED_DESCRIPTION = PREFIX + "data.embed.description";
-        public const string DATA_EMBED_AUTHOR = PREFIX + "data.embed.author";
-        public const string DATA_EMBED_AUTHOR_LINK = PREFIX + "data.embed.author.link";
-        public const string DATA_EMBED_AUTHOR_URL = PREFIX + "data.embed.author.url";
-        public const string DATA_EMBED_FOOTER = PREFIX + "data.embed.footer";
-        public const string DATA_EMBED_FOOTER_URL = PREFIX + "data.embed.footer.url";
-        public const string DATA_EMBED_FIELDS = PREFIX + "data.embed.fields";
+        #region Templates
+        public const string TEMPLATE_EMBED_CREATE = "EMBED_CREATE";
+        public const string TEMPLATE_TIMESTAMP = "TIMESTAMP";
+        public const string TEMPLATE_TEMPLATES = "TEMPLATES";
+        public const string TEMPLATE_NITRO = "NITRO";
+        public const string TEMPLATE_NO_PERMISSION = "NO_PERMISSION";
+        #endregion
     }
 }

@@ -402,26 +402,6 @@ namespace APP.Utils {
             return results;
         }
 
-        public List<DiscordActionRowComponent> EventComponent() {
-
-            var selectEventComponents = new List<DiscordSelectComponentOption>() {
-                new DiscordSelectComponentOption("Properties", Identity.SELECTION_EVENT_PROPERTIES, "Edit properties of the event.", emoji: new DiscordComponentEmoji("🔶")),
-                new DiscordSelectComponentOption("Introduction", Identity.SELECTION_EVENT_INTRODUCTION, "Edit introduction of the event.", emoji: new DiscordComponentEmoji("📑")),
-                new DiscordSelectComponentOption("Information", Identity.SELECTION_EVENT_INFORMATION, "Edit information of the event.", emoji: new DiscordComponentEmoji("ℹ️")),
-                new DiscordSelectComponentOption("Top rewards", Identity.SELECTION_EVENT_REWARDS, "Edit top rewards of the event.", emoji: new DiscordComponentEmoji("🏆")),
-                new DiscordSelectComponentOption("Date Format", Identity.SELECTION_EVENT_TIMESTAMP, "Edit timestamp of the event.", emoji: new DiscordComponentEmoji("📅")),
-                new DiscordSelectComponentOption("Reaction Format", Identity.SELECTION_EVENT_REACTION, "Edit reactions of the event.", emoji: new DiscordComponentEmoji("☺️"))
-            };
-
-            List<DiscordComponent> selectComponents = new() {
-                new DiscordSelectComponent(Identity.SELECTION_EVENT, "Select event specific component", selectEventComponents)};
-
-            List<DiscordActionRowComponent> results = new() {
-                new DiscordActionRowComponent(selectComponents)};
-
-            return results;
-        }
-
         public async Task<DiscordMessage?> GetMessageByIdAsync(DiscordChannel channel, ulong? messageId) {
             try {
                 if (messageId != null) return await channel.GetMessageAsync((ulong)messageId);

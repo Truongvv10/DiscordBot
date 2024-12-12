@@ -49,7 +49,7 @@ namespace APP.Commands.Slash {
             [Option("expire", "The expire time (in minutes) of this nitro.")] double expire) {
             try {
                 // Build the embed message with default values
-                var template = await DataService.GetTemplateAsync(ctx.Guild.Id, Identity.TDATA_NITRO);
+                var template = await DataService.GetTemplateAsync(ctx.Guild.Id, Identity.TEMPLATE_NITRO);
                 var message = template!.Message;
                 var date = DateTime.Now.AddMinutes(expire);
                 message.SetData(Placeholder.DATE_END, date.ToString("dd/MM/yyyy HH:mm"));
@@ -67,7 +67,7 @@ namespace APP.Commands.Slash {
         public async Task Templates(InteractionContext ctx) {
             try {
                 // Build the embed message with default values
-                var template = await DataService.GetTemplateAsync(ctx.Guild.Id, Identity.TDATA_TEMPLATES);
+                var template = await DataService.GetTemplateAsync(ctx.Guild.Id, Identity.TEMPLATE_TEMPLATES);
                 var message = template!.Message;
 
                 // Create embed message

@@ -333,7 +333,7 @@ namespace APP.Events {
             try {
                 // Variables
                 var data = e.Values;
-                var template = await dataService.GetTemplateAsync(e.Interaction.Guild.Id, Identity.TDATA_TIMESTAMP);
+                var template = await dataService.GetTemplateAsync(e.Interaction.Guild.Id, Identity.TEMPLATE_TIMESTAMP);
                 var message = template.Message;
 
                 // Check modals
