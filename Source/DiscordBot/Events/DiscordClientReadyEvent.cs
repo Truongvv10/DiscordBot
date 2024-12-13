@@ -55,7 +55,7 @@ namespace APP.Events {
                 var stopwatch = Stopwatch.StartNew();
                 await dataService.LoadGuildsAsync(client.Guilds.Select(g => g.Key));
                 stopwatch.Stop();
-                Console.WriteLine($"{AnsiColor.RESET}[{DateTime.Now}] {AnsiColor.CYAN}Successfully loaded default templates {AnsiColor.YELLOW}({stopwatch.ElapsedMilliseconds}ms){AnsiColor.RESET}");
+                Console.WriteLine($"{AnsiColor.RESET}[{DateTime.Now}] {AnsiColor.CYAN}Successfully loaded all discord guilds {AnsiColor.YELLOW}({stopwatch.ElapsedMilliseconds}ms){AnsiColor.RESET}");
 
                 // Load all templates
                 stopwatch = Stopwatch.StartNew();
