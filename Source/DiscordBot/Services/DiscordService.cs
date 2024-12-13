@@ -13,6 +13,7 @@ using BLL.Interfaces;
 using BLL.Enums;
 using DLLSQLServer.Repositories;
 using BLL.Services;
+using DLLSQLite.Repositories;
 
 namespace APP.Services {
     public class DiscordService {
@@ -27,10 +28,17 @@ namespace APP.Services {
         public DiscordService(Config config, CacheData cache) {
 
             // Initialize fields
-            if (config.DatabaseType == DatabaseSaveType.SqlServer && config.ConnectionString != null) {
-                dataService = new SqlServerRepository(cache, config.ConnectionString);
-            } else {
-                throw new ServiceException($"Connection can not be established");
+            if (config.ConnectionString != null) {
+                switch (config.DatabaseType) {
+                    case DatabaseSaveType.SqlServer:
+                        dataService = new SqlServerRepository(cache, config.ConnectionString);
+                        break;
+                    case DatabaseSaveType.Sqlite:
+                        dataService = new SqliteRepository(cache, config.ConnectionString);
+                        break;
+                    default:
+                        throw new ServiceException($"Connection can not be established");
+                }
             }
 
             this.cache = cache;

@@ -11,7 +11,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace DLLSQLServer.Repositories {
-    public class SqlServerRepository : IDataService {
+    public class SqlServerRepository : IDataRepository {
 
         #region Fields
         private CacheData cacheData;

@@ -11,7 +11,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace DLLSQLite.Repositories {
-    public class SqliteRepository : IDataService {
+    public class SqliteRepository : IDataRepository {
         #region Fields
         private CacheData cacheData;
         private SqliteDataContext dataContext;
