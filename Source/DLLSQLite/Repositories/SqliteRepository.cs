@@ -15,12 +15,14 @@ namespace DLLSQLite.Repositories {
         #region Fields
         private CacheData cacheData;
         private SqliteDataContext dataContext;
+        private string folder = Path.Combine(Environment.CurrentDirectory, "Saves");
         #endregion
 
         #region Constructors
         public SqliteRepository(CacheData cacheData, string databasePath) {
             this.cacheData = cacheData;
-            dataContext = new SqliteDataContext(databasePath);
+            var connectionString = $"Data Source={Path.Combine(folder, databasePath.Replace("Data Source=", ""))};";
+            dataContext = new SqliteDataContext(connectionString);
         }
         #endregion
 
