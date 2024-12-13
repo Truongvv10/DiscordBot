@@ -10,15 +10,13 @@ namespace APP.Attributes {
 
         #region Fields
         private CommandEnum command;
-        private bool checkChannelPermission = false;
-        private bool everyoneCanUse = false;
+        private Permissions[] channelPermissions;
         #endregion
 
         #region Constructors
-        public RequirePermissionAttribute(CommandEnum command, bool everyoneCanUse = false, bool checkChannelPermission = false) {
+        public RequirePermissionAttribute(CommandEnum command, Permissions[]? channelPermissions = null) {
             this.command = command;
-            this.everyoneCanUse = everyoneCanUse;
-            this.checkChannelPermission = checkChannelPermission;
+            this.channelPermissions = channelPermissions ?? Array.Empty<Permissions>();
         }
         #endregion
 
@@ -27,9 +25,9 @@ namespace APP.Attributes {
             get => command;
             set => command = value;
         }
-        public bool CheckChannelPermission {
-            get => checkChannelPermission;
-            set => checkChannelPermission = value;
+        public Permissions[] ChannelPermissions {
+            get => channelPermissions;
+            set => channelPermissions = value;
         }
         #endregion
 
@@ -41,13 +39,13 @@ namespace APP.Attributes {
 
             LogCommand(user, ctx.Guild, ctx.Interaction.Channel);
 
-            if (everyoneCanUse) return true;
+            if (command == CommandEnum.NONE) return true;
             if (user.Permissions.HasPermission(Permissions.All)) return true;
             if (user.Permissions.HasPermission(Permissions.Administrator)) return true;
 
-            if (checkChannelPermission) {
-                if (userInChannel.HasPermission(Permissions.ManageChannels)) return true;
-                if (userInChannel.HasPermission(Permissions.ManageMessages)) return true;
+            if (channelPermissions.Any()) {
+                foreach (var permission in channelPermissions) if (!userInChannel.HasPermission(permission)) return false;
+                return true;
             }
 
             return false;

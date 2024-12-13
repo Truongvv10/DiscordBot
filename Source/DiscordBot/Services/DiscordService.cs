@@ -17,7 +17,7 @@ using BLL.Services;
 namespace APP.Services {
     public class DiscordService {
 
-        private IDataService dataService;
+        private IDataRepository dataService;
         private Config config;
         private DiscordClient client;
         private SlashCommandsExtension commands;

@@ -17,11 +17,11 @@ namespace APP.Utils {
     public class DiscordUtil {
 
         #region Fields
-        private IDataService dataService;
+        private IDataRepository dataService;
         #endregion
 
         #region Constructor
-        public DiscordUtil(IDataService dataService) {
+        public DiscordUtil(IDataRepository dataService) {
             this.dataService = dataService;
         }
         #endregion

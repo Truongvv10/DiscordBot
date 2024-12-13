@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace BLL.Interfaces {
-    public interface IDataService {
+    public interface IDataRepository {
         // Loading Data
         public Task LoadTemplatesAsync();
         public Task LoadTimeZonesAsync();

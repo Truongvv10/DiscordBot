@@ -36,7 +36,7 @@ namespace APP.Utils {
                 throw new DomainException("An error occurred while building embed", ex);
             }
         }
-        public static async Task<Message> TranslatePlaceholders(this Message message, DiscordInteraction interaction, IDataService data) {
+        public static async Task<Message> TranslatePlaceholders(this Message message, DiscordInteraction interaction, IDataRepository data) {
             try {
 
                 var embed = message.Embed;

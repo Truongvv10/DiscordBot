@@ -6,6 +6,7 @@ using BLL.Exceptions;
 using BLL.Interfaces;
 using BLL.Model;
 using BLL.Services;
+using DSharpPlus;
 using DSharpPlus.Entities;
 using DSharpPlus.SlashCommands;
 using Newtonsoft.Json;
@@ -24,13 +25,13 @@ namespace APP.Commands.Slash {
         #endregion
 
         #region Properties
-        public required IDataService DataService { private get; set; }
+        public required IDataRepository DataService { private get; set; }
         public required DiscordUtil DiscordUtil { private get; set; }
         #endregion
 
         #region Command: /embed
         [SlashCommand(EMBED_CREATE, "Send an editable embeded message to the current channel")]
-        [RequirePermission(CommandEnum.EMBED, false, true)]
+        [RequirePermission(CommandEnum.EMBED, [Permissions.ManageChannels, Permissions.ManageMessages])]
         public async Task Create(InteractionContext ctx,
             [Option("sent_channel", "The channel where your embeded message will be sent to.")] DiscordChannel channel,
             [Option("hidden", "If only you can see this embeded message, default is false")] bool hidden = false,
@@ -62,7 +63,7 @@ namespace APP.Commands.Slash {
 
         #region Command: /embed edit
         [SlashCommand(EMBED_EDIT, "Edit an existing embeded message from the bot")]
-        [RequirePermission(CommandEnum.EMBED_EDIT, false, true)]
+        [RequirePermission(CommandEnum.EMBED_EDIT, [Permissions.ManageChannels, Permissions.ManageMessages])]
         public async Task Edit(InteractionContext ctx,
             [Option("message-id", "The id of the embeded message you want to edit.")] string id,
             [Option("hidden", "If only you can see this embeded message, default is true")] bool hidden = true) {
@@ -81,7 +82,7 @@ namespace APP.Commands.Slash {
 
         #region Command: /embed templates
         [SlashCommand(EMBED_TEMPLATES, "View all available templates")]
-        [RequirePermission(CommandEnum.EMBED_TEMPLATES, false, true)]
+        [RequirePermission(CommandEnum.EMBED_TEMPLATES, [Permissions.ManageChannels, Permissions.ManageMessages])]
         public async Task Templates(InteractionContext ctx) {
             try {
                 // Build the embed message with default values

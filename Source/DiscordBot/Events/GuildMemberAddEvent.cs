@@ -12,11 +12,11 @@ namespace APP.Events {
     public class GuildMemberAddEvent {
 
         #region Fields
-        private readonly IDataService dataService;
+        private readonly IDataRepository dataService;
         #endregion
 
         #region Constructors
-        public GuildMemberAddEvent(IDataService dataService) {
+        public GuildMemberAddEvent(IDataRepository dataService) {
             this.dataService = dataService;
         }
         #endregion

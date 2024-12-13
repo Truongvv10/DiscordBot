@@ -12,11 +12,11 @@ namespace APP.Events {
     public class ReactionAddEvent {
 
         #region Fields
-        private readonly IDataService dataService;
+        private readonly IDataRepository dataService;
         #endregion
 
         #region Constructors
-        public ReactionAddEvent(IDataService dataService) {
+        public ReactionAddEvent(IDataRepository dataService) {
             this.dataService = dataService;
         }
         #endregion

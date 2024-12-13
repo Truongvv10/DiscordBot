@@ -13,12 +13,12 @@ namespace APP.Events {
     public class ModalSubmitEvent {
 
         #region Fields
-        private readonly IDataService dataService;
+        private readonly IDataRepository dataService;
         private readonly DiscordUtil discordUtil;
         #endregion
 
         #region Constructors
-        public ModalSubmitEvent(IDataService dataService, DiscordUtil discordUtil) {
+        public ModalSubmitEvent(IDataRepository dataService, DiscordUtil discordUtil) {
             this.dataService = dataService;
             this.discordUtil = discordUtil;
         }

@@ -21,12 +21,12 @@ namespace APP.Commands.Slash {
         #endregion
 
         #region Properties
-        public required IDataService DataService { private get; set; }
+        public required IDataRepository DataService { private get; set; }
         public required DiscordUtil DiscordUtil { private get; set; }
         #endregion
 
         [SlashCommand(TIMESTAMP, "Generate dynamic discord timestamp")]
-        [RequirePermission(CommandEnum.TIMESTAMP, true)]
+        [RequirePermission(CommandEnum.NONE)]
         public async Task Timestamp(InteractionContext ctx,
             [Option("time-zone", "The time zone you live in.")] TimeZoneEnum timeZone) {
             try {
@@ -45,7 +45,7 @@ namespace APP.Commands.Slash {
         }
 
         [SlashCommand(NITRO, "Create nitro giveaway")]
-        [RequirePermission(CommandEnum.NITRO, false, true)]
+        [RequirePermission(CommandEnum.NITRO)]
         public async Task Nitro(InteractionContext ctx,
             [Option("expire", "The expire time (in minutes) of this nitro.")] double expire) {
             try {
@@ -64,7 +64,7 @@ namespace APP.Commands.Slash {
         }
 
         [SlashCommand(TEMPLATES, "View all available templates")]
-        [RequirePermission(CommandEnum.TEMPLATES, false, true)]
+        [RequirePermission(CommandEnum.TEMPLATES, [Permissions.ManageChannels, Permissions.ManageMessages])]
         public async Task Templates(InteractionContext ctx) {
             try {
                 // Build the embed message with default values

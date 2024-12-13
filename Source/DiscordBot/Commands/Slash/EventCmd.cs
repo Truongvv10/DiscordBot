@@ -26,12 +26,12 @@ namespace APP.Commands.Slash {
         #endregion
 
         #region Properties
-        public required IDataService DataService { private get; set; }
+        public required IDataRepository DataService { private get; set; }
         public required DiscordUtil DiscordUtil { private get; set; }
         #endregion
 
         [SlashCommand(EVENT_CREATE, "Send an embeded message to the current channel")]
-        [RequirePermission(CommandEnum.EVENTS, false, true)]
+        [RequirePermission(CommandEnum.EVENTS, [Permissions.ManageChannels, Permissions.ManageMessages])]
         public async Task Create(InteractionContext ctx,
             [Option("time_zone", "The timezone of the date & time will be calculated to.")] TimeZoneEnum timeZone,
             [Option("sent_channel", "The channel where your event will be sent to.")] DiscordChannel channel,

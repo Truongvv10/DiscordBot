@@ -15,12 +15,12 @@ namespace APP.Events {
     public class ButtonClickEvent {
 
         #region Fields
-        private readonly IDataService dataService;
+        private readonly IDataRepository dataService;
         public readonly DiscordUtil discordUtil;
         #endregion
 
         #region Constructors
-        public ButtonClickEvent(IDataService dataService, DiscordUtil discordUtil) {
+        public ButtonClickEvent(IDataRepository dataService, DiscordUtil discordUtil) {
             this.dataService = dataService;
             this.discordUtil = discordUtil;
         }

@@ -37,7 +37,7 @@ namespace APP.Utils {
                 ID, CUSTOM, TIMEZONE, DATE_START, DATE_END, URL1, URL2, URL3, URL4, USER_NAME, USER_AVATARURL, LIST_USERS, LIST_REACTIONS, LIST_TEMPLATES, LIST_TEMPLATES_GUILD});
         }
 
-        public static async Task<string> Translate(string input, Dictionary<string, string> data, DiscordInteraction interaction, IDataService dataService) {
+        public static async Task<string> Translate(string input, Dictionary<string, string> data, DiscordInteraction interaction, IDataRepository dataService) {
 
             var replacements = ExtractPlaceholders(input);
             replacements.OrderBy(x => !x.StartsWith(CUSTOM));

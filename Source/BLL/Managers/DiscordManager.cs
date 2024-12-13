@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 namespace BLL.Managers {
     public class DiscordManager {
         #region Properties
-        private IDataService repository;
+        private IDataRepository repository;
         private string configFolder = Path.Combine(Environment.CurrentDirectory, "Saves", "Config.json");
         #endregion
 

@@ -13,11 +13,11 @@ namespace APP.Events {
 
         #region Fields
         private readonly DiscordClient client;
-        private readonly IDataService dataService;
+        private readonly IDataRepository dataService;
         #endregion
 
         #region Constructors
-        public DiscordClientReadyEvent(DiscordClient client, IDataService dataService) {
+        public DiscordClientReadyEvent(DiscordClient client, IDataRepository dataService) {
             this.client = client;
             this.dataService = dataService;
         }
