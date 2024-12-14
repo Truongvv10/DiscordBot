@@ -302,9 +302,9 @@ namespace APP.Events {
                         break;
 
                     case Identity.SELECTION_PLACEHOLDER_ADD:
-                        var dataGroup = data[Identity.MODAL_DATA_PLACEHOLDER_ADD_GROUP].Replace(" ", "_");
-                        var dataId = data[Identity.MODAL_DATA_PLACEHOLDER_ADD_ID].Replace(" ", "_");
-                        var dataValue = data[Identity.MODAL_DATA_PLACEHOLDER_ADD_VALUE];
+                        var dataGroup = data[Identity.MODAL_DATA_PLACEHOLDER_ADD_GROUP].Replace(" ", "_").ToLower();
+                        var dataId = data[Identity.MODAL_DATA_PLACEHOLDER_ADD_ID].Replace(" ", "_").ToLower();
+                        var dataValue = data[Identity.MODAL_DATA_PLACEHOLDER_ADD_VALUE].ToLower();
 
                         if (!string.IsNullOrWhiteSpace(dataGroup) && !string.IsNullOrWhiteSpace(dataId) && !string.IsNullOrWhiteSpace(dataValue))
                             message.AddData($"{Placeholder.CUSTOM}.{dataGroup}.{dataId}", dataValue);

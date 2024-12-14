@@ -63,7 +63,7 @@
             "data.custom.intro.description": "Hey **everyone**! We'll be hosting **{data.id} Event**!",
             "data.custom.info.title": "## 🔸 Game Information",
             "data.custom.info.description": "N/A",
-            "data.custom.reward.title": "## 🔸 Top/Paticipation Rewards",
+            "data.custom.reward.title": "## 🔸 Top/Participation Rewards",
             "data.custom.reward.description": "**`1st`** 🥇 ...\n**`2nd`** 🥈 ...\n**`3rd`** 🥉 ...\n**`4th`** ...\n**`5th`** ...\n**`Participation`** ...",
             "data.custom.time.title": "## 🔸 When will it start",
             "data.custom.time.start": "**Starts at:**\n{data.date.start.1} ({data.date.start.7})",

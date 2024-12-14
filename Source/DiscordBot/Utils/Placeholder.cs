@@ -44,8 +44,7 @@ namespace APP.Utils {
 
             foreach (var placeholder in replacements) {
                 string toReplace = $"{{{placeholder}}}";
-                string value = Regex.Replace(placeholder, @"(\.\d+)$", "");
-                if (data.TryGetValue(value, out var replacement)) {
+                if (data.TryGetValue(placeholder, out var replacement)) {
                     if (Regex.IsMatch(placeholder, @"^data\.date\.start(\.\d+)?$")) {
                         string timezone = data[TIMEZONE] ?? "CET";
                         DateTime date = DateTime.ParseExact(data[DATE_START], "dd/MM/yyyy HH:mm", null);
@@ -91,18 +90,6 @@ namespace APP.Utils {
             }
 
             return input;
-        }
-
-        public static bool IsSeperate(string key) {
-            if (Regex.IsMatch(key, @"data.custom\.\w+$"))
-                return true;
-            else return false;
-        }
-
-        public static bool IsGrouped(string key) {
-            if (Regex.IsMatch(key, @"data.custom\.(\w+\.\w+)$"))
-                return true;
-            else return false;
         }
 
         private static List<string> ExtractPlaceholders(string input) {
