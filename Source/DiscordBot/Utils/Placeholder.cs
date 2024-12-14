@@ -26,6 +26,9 @@ namespace APP.Utils {
         public const string DATE_END = PREFIX + "data.date.end";
         public const string USER_NAME = PREFIX + "data.user.name";
         public const string USER_AVATARURL = PREFIX + "data.user.avatarurl";
+        public const string CHANNEL_ID = PREFIX + "data.channel.id";
+        public const string GUILD_ID = PREFIX + "data.guild.id";
+        public const string MESSAGE_ID = PREFIX + "data.message.id";
         public const string LIST_USERS = PREFIX + "data.list.users";
         public const string LIST_REACTIONS = PREFIX + "data.list.reactions";
         public const string LIST_TEMPLATES = PREFIX + "data.list.templates";
@@ -34,61 +37,65 @@ namespace APP.Utils {
 
         static Placeholder() {
             placeholders.AddRange(new[] {
-                ID, CUSTOM, TIMEZONE, DATE_START, DATE_END, URL1, URL2, URL3, URL4, USER_NAME, USER_AVATARURL, LIST_USERS, LIST_REACTIONS, LIST_TEMPLATES, LIST_TEMPLATES_GUILD});
+                ID, CUSTOM, TIMEZONE, DATE_START, DATE_END, URL1, URL2, URL3, URL4, USER_NAME, USER_AVATARURL, CHANNEL_ID, GUILD_ID, MESSAGE_ID, LIST_USERS, LIST_REACTIONS, LIST_TEMPLATES, LIST_TEMPLATES_GUILD});
         }
 
         public static async Task<string> Translate(string input, Dictionary<string, string> data, DiscordInteraction interaction, IDataRepository dataService) {
-
-            var replacements = ExtractPlaceholders(input);
-            replacements.OrderBy(x => !x.StartsWith(CUSTOM));
-
-            foreach (var placeholder in replacements) {
+            foreach (var placeholder in ExtractPlaceholders(input)) {
                 string toReplace = $"{{{placeholder}}}";
-                if (data.TryGetValue(placeholder, out var replacement)) {
-                    if (Regex.IsMatch(placeholder, @"^data\.date\.start(\.\d+)?$")) {
-                        string timezone = data[TIMEZONE] ?? "CET";
-                        DateTime date = DateTime.ParseExact(data[DATE_START], "dd/MM/yyyy HH:mm", null);
-                        var timestamp = await TranslateTime(date, timezone, placeholder);
-                        input = input.Replace(toReplace, timestamp);
-                    } else if (Regex.IsMatch(placeholder, @"^data\.date\.end(\.\d+)?$")) {
-                        string timezone = data[TIMEZONE] ?? "CET";
-                        DateTime date = DateTime.ParseExact(data[DATE_END], "dd/MM/yyyy HH:mm", null);
-                        var timestamp = await TranslateTime(date, timezone, placeholder);
-                        input = input.Replace(toReplace, timestamp);
-                    } else if (placeholder.Equals(TIMEZONE)) {
-                        input = input.Replace(toReplace, data[TIMEZONE]);
-                    } else {
-                        input = input.Replace(toReplace, replacement);
-                    }
+                switch (placeholder) {
+                    case USER_NAME:
+                        input = input.Replace(toReplace, interaction.User.Username);
+                        break;
+                    case USER_AVATARURL:
+                        input = input.Replace(toReplace, interaction.User.AvatarUrl);
+                        break;
+                    case LIST_TEMPLATES:
+                        var cache = new CacheData();
+                        await cache.LoadTemplates();
+                        input = input.Replace(toReplace, cache.Templates.Keys.Aggregate("", (current, next) => current + "`" + next + "`, "));
+                        break;
+                    case LIST_TEMPLATES_GUILD:
+                        var templates = await dataService.GetAllTemplatesAsync(interaction.Guild.Id);
+                        string templateList = templates.Count() == 0 ? "`No templates saved yet...`" : templates.Select(x => x.Name).Aggregate("", (current, next) => current + "`" + next + "`, ");
+                        input = input.Replace(toReplace, templateList);
+                        break;
+                    case MESSAGE_ID:
+                        input = input.Replace(toReplace, interaction.Id.ToString());
+                        break;
+                    case CHANNEL_ID:
+                        input = input.Replace(toReplace, interaction.Channel.Id.ToString());
+                        break;
+                    case GUILD_ID:
+                        input = input.Replace(toReplace, interaction.Guild.Id.ToString());
+                        break;
+                    default:
+                        if (data.TryGetValue(placeholder, out var replacement)) {
+                            if (Regex.IsMatch(placeholder, @"^data\.date\.start(\.\d+)?$")) {
+                                string timezone = data[TIMEZONE] ?? "CET";
+                                DateTime date = DateTime.ParseExact(data[DATE_START], "dd/MM/yyyy HH:mm", null);
+                                var timestamp = await TranslateTime(date, timezone, placeholder);
+                                input = input.Replace(toReplace, timestamp);
+                            } else if (Regex.IsMatch(placeholder, @"^data\.date\.end(\.\d+)?$")) {
+                                string timezone = data[TIMEZONE] ?? "CET";
+                                DateTime date = DateTime.ParseExact(data[DATE_END], "dd/MM/yyyy HH:mm", null);
+                                var timestamp = await TranslateTime(date, timezone, placeholder);
+                                input = input.Replace(toReplace, timestamp);
+                            } else if (placeholder.Equals(TIMEZONE)) {
+                                input = input.Replace(toReplace, data[TIMEZONE]);
+                            } else {
+                                input = input.Replace(toReplace, replacement);
+                            }
 
-                } else if (Regex.IsMatch(placeholder, @"^data\.date\.(start|end)(\.\d+)?$")) {
-                    var timestamp = await TranslateTime(DateTime.Now, "CET", placeholder);
-                    input = input.Replace(toReplace, timestamp);
-                } else if (placeholder == TIMEZONE) {
-                    input = input.Replace(toReplace, "CET");
-                }
-
-                if (placeholder == LIST_TEMPLATES) {
-                    var cache = new CacheData();
-                    await cache.LoadTemplates();
-                    input = input.Replace(toReplace, cache.Templates.Keys.Aggregate("", (current, next) => current + "`" + next + "`, "));
-                }
-
-                if (placeholder == USER_NAME) {
-                    input = input.Replace(toReplace, interaction.User.Username);
-                }
-
-                if (placeholder == USER_AVATARURL) {
-                    input = input.Replace(toReplace, interaction.User.AvatarUrl);
-                }
-
-                if (placeholder == LIST_TEMPLATES_GUILD) {
-                    var templates = await dataService.GetAllTemplatesAsync(interaction.Guild.Id);
-                    string templateList = templates.Count() == 0 ? "`No templates saved yet...`" : templates.Select(x => x.Name).Aggregate("", (current, next) => current + "`" + next + "`, ");
-                    input = input.Replace(toReplace, templateList);
+                        } else if (Regex.IsMatch(placeholder, @"^data\.date\.(start|end)(\.\d+)?$")) {
+                            var timestamp = await TranslateTime(DateTime.Now, "CET", placeholder);
+                            input = input.Replace(toReplace, timestamp);
+                        } else if (placeholder == TIMEZONE) {
+                            input = input.Replace(toReplace, "CET");
+                        }
+                        break;
                 }
             }
-
             return input;
         }
 
@@ -114,7 +121,7 @@ namespace APP.Utils {
             }
 
             // Return the list of found placeholders
-            return foundPlaceholders.ToList();
+            return foundPlaceholders.OrderBy(x => !x.StartsWith(CUSTOM)).ToList();
         }
 
         private static async Task<string> TranslateTime(DateTime date, string timeZone, string placeholder) {
