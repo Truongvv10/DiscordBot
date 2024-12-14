@@ -42,12 +42,7 @@ namespace APP.Attributes {
             if (command == CommandEnum.NONE) return true;
             if (user.Permissions.HasPermission(Permissions.All)) return true;
             if (user.Permissions.HasPermission(Permissions.Administrator)) return true;
-
-            if (channelPermissions.Any()) {
-                foreach (var permission in channelPermissions) if (!userInChannel.HasPermission(permission)) return false;
-                return true;
-            }
-
+            if (channelPermissions.Any()) foreach (var p in channelPermissions) if (userInChannel.HasPermission(p)) return true;
             return false;
         }
 
