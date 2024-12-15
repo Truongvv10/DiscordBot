@@ -14,6 +14,8 @@ using BLL.Enums;
 using DLLSQLServer.Repositories;
 using BLL.Services;
 using DLLSQLite.Repositories;
+using DLLSQLite.Contexts;
+using DLLSQLServer.Contexts;
 
 namespace APP.Services {
     public class DiscordService {
@@ -22,19 +24,24 @@ namespace APP.Services {
         private Config config;
         private DiscordClient client;
         private SlashCommandsExtension commands;
-        private CacheData cache;
+        private ICacheData cache;
         private DiscordUtil discordUtil;
 
-        public DiscordService(Config config, CacheData cache) {
+        public DiscordService(Config config, ICacheData cache) {
 
             // Initialize fields
-            if (config.ConnectionString != null) {
+            var connectionString = config.ConnectionString;
+            if (connectionString != null) {
                 switch (config.DatabaseType) {
                     case DatabaseSaveType.SqlServer:
-                        dataService = new SqlServerRepository(cache, config.ConnectionString);
+                        var sqlserverDataContext = new SqlServerDataContext(connectionString);
+                        dataService = new SqlServerRepository(cache, sqlserverDataContext);
+                        //dataService = new SqlServerRepository(cache, config.ConnectionString);
                         break;
                     case DatabaseSaveType.Sqlite:
-                        dataService = new SqliteRepository(cache, config.ConnectionString);
+                        var sqliteDataContext = new SqliteDataContext(connectionString);
+                        dataService = new SqliteRepository(cache, sqliteDataContext);
+                        //dataService = new SqliteRepository(cache, config.ConnectionString);
                         break;
                     default:
                         throw new ServiceException($"Connection can not be established");
