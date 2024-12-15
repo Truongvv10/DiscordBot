@@ -41,11 +41,12 @@ namespace APP.Utils {
 
         static Placeholder() {
             placeholders.AddRange(new[] {
-                ID, CUSTOM, TIMEZONE, DATE_START, DATE_END, URL1, URL2, URL3, URL4, USER_NAME, USER_AVATARURL, CHANNEL_ID, GUILD_ID, MESSAGE_ID, LIST_USERS, LIST_REACTIONS, LIST_TEMPLATES, LIST_TEMPLATES_GUILD});
+                ID, CUSTOM, TIMEZONE, DATE_START, DATE_END, URL1, URL2, URL3, URL4, TEXT1, TEXT2, TEXT3, TEXT4, USER_NAME, USER_AVATARURL, CHANNEL_ID, GUILD_ID, MESSAGE_ID, LIST_USERS, LIST_REACTIONS, LIST_TEMPLATES, LIST_TEMPLATES_GUILD});
         }
 
         public static async Task<string> Translate(string input, Dictionary<string, string> data, DiscordInteraction interaction, IDataRepository dataService) {
-            foreach (var placeholder in ExtractPlaceholders(input)) {
+            var extractedPlaceholders = ExtractPlaceholders(input);
+            foreach (var placeholder in extractedPlaceholders) {
                 string toReplace = $"{{{placeholder}}}";
                 switch (placeholder) {
                     case USER_NAME:
