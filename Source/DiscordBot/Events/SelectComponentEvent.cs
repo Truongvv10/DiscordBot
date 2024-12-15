@@ -190,8 +190,8 @@ namespace APP.Events {
                     case Identity.SELECTION_PLACEHOLDER_TIME:
 
                         var dataTimeZone = data.ContainsKey(Placeholder.TIMEZONE) ? data[Placeholder.TIMEZONE] : "";
-                        var dataDateStart = data.ContainsKey(Placeholder.DATE_START) ? data[Placeholder.DATE_START] : "";
-                        var dataDateEnd = data.ContainsKey(Placeholder.DATE_END) ? data[Placeholder.DATE_END] : "";
+                        var dataDateStart = data.ContainsKey(Placeholder.DATE_START) ? data[Placeholder.DATE_START] : DateTimeUtil.RoundDateTime(DateTime.Now).ToString("dd/MM/yyyy HH:mm");
+                        var dataDateEnd = data.ContainsKey(Placeholder.DATE_END) ? data[Placeholder.DATE_END] : DateTimeUtil.RoundDateTime(DateTime.Now).ToString("dd/MM/yyyy HH:mm");
 
                         modal.WithTitle("PLACEHOLDER DATES").WithCustomId($"{Identity.MODAL_PLACEHOLDER};{option};{messageId}");
                         modal.AddComponents(new TextInputComponent(Placeholder.TIMEZONE, Identity.MODAL_DATA_PLACEHOLDER_TIMEZONE, $"Examples: CET, BST, GMT...", dataTimeZone, false, TextInputStyle.Short));
@@ -223,10 +223,10 @@ namespace APP.Events {
                         var dataText4 = data.ContainsKey(Placeholder.TEXT4) ? data[Placeholder.TEXT4] : "";
 
                         modal.WithTitle("PLACEHOLDER TEXTS").WithCustomId($"{Identity.MODAL_PLACEHOLDER};{option};{messageId}");
-                        modal.AddComponents(new TextInputComponent(Placeholder.TEXT1, Identity.MODAL_DATA_PLACEHOLDER_TEXT1, placeholerUrl, dataText1, false, TextInputStyle.Short));
-                        modal.AddComponents(new TextInputComponent(Placeholder.TEXT2, Identity.MODAL_DATA_PLACEHOLDER_TEXT2, placeholerUrl, dataText2, false, TextInputStyle.Short));
-                        modal.AddComponents(new TextInputComponent(Placeholder.TEXT3, Identity.MODAL_DATA_PLACEHOLDER_TEXT3, placeholerUrl, dataText3, false, TextInputStyle.Short));
-                        modal.AddComponents(new TextInputComponent(Placeholder.TEXT4, Identity.MODAL_DATA_PLACEHOLDER_TEXT4, placeholerUrl, dataText4, false, TextInputStyle.Short));
+                        modal.AddComponents(new TextInputComponent(Placeholder.TEXT1, Identity.MODAL_DATA_PLACEHOLDER_TEXT1, placeholderText, dataText1, false, TextInputStyle.Short));
+                        modal.AddComponents(new TextInputComponent(Placeholder.TEXT2, Identity.MODAL_DATA_PLACEHOLDER_TEXT2, placeholderText, dataText2, false, TextInputStyle.Short));
+                        modal.AddComponents(new TextInputComponent(Placeholder.TEXT3, Identity.MODAL_DATA_PLACEHOLDER_TEXT3, placeholderText, dataText3, false, TextInputStyle.Short));
+                        modal.AddComponents(new TextInputComponent(Placeholder.TEXT4, Identity.MODAL_DATA_PLACEHOLDER_TEXT4, placeholderText, dataText4, false, TextInputStyle.Short));
                         await e.Interaction.CreateResponseAsync(InteractionResponseType.Modal, modal);
                         break;
 
