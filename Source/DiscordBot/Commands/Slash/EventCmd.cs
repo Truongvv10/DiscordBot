@@ -48,9 +48,7 @@ namespace APP.Commands.Slash {
                 message.Type = CommandEnum.EVENTS_CREATE;
 
                 // Set the values
-                var dateTime = DateTime.Now;
-                int roundedMinutes = (dateTime.Minute < 15) ? 0 : (dateTime.Minute < 45) ? 30 : 0;
-                dateTime = dateTime.AddMinutes(roundedMinutes - dateTime.Minute).AddHours(dateTime.Minute >= 45 ? 1 : 0);
+                var dateTime = DateTimeUtil.RoundDateTime(DateTime.Now);
                 message.AddData(Placeholder.TIMEZONE, timeZone.ToString());
                 message.AddData(Placeholder.DATE_START, dateTime.ToString("dd/MM/yyyy HH:mm"));
                 message.AddData(Placeholder.DATE_END, dateTime.AddHours(1).ToString("dd/MM/yyyy HH:mm"));
