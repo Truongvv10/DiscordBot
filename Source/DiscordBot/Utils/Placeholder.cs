@@ -23,6 +23,10 @@ namespace APP.Utils {
         public const string URL2 = PREFIX + "data.url.2";
         public const string URL3 = PREFIX + "data.url.3";
         public const string URL4 = PREFIX + "data.url.4";
+        public const string TEXT1 = PREFIX + "data.text.1";
+        public const string TEXT2 = PREFIX + "data.text.2";
+        public const string TEXT3 = PREFIX + "data.text.3";
+        public const string TEXT4 = PREFIX + "data.text.4";
         public const string DATE_END = PREFIX + "data.date.end";
         public const string USER_NAME = PREFIX + "data.user.name";
         public const string USER_AVATARURL = PREFIX + "data.user.avatarurl";
@@ -94,6 +98,7 @@ namespace APP.Utils {
                             input = input.Replace(toReplace, "CET");
                         }
                         break;
+
                 }
             }
             return input;

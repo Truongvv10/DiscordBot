@@ -215,6 +215,21 @@ namespace APP.Events {
                         await e.Interaction.CreateResponseAsync(InteractionResponseType.Modal, modal);
                         break;
 
+                    case Identity.SELECTION_PLACEHOLDER_TEXTS:
+
+                        var dataText1 = data.ContainsKey(Placeholder.TEXT1) ? data[Placeholder.TEXT1] : "";
+                        var dataText2 = data.ContainsKey(Placeholder.TEXT2) ? data[Placeholder.TEXT2] : "";
+                        var dataText3 = data.ContainsKey(Placeholder.TEXT3) ? data[Placeholder.TEXT3] : "";
+                        var dataText4 = data.ContainsKey(Placeholder.TEXT4) ? data[Placeholder.TEXT4] : "";
+
+                        modal.WithTitle("PLACEHOLDER TEXTS").WithCustomId($"{Identity.MODAL_PLACEHOLDER};{option};{messageId}");
+                        modal.AddComponents(new TextInputComponent(Placeholder.TEXT1, Identity.MODAL_DATA_PLACEHOLDER_TEXT1, placeholerUrl, dataText1, false, TextInputStyle.Short));
+                        modal.AddComponents(new TextInputComponent(Placeholder.TEXT2, Identity.MODAL_DATA_PLACEHOLDER_TEXT2, placeholerUrl, dataText2, false, TextInputStyle.Short));
+                        modal.AddComponents(new TextInputComponent(Placeholder.TEXT3, Identity.MODAL_DATA_PLACEHOLDER_TEXT3, placeholerUrl, dataText3, false, TextInputStyle.Short));
+                        modal.AddComponents(new TextInputComponent(Placeholder.TEXT4, Identity.MODAL_DATA_PLACEHOLDER_TEXT4, placeholerUrl, dataText4, false, TextInputStyle.Short));
+                        await e.Interaction.CreateResponseAsync(InteractionResponseType.Modal, modal);
+                        break;
+
                     case Identity.SELECTION_PLACEHOLDER_ADD:
 
                         modal.WithTitle("ADD PLACEHOLDER").WithCustomId($"{Identity.MODAL_PLACEHOLDER};{option};{messageId}");

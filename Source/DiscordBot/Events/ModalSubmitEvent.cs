@@ -299,6 +299,34 @@ namespace APP.Events {
                         var dataUrl2 = data[Identity.MODAL_DATA_PLACEHOLDER_URL1];
                         var dataUrl3 = data[Identity.MODAL_DATA_PLACEHOLDER_URL1];
                         var dataUrl4 = data[Identity.MODAL_DATA_PLACEHOLDER_URL1];
+
+                        if (!string.IsNullOrWhiteSpace(dataUrl1)) message.AddData(Placeholder.URL1, dataUrl1);
+                        else { if (message.Data.ContainsKey(Placeholder.URL1)) message.RemoveData(Placeholder.URL1); };
+                        if (!string.IsNullOrWhiteSpace(dataUrl2)) message.AddData(Placeholder.URL2, dataUrl2);
+                        else { if (message.Data.ContainsKey(Placeholder.URL2)) message.RemoveData(Placeholder.URL2); };
+                        if (!string.IsNullOrWhiteSpace(dataUrl3)) message.AddData(Placeholder.URL3, dataUrl3);
+                        else { if (message.Data.ContainsKey(Placeholder.URL3)) message.RemoveData(Placeholder.URL3); };
+                        if (!string.IsNullOrWhiteSpace(dataUrl4)) message.AddData(Placeholder.URL4, dataUrl4);
+                        else { if (message.Data.ContainsKey(Placeholder.URL4)) message.RemoveData(Placeholder.URL4); };
+
+                        break;
+
+                    case Identity.SELECTION_PLACEHOLDER_TEXTS:
+
+                        var dataText1 = data[Identity.MODAL_DATA_PLACEHOLDER_TEXT1];
+                        var dataText2 = data[Identity.MODAL_DATA_PLACEHOLDER_TEXT2];
+                        var dataText3 = data[Identity.MODAL_DATA_PLACEHOLDER_TEXT3];
+                        var dataText4 = data[Identity.MODAL_DATA_PLACEHOLDER_TEXT4];
+
+                        if (!string.IsNullOrWhiteSpace(dataText1)) message.AddData(Placeholder.TEXT1, dataText1);
+                        else { if (message.Data.ContainsKey(Placeholder.TEXT1)) message.RemoveData(Placeholder.TEXT1); };
+                        if (!string.IsNullOrWhiteSpace(dataText2)) message.AddData(Placeholder.TEXT2, dataText2);
+                        else { if (message.Data.ContainsKey(Placeholder.TEXT2)) message.RemoveData(Placeholder.TEXT2); };
+                        if (!string.IsNullOrWhiteSpace(dataText3)) message.AddData(Placeholder.TEXT3, dataText3);
+                        else { if (message.Data.ContainsKey(Placeholder.TEXT3)) message.RemoveData(Placeholder.TEXT3); };
+                        if (!string.IsNullOrWhiteSpace(dataText4)) message.AddData(Placeholder.TEXT4, dataText4);
+                        else { if (message.Data.ContainsKey(Placeholder.TEXT4)) message.RemoveData(Placeholder.TEXT4); };
+
                         break;
 
                     case Identity.SELECTION_PLACEHOLDER_ADD:

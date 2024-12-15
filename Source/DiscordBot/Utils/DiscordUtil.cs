@@ -331,6 +331,7 @@ namespace APP.Utils {
             var selectOptions = new List<DiscordSelectComponentOption>() {
                     new DiscordSelectComponentOption("Edit name", Identity.SELECTION_PLACEHOLDER_ID, "Edit the name of this message.", emoji: new DiscordComponentEmoji("🏷️")),
                     new DiscordSelectComponentOption("Edit time", Identity.SELECTION_PLACEHOLDER_TIME, "Edit the time of this message.", emoji: new DiscordComponentEmoji("🕙")),
+                    new DiscordSelectComponentOption("Edit texts", Identity.SELECTION_PLACEHOLDER_URLS, "Edit the texts of this message.", emoji: new DiscordComponentEmoji("🔗")),
                     new DiscordSelectComponentOption("Edit urls", Identity.SELECTION_PLACEHOLDER_URLS, "Edit the urls of this message.", emoji: new DiscordComponentEmoji("🔗"))};
 
             // Split into nested dictionary

@@ -33,6 +33,7 @@
         // Selection Properties
         public const string SELECTION_PLACEHOLDER_ID = $"{SELECTION_PLACEHOLDER}.id";
         public const string SELECTION_PLACEHOLDER_TIME = $"{SELECTION_PLACEHOLDER}.time";
+        public const string SELECTION_PLACEHOLDER_TEXTS = $"{SELECTION_PLACEHOLDER}.texts";
         public const string SELECTION_PLACEHOLDER_URLS = $"{SELECTION_PLACEHOLDER}.urls";
         public const string SELECTION_PLACEHOLDER_CUSTOM = $"{SELECTION_PLACEHOLDER}.custom";
         public const string SELECTION_PLACEHOLDER_ADD = $"{SELECTION_PLACEHOLDER}.add";
@@ -111,6 +112,10 @@
         public const string MODAL_DATA_PLACEHOLDER_URL2 = $"{MODAL_DATA_PLACEHOLDER}.url.2";
         public const string MODAL_DATA_PLACEHOLDER_URL3 = $"{MODAL_DATA_PLACEHOLDER}.url.3";
         public const string MODAL_DATA_PLACEHOLDER_URL4 = $"{MODAL_DATA_PLACEHOLDER}.url.4";
+        public const string MODAL_DATA_PLACEHOLDER_TEXT1 = $"{MODAL_DATA_PLACEHOLDER}.text.1";
+        public const string MODAL_DATA_PLACEHOLDER_TEXT2 = $"{MODAL_DATA_PLACEHOLDER}.text.2";
+        public const string MODAL_DATA_PLACEHOLDER_TEXT3 = $"{MODAL_DATA_PLACEHOLDER}.text.3";
+        public const string MODAL_DATA_PLACEHOLDER_TEXT4 = $"{MODAL_DATA_PLACEHOLDER}.text.4";
         public const string MODAL_DATA_PLACEHOLDER_ADD_GROUP = $"{MODAL_DATA_PLACEHOLDER}.add.group";
         public const string MODAL_DATA_PLACEHOLDER_ADD_ID = $"{MODAL_DATA_PLACEHOLDER}.add.id";
         public const string MODAL_DATA_PLACEHOLDER_ADD_VALUE = $"{MODAL_DATA_PLACEHOLDER}.add.value";
