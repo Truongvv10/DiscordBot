@@ -11,6 +11,12 @@ using System.Threading.Tasks;
 namespace APP.Utils {
     public static class DateTimeUtil {
 
+        public static DateTime RoundDateTime(DateTime dateTime) {
+            int roundedMinutes = (dateTime.Minute < 15) ? 0 : (dateTime.Minute < 45) ? 30 : 0;
+            var result = dateTime.AddMinutes(roundedMinutes - dateTime.Minute).AddHours(dateTime.Minute >= 45 ? 1 : 0);
+            return result;
+        }
+
         public static bool IsStringValidDate(string date) {
             bool result = DateTime.TryParseExact(date, "dd/MM/yyyy HH:mm", null, System.Globalization.DateTimeStyles.None, out _);
             return result;
