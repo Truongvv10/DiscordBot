@@ -121,7 +121,7 @@ namespace APP.Utils {
                 trimmedPlaceholder = Regex.Replace(trimmedPlaceholder, @"custom\.((\w+\.\w+)|\w+)$", "custom");
 
                 // Check if the trimmed placeholder exists in the list of known placeholders
-                if (placeholders.Contains(trimmedPlaceholder)) {
+                if (placeholders.Contains(trimmedPlaceholder) || placeholder.Contains(placeholder)) {
                     foundPlaceholders.Add(placeholder); // Add the original placeholder with sub-variant if present
                 }
             }
