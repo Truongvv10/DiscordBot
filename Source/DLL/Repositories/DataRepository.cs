@@ -38,7 +38,7 @@ namespace DLL.Repositories {
         }
 
         public async Task AddServerAsync(ulong guildId) {
-            await dataContext.AddAsync(new Guild() { GuildId = guildId });
+            await dataContext.AddAsync(new Guild(guildId));
             await dataContext.SaveChangesAsync();
         }
 
@@ -297,14 +297,15 @@ namespace DLL.Repositories {
                 throw new ServiceException($"Guild Id can not be null.");
             var existingSettings = await GetSettingsAsync(settings.GuildId);
             existingSettings = settings;
-            await dataContext.SaveChangesAsync();
+            dataContext.Update(existingSettings);
+            await CtxSaveAndClear();
             return existingSettings;
         }
 
         public async Task<Template> UpdateTemplateAsync(Template template) {
             var existingTemplate = await GetTemplateAsync(template.GuildId, template.Name);
             existingTemplate = template;
-            await dataContext.SaveChangesAsync();
+            await CtxSaveAndClear();
             return existingTemplate;
         }
         #endregion

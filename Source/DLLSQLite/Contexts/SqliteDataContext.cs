@@ -13,7 +13,7 @@ namespace DLLSQLite.Contexts {
     public class SqliteDataContext : DataContextAbstract {
 
         #region Fields
-        private readonly string file = Path.Combine(Environment.CurrentDirectory, "Saves", "Data.db");
+        private readonly string file = Path.Combine(Environment.CurrentDirectory, "Data.db");
         #endregion
 
         #region Constructors
