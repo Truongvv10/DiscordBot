@@ -8,9 +8,12 @@ using System.Threading.Tasks;
 
 namespace BLL.Interfaces {
     public interface IDataRepository {
+        // Saving
+        public Task CtxSaveAndClear();
         // Loading Data
         public Task LoadTemplatesAsync();
         public Task LoadTimeZonesAsync();
+        public Task LoadSettingsFromGuildsAsync();
         public Task LoadGuildsAsync(IEnumerable<ulong> guildIds);
         // Server
         public Task AddServerAsync(ulong guildId);
@@ -18,6 +21,12 @@ namespace BLL.Interfaces {
         public Task<List<Guild>> GetAllServersAsync();
         public Task RemoveServerAsync(Guild guild);
         public Task<bool> AnyServerAsync(ulong guildId);
+        // Settings
+        public Task<Settings> AddSettingsAsync(Settings settings);
+        public Task<Settings?> GetSettingsAsync(ulong guildId);
+        public Task<Settings> UpdateSettingsAsync(Settings settings);
+        public Task RemoveSettingsAsync(Settings settings);
+        public Task<bool> AnySettingsAsync(ulong guildId);
         // Message
         public Task<Message> AddMessageAsync(Message message);
         public Task<Message?> GetMessageAsync(ulong guildId, ulong messageId);

@@ -148,6 +148,7 @@
         public const string TEMPLATE_TEMPLATES = "TEMPLATES";
         public const string TEMPLATE_NITRO = "NITRO";
         public const string TEMPLATE_NO_PERMISSION = "NO_PERMISSION";
+        public const string TEMPLATE_ACTION_SUCCESS = "ACTION_SUCCESS";
         #endregion
     }
 }

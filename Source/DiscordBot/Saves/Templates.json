@@ -10,6 +10,35 @@
             "timestamp": true
         }
     },
+    "EVENT_CREATE": {
+        "embed": {
+            "footer": "Hosted by {data.user.name}",
+            "footer_url": "{data.user.avatarurl}",
+            "image": "local://template_image.png",
+            "color": "#0681cd",
+            "timestamp": true,
+            "description": "{data.custom.intro.title}\n{data.custom.intro.description}\n{data.custom.info.title}\n{data.custom.info.description}\n{data.custom.reward.title}\n{data.custom.reward.description}\n{data.custom.time.title}\n{data.custom.time.start}\n{data.custom.time.end}\n\n{data.custom.time.reaction}",
+            "childs": {},
+            "roles": [],
+            "fields": []
+        },
+        "data": {
+            "data.id": "Template",
+            "data.timezone": "CET",
+            "data.date.start": "05/29/2001 10:00",
+            "data.date.end": "05/29/2001 11:00",
+            "data.custom.intro.title": "## 🔹 {data.id} Event",
+            "data.custom.intro.description": "Hey **everyone**! We'll be hosting **{data.id} Event**!",
+            "data.custom.info.title": "## 🔸 Game Information",
+            "data.custom.info.description": "N/A",
+            "data.custom.reward.title": "## 🔸 Top/Participation Rewards",
+            "data.custom.reward.description": "**`1st`** 🥇 ...\n**`2nd`** 🥈 ...\n**`3rd`** 🥉 ...\n**`4th`** ...\n**`5th`** ...\n**`Participation`** ...",
+            "data.custom.time.title": "## 🔸 When will it start",
+            "data.custom.time.start": "**Starts at:**\n{data.date.start.1} ({data.date.start.7})",
+            "data.custom.time.end": "**Ends at:**\n{data.date.end.1}",
+            "data.custom.time.reaction": "*Reacted with a `✅` if you are coming to the event!*\n*Reacted with a `❌` if you are going to miss out...*"
+        }
+    },
     "TEMPLATES": {
         "embed": {
             "description": "**Select** an existing **template** below this message! You can overwrite default built-in templates by saving under these names:",
@@ -41,35 +70,6 @@
             "timestamp": true
         },
         "ephemeral": true
-    },
-    "EVENT_CREATE": {
-        "embed": {
-            "footer": "Hosted by {data.user.name}",
-            "footer_url": "{data.user.avatarurl}",
-            "image": "local://template_image.png",
-            "color": "#0681cd",
-            "timestamp": true,
-            "description": "{data.custom.intro.title}\n{data.custom.intro.description}\n{data.custom.info.title}\n{data.custom.info.description}\n{data.custom.reward.title}\n{data.custom.reward.description}\n{data.custom.time.title}\n{data.custom.time.start}\n{data.custom.time.end}\n\n{data.custom.time.reaction}",
-            "childs": {},
-            "roles": [],
-            "fields": []
-        },
-        "data": {
-            "data.id": "Template",
-            "data.timezone": "CET",
-            "data.date.start": "05/29/2001 10:00",
-            "data.date.end": "05/29/2001 11:00",
-            "data.custom.intro.title": "## 🔹 {data.id} Event",
-            "data.custom.intro.description": "Hey **everyone**! We'll be hosting **{data.id} Event**!",
-            "data.custom.info.title": "## 🔸 Game Information",
-            "data.custom.info.description": "N/A",
-            "data.custom.reward.title": "## 🔸 Top/Participation Rewards",
-            "data.custom.reward.description": "**`1st`** 🥇 ...\n**`2nd`** 🥈 ...\n**`3rd`** 🥉 ...\n**`4th`** ...\n**`5th`** ...\n**`Participation`** ...",
-            "data.custom.time.title": "## 🔸 When will it start",
-            "data.custom.time.start": "**Starts at:**\n{data.date.start.1} ({data.date.start.7})",
-            "data.custom.time.end": "**Ends at:**\n{data.date.end.1}",
-            "data.custom.time.reaction": "*Reacted with a `✅` if you are coming to the event!*\n*Reacted with a `❌` if you are going to miss out...*"
-        }
     },
     "NITRO": {
         "embed": {
@@ -164,5 +164,19 @@
                 }
             ]
         }
+    },
+    "ACTION_SUCCESS": {
+        "embed": {
+            "author": "Successfully {data.text.1}.",
+            "author_url": "https://cdn-icons-png.flaticon.com/128/190/190411.png",
+            "description": "{data.text.2}",
+            "color": "#4bdc66",
+            "timestamp": false
+        },
+        "data": {
+            "data.text.1": "executed action",
+            "data.text.2": ""
+        },
+        "ephemeral": true
     }
 }

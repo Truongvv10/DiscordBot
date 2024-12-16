@@ -38,12 +38,12 @@ namespace APP.Utils {
                 // Create the response
                 var response = await CreateResponseAsync(type, interaction, translated, channelId, hidden);
                 await interaction.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, response);
-                var original = await interaction.GetOriginalResponseAsync().ConfigureAwait(true);
 
                 // Stop the stopwatch and log the elapsed time
                 stopwatch.Stop();
 
                 // Store the message ID and components for future reference
+                var original = await interaction.GetOriginalResponseAsync().ConfigureAwait(false);
                 message.WithMessageId(original.Id);
                 message.GuildId = interaction.Guild.Id;
 
@@ -74,7 +74,7 @@ namespace APP.Utils {
 
                     // Create the response
                     if (isDeferMessageUpdate) await interaction.CreateResponseAsync(InteractionResponseType.DeferredMessageUpdate);
-                    var response = await CreateResponseAsync(message.Type, interaction, translated, (ulong)message.ChannelId!, message.IsEphemeral);
+                    var response = await CreateResponseAsync(message.Type, interaction, translated, message.ChannelId!, message.IsEphemeral);
                     var original = await interaction.GetOriginalResponseAsync();
                     await original.ModifyAsync(new DiscordMessageBuilder()
                         .WithContent(response.Content)
@@ -331,7 +331,7 @@ namespace APP.Utils {
             var selectOptions = new List<DiscordSelectComponentOption>() {
                     new DiscordSelectComponentOption("Edit name", Identity.SELECTION_PLACEHOLDER_ID, "Edit the name of this message.", emoji: new DiscordComponentEmoji("🏷️")),
                     new DiscordSelectComponentOption("Edit time", Identity.SELECTION_PLACEHOLDER_TIME, "Edit the time of this message.", emoji: new DiscordComponentEmoji("🕙")),
-                    new DiscordSelectComponentOption("Edit texts", Identity.SELECTION_PLACEHOLDER_URLS, "Edit the texts of this message.", emoji: new DiscordComponentEmoji("🔗")),
+                    new DiscordSelectComponentOption("Edit texts", Identity.SELECTION_PLACEHOLDER_TEXTS, "Edit the texts of this message.", emoji: new DiscordComponentEmoji("💬")),
                     new DiscordSelectComponentOption("Edit urls", Identity.SELECTION_PLACEHOLDER_URLS, "Edit the urls of this message.", emoji: new DiscordComponentEmoji("🔗"))};
 
             // Split into nested dictionary

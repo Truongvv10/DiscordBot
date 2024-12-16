@@ -1,4 +1,5 @@
 ﻿using BLL.Exceptions;
+using BLL.Interfaces;
 using BLL.Model;
 using Newtonsoft.Json;
 using NodaTime;
@@ -11,10 +12,11 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace BLL.Services {
-    public class CacheData {
+    public class CacheData : ICacheData {
         #region Properties
         private string folder = Path.Combine(Environment.CurrentDirectory, "Saves");
         private Dictionary<(ulong, ulong), Message> messages = new();
+        private Dictionary<ulong, Settings> settings = new();
         private Dictionary<string, Message> templates = new();
         private List<string> timeZones = new();
         #endregion
@@ -24,9 +26,11 @@ namespace BLL.Services {
         #endregion
 
         #region Getter & Setter
-        public Dictionary<(ulong, ulong), Message> Messages {
+        public IReadOnlyDictionary<(ulong, ulong), Message> Messages {
             get => messages;
-            set => messages = value;
+        }
+        public IReadOnlyDictionary<ulong, Settings> Settings {
+            get => settings;
         }
         public IReadOnlyDictionary<string, Message> Templates {
             get => templates;
@@ -64,26 +68,30 @@ namespace BLL.Services {
         public bool AnyMessage(ulong guildId, ulong messageId) {
             return messages.ContainsKey((guildId, messageId));
         }
+
         public void AddMessage(ulong guildId, Message message) {
             if (message != null && message.MessageId != null) {
-                if (!AnyMessage(guildId, (ulong)message.MessageId)) {
-                    messages.Add((guildId, (ulong)message.MessageId), message);
+                if (!AnyMessage(guildId, message.MessageId)) {
+                    messages.Add((guildId, message.MessageId), message);
                 } else throw new UtilException($"Message with id \"{message.MessageId}\" in guild \"{guildId}\" already exists in cache.");
             } else throw new UtilException($"Message or id can not be null");
         }
+
         public Message GetMessage(ulong guildId, ulong messageId) {
             if (AnyMessage(guildId, messageId)) {
                 return messages[(guildId, messageId)];
             } else throw new UtilException($"Message with id \"{messageId}\" in guild \"{guildId}\" doesn't exists in cache.");
         }
+
         public Message UpdateMessage(ulong guildId, Message message) {
             if (message != null && message.MessageId != null) {
-                if (AnyMessage(guildId, (ulong)message.MessageId)) {
-                    messages[(guildId, (ulong)message.MessageId)] = message;
-                    return messages[(guildId, (ulong)message.MessageId)];
+                if (AnyMessage(guildId, message.MessageId)) {
+                    messages[(guildId, message.MessageId)] = message;
+                    return messages[(guildId, message.MessageId)];
                 } else throw new UtilException($"Message with id \"{message.MessageId}\" in guild \"{guildId}\" doesn't exists in cache.");
             } else throw new UtilException($"Message or id can not be null");
         }
+
         public void DeleteMessage(ulong guildId, ulong messageId) {
             if (AnyMessage(guildId, messageId)) {
                 messages.Remove((guildId, messageId));
@@ -95,11 +103,47 @@ namespace BLL.Services {
         public bool AnyTemplate(string name) {
             return templates.ContainsKey(name);
         }
+
         public Template GetTemplate(string name) {
             if (AnyTemplate(name)) {
                 var message = templates[name].DeepClone();
                 return new Template(name, message);
             } else throw new UtilException($"Template with name \"{name}\" doesn't exists in cache.");
+        }
+        #endregion
+
+        #region Settings
+        public bool AnySettings(ulong guildId) {
+            return settings.ContainsKey(guildId);
+        }
+
+        public void AddSettings(ulong guildId, Settings settings) {
+            if (settings != null) {
+                if (!AnySettings(guildId)) {
+                    this.settings.Add(guildId, settings);
+                } else throw new UtilException($"Settings for guild \"{guildId}\" already exists in cache.");
+            } else throw new UtilException($"Settings can not be null");
+        }
+
+        public Settings GetSettings(ulong guildId) {
+            if (AnySettings(guildId)) {
+                return settings[guildId];
+            } else throw new UtilException($"Settings for guild \"{guildId}\" doesn't exists in cache.");
+        }
+
+        public Settings UpdateSettings(ulong guildId, Settings settings) {
+            if (settings != null) {
+                if (AnySettings(guildId)) {
+                    this.settings[guildId] = settings;
+                    return this.settings[guildId];
+                } else throw new UtilException($"Settings for guild \"{guildId}\" doesn't exists in cache.");
+            } else throw new UtilException($"Settings can not be null");
+        }
+
+        public void DeleteSettings(ulong guildId) {
+            if (AnySettings(guildId)) {
+                settings.Remove(guildId);
+            } else throw new UtilException($"Settings for guild \"{guildId}\" doesn't exists in cache.");
         }
         #endregion
     }

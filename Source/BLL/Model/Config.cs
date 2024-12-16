@@ -23,8 +23,6 @@ namespace BLL.Model {
         private bool hasEnableDms;
         private bool hasEnableDefaultHelp;
         private bool logUnknownEvents;
-        private ulong? logChannel;
-        private ulong? changelogChannel;
         #endregion
 
         #region Constructors
@@ -36,8 +34,6 @@ namespace BLL.Model {
             HasEnableDms = true;
             HasEnableDefaultHelp = true;
             LogUnknownEvents = false;
-            logChannel = null;
-            changelogChannel = null;
         }
         public Config(string token, DatabaseSaveType databaseType, string prefix = "!", bool autoReconnect = true, bool enableMentionPrefix = true, bool enableDms = false, bool enableDefaultHelp = false, bool logUnknownEvents = false) {
             this.token = token;
@@ -107,18 +103,6 @@ namespace BLL.Model {
         public bool LogUnknownEvents {
             get => logUnknownEvents;
             set => logUnknownEvents = value;
-        }
-
-        [JsonProperty("log_channel", NullValueHandling = NullValueHandling.Ignore)]
-        public ulong? LogChannel {
-            get => logChannel;
-            set => logChannel = value;
-        }
-
-        [JsonProperty("changelog_channel", NullValueHandling = NullValueHandling.Ignore)]
-        public ulong? ChangelogChannel {
-            get => changelogChannel;
-            set => changelogChannel = value;
         }
     }
     #endregion

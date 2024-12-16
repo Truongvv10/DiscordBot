@@ -68,6 +68,42 @@ namespace BLL.Enums {
 
 
         [Description("/changelog")]
-        CHANGELOG = 600
+        CHANGELOG = 600,
+
+
+        [Description("/settings")]
+        SETTINGS = 700,
+        [Description("/settings set welcome")]
+        SETTINGS_SET_WELCOME = 720,
+        [Description("/settings set introduction")]
+        SETTINGS_SET_INTRODUCTION = 721,
+        [Description("/settings set log")]
+        SETTINGS_SET_LOG = 722,
+        [Description("/settings set changelog")]
+        SETTINGS_SET_CHANEGLOG = 723,
+        [Description("/settings set inactivity")]
+        SETTINGS_SET_INACTIVITY = 724,
+        [Description("/settings set punishment")]
+        SETTINGS_SET_PUNISHMENT = 725,
+        [Description("/settings set strike")]
+        SETTINGS_SET_STRIKE = 726,
+        [Description("/settings set verify")]
+        SETTINGS_SET_VERIFY = 727,
+        [Description("/settings remove welcome")]
+        SETTINGS_REMOVE_WELCOME = 740,
+        [Description("/settings remove introduction")]
+        SETTINGS_REMOVE_INTRODUCTION = 741,
+        [Description("/settings remove log")]
+        SETTINGS_REMOVE_LOG = 742,
+        [Description("/settings remove changelog")]
+        SETTINGS_REMOVE_CHANEGLOG = 743,
+        [Description("/settings remove inactivity")]
+        SETTINGS_REMOVE_INACTIVITY = 744,
+        [Description("/settings remove punishment")]
+        SETTINGS_REMOVE_PUNISHMENT = 745,
+        [Description("/settings remove strike")]
+        SETTINGS_REMOVE_STRIKE = 746,
+        [Description("/settings remove verify")]
+        SETTINGS_REMOVE_VERIFY = 747,
     }
 }

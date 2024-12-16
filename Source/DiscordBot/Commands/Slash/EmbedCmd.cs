@@ -29,7 +29,7 @@ namespace APP.Commands.Slash {
         public required DiscordUtil DiscordUtil { private get; set; }
         #endregion
 
-        #region Command: /embed
+        #region Command: /embed create
         [SlashCommand(EMBED_CREATE, "Send an editable embeded message to the current channel")]
         [RequirePermission(CommandEnum.EMBED, [Permissions.ManageChannels, Permissions.ManageMessages])]
         public async Task Create(InteractionContext ctx,

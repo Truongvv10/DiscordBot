@@ -4,6 +4,8 @@ using AnsiColor = APP.Utils.AnsiColor;
 using BLL.Interfaces;
 using BLL.Managers;
 using BLL.Services;
+using DLLSQLite.Repositories;
+using DLLSQLite.Contexts;
 
 namespace APP {
     internal class Program {
@@ -11,7 +13,7 @@ namespace APP {
             try {
                 // Initialize the Discord bot
                 DiscordManager manager = new DiscordManager();
-                CacheData cache = new CacheData();
+                ICacheData cache = new CacheData();
                 var discordService = new DiscordService(await manager.GetDiscordBotConfig(), cache);
 
                 // Initialize the Discord bot

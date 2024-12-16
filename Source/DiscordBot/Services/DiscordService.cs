@@ -96,6 +96,7 @@ namespace APP.Services {
                 commands.RegisterCommands<GeneralCommands>();
                 commands.RegisterCommands<EmbedCmd>();
                 commands.RegisterCommands<EventCmd>();
+                commands.RegisterCommands<SettingsCmd>();
 
                 // Register events
                 RegisterEvents();
