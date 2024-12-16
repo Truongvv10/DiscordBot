@@ -124,10 +124,16 @@ namespace DLL.Repositories {
         }
 
         public async Task<Settings?> GetSettingsAsync(ulong guildId) {
-            return await dataContext.Settings
-                .Where(s => s.GuildId == guildId)
-                .AsNoTracking()
-                .FirstOrDefaultAsync();
+            if (cacheData.Settings.TryGetValue(guildId, out var settings)) {
+                return settings;
+            } else {
+                var result = await dataContext.Settings
+                    .Where(s => s.GuildId == guildId)
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync();
+                if (result != null) cacheData.AddSettings(guildId, result);
+                return result;
+            }
         }
 
         public async Task<Template?> GetTemplateAsync(ulong guildId, string name) {
@@ -166,6 +172,7 @@ namespace DLL.Repositories {
             var tracked = dataContext.Messages.Local.FirstOrDefault(m => m.MessageId == message.MessageId && m.GuildId == m.GuildId);
             if (tracked != null) dataContext.Entry(tracked).State = EntityState.Detached;
             dataContext.Messages.Remove(message);
+            cacheData.DeleteMessage(message.GuildId, message.MessageId);
             await CtxSaveAndClear();
         }
 
@@ -176,6 +183,7 @@ namespace DLL.Repositories {
 
         public async Task RemoveSettingsAsync(Settings settings) {
             dataContext.Settings.Remove(settings);
+            cacheData.DeleteSettings(settings.GuildId);
             await CtxSaveAndClear();
         }
 
@@ -298,6 +306,7 @@ namespace DLL.Repositories {
             var existingSettings = await GetSettingsAsync(settings.GuildId);
             existingSettings = settings;
             dataContext.Update(existingSettings);
+            cacheData.UpdateSettings(settings.GuildId, existingSettings);
             await CtxSaveAndClear();
             return existingSettings;
         }
