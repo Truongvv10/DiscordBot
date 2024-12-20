@@ -403,7 +403,7 @@ namespace APP.Events {
                 if (!DateTimeUtil.ExistInNodaTimeZone(timeZone))
                     throw new EventException($"Time zone \"{timeZone}\" can not be found.");
                 if (!DateTime.TryParseExact(time, "dd/MM/yyyy HH:mm", null, System.Globalization.DateTimeStyles.None, out DateTime parsedTime))
-                    throw new EventException($"Time \"{time}\" has an incorrect frmat.");
+                    throw new EventException($"Time \"{time}\" has an incorrect format.");
 
                 message.AddData(Placeholder.TIMEZONE, timeZone);
                 message.AddData(Placeholder.DATE_START, parsedTime.ToString("dd/MM/yyyy HH:mm"));

@@ -86,30 +86,18 @@ namespace APP.Utils {
                         break;
                     default:
                         if (data.TryGetValue(placeholder, out var replacement)) {
-                            if (Regex.IsMatch(placeholder, @"^data\.date\.start(\.\d+)?$")) {
-                                string timezone = data[TIMEZONE] ?? "CET";
-                                DateTime date = DateTime.ParseExact(data[DATE_START], "dd/MM/yyyy HH:mm", null);
-                                var timestamp = await TranslateTime(date, timezone, placeholder);
-                                input = input.Replace(toReplace, timestamp);
-                            } else if (Regex.IsMatch(placeholder, @"^data\.date\.end(\.\d+)?$")) {
-                                string timezone = data[TIMEZONE] ?? "CET";
-                                DateTime date = DateTime.ParseExact(data[DATE_END], "dd/MM/yyyy HH:mm", null);
-                                var timestamp = await TranslateTime(date, timezone, placeholder);
-                                input = input.Replace(toReplace, timestamp);
-                            } else if (placeholder.Equals(TIMEZONE)) {
-                                input = input.Replace(toReplace, data[TIMEZONE]);
-                            } else {
-                                input = input.Replace(toReplace, replacement);
-                            }
-
+                            input = input.Replace(toReplace, replacement);
                         } else if (Regex.IsMatch(placeholder, @"^data\.date\.(start|end)(\.\d+)?$")) {
-                            var timestamp = await TranslateTime(DateTime.Now, "CET", placeholder);
+                            string timezone = data[TIMEZONE] ?? "CET";
+                            DateTime date = DateTime.Now;
+                            if (placeholder.Contains(DATE_START)) date = DateTime.ParseExact(data[DATE_START], "dd/MM/yyyy HH:mm", null);
+                            if (placeholder.Contains(DATE_END)) date = DateTime.ParseExact(data[DATE_END], "dd/MM/yyyy HH:mm", null);
+                            var timestamp = await TranslateTime(date, timezone, placeholder);
                             input = input.Replace(toReplace, timestamp);
                         } else if (placeholder == TIMEZONE) {
                             input = input.Replace(toReplace, "CET");
                         }
                         break;
-
                 }
             }
             return input;

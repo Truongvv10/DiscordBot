@@ -63,7 +63,7 @@ namespace APP.Commands.Slash {
                 var modal = new DiscordInteractionResponseBuilder();
                 modal.WithTitle($"TIMESTAMP").WithCustomId(Identity.MODAL_TIMESTAMP)
                     .AddComponents(new TextInputComponent("TIMEZONE", Identity.MODAL_DATA_TIMESTAMPS_TIMEZONE, "Europe/Brussels", timeZone.ToString(), true, TextInputStyle.Short))
-                    .AddComponents(new TextInputComponent("TIMEZONE", Identity.MODAL_DATA_TIMESTAMPS_TIME, "DD/MM/YYYY hh:mm", DateTime.Now.ToString("dd/MM/yyyy HH:mm"), true, TextInputStyle.Short, 16, 16));
+                    .AddComponents(new TextInputComponent("DATE AND TIME", Identity.MODAL_DATA_TIMESTAMPS_TIME, "DD/MM/YYYY hh:mm", DateTime.Now.ToString("dd/MM/yyyy HH:mm"), true, TextInputStyle.Short, 16, 16));
 
                 // Create response model
                 await ctx.Interaction.CreateResponseAsync(InteractionResponseType.Modal, modal);
