@@ -9,6 +9,8 @@ using Microsoft.VisualBasic;
 using DSharpPlus.Entities;
 using System;
 using APP.Enums;
+using APP.Services;
+using Notion.Client;
 
 namespace APP.Events {
     public class ModalSubmitEvent {
@@ -58,6 +60,7 @@ namespace APP.Events {
         private async Task UseIntroduction(ModalSubmitEventArgs e) {
             // Variables
             var data = e.Interaction.Data.CustomId.Split(";");
+            var filter = new ProfanityService();
             var channel = await discordUtil.GetChannelByIdAsync(e.Interaction.Guild, ulong.Parse(data[1]));
             var country = data[2];
             var timezone = (TimeZoneEnum)int.Parse(data[3]);
@@ -66,7 +69,7 @@ namespace APP.Events {
             var color = data[6];
             var template = await dataService.GetTemplateAsync(e.Interaction.Guild.Id, Identity.TEMPLATE_INTRODUCTION);
             var message = template!.Message;
-            var description = e.Values.Values.First().ToString();
+            var description = filter.CensorText(e.Values.Values.First().ToString());
             var embed = message.Embed;
 
             embed.AddField("Country", country);
