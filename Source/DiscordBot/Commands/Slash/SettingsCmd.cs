@@ -59,7 +59,7 @@ namespace APP.Commands.Slash {
                     message.ChannelId = channel.Id;
                     message.Sender = ctx.User.Id;
                     message.Type = CommandEnum.SETTINGS_SET_WELCOME;
-                    message.AddData(Placeholder.TEXT1, $"executed command");
+                    message.AddData(Placeholder.TEXT1, $"Successfully executed command.");
                     message.AddData(Placeholder.TEXT2, $"Edited **`welcome channel`** to {channel.Mention}.");
 
                     // Save settings
@@ -88,7 +88,7 @@ namespace APP.Commands.Slash {
                     message.ChannelId = channel.Id;
                     message.Sender = ctx.User.Id;
                     message.Type = CommandEnum.SETTINGS_SET_INTRODUCTION;
-                    message.AddData(Placeholder.TEXT1, $"executed command");
+                    message.AddData(Placeholder.TEXT1, $"Successfully executed command.");
                     message.AddData(Placeholder.TEXT2, $"Edited **`introduction channel`** to {channel.Mention}.");
 
                     // Save settings
@@ -117,7 +117,7 @@ namespace APP.Commands.Slash {
                     message.ChannelId = channel.Id;
                     message.Sender = ctx.User.Id;
                     message.Type = CommandEnum.SETTINGS_SET_LOG;
-                    message.AddData(Placeholder.TEXT1, $"executed command");
+                    message.AddData(Placeholder.TEXT1, $"Successfully executed command.");
                     message.AddData(Placeholder.TEXT2, $"Edited **`log channel`** to {channel.Mention}.");
 
                     // Save settings
@@ -146,7 +146,7 @@ namespace APP.Commands.Slash {
                     message.ChannelId = channel.Id;
                     message.Sender = ctx.User.Id;
                     message.Type = CommandEnum.SETTINGS_SET_CHANEGLOG;
-                    message.AddData(Placeholder.TEXT1, $"executed command");
+                    message.AddData(Placeholder.TEXT1, $"Successfully executed command.");
                     message.AddData(Placeholder.TEXT2, $"Edited **`changelog channel`** to {channel.Mention}.");
 
                     // Save settings
@@ -175,7 +175,7 @@ namespace APP.Commands.Slash {
                     message.ChannelId = channel.Id;
                     message.Sender = ctx.User.Id;
                     message.Type = CommandEnum.SETTINGS_SET_INACTIVITY;
-                    message.AddData(Placeholder.TEXT1, $"executed command");
+                    message.AddData(Placeholder.TEXT1, $"Successfully executed command.");
                     message.AddData(Placeholder.TEXT2, $"Edited **`inactivity channel`** to {channel.Mention}.");
 
                     // Save settings
@@ -204,7 +204,7 @@ namespace APP.Commands.Slash {
                     message.ChannelId = channel.Id;
                     message.Sender = ctx.User.Id;
                     message.Type = CommandEnum.SETTINGS_SET_PUNISHMENT;
-                    message.AddData(Placeholder.TEXT1, $"executed command");
+                    message.AddData(Placeholder.TEXT1, $"Successfully executed command.");
                     message.AddData(Placeholder.TEXT2, $"Edited **`punishment channel`** to {channel.Mention}.");
 
                     // Save settings
@@ -233,7 +233,7 @@ namespace APP.Commands.Slash {
                     message.ChannelId = channel.Id;
                     message.Sender = ctx.User.Id;
                     message.Type = CommandEnum.SETTINGS_SET_STRIKE;
-                    message.AddData(Placeholder.TEXT1, $"executed command");
+                    message.AddData(Placeholder.TEXT1, $"Successfully executed command.");
                     message.AddData(Placeholder.TEXT2, $"Edited **`strike channel`** to {channel.Mention}.");
 
                     // Save settings
@@ -262,7 +262,7 @@ namespace APP.Commands.Slash {
                     message.ChannelId = channel.Id;
                     message.Sender = ctx.User.Id;
                     message.Type = CommandEnum.SETTINGS_SET_VERIFY;
-                    message.AddData(Placeholder.TEXT1, $"executed command");
+                    message.AddData(Placeholder.TEXT1, $"Successfully executed command.");
                     message.AddData(Placeholder.TEXT2, $"Edited **`verify channel`** to {channel.Mention}.");
 
                     // Save settings
@@ -301,7 +301,7 @@ namespace APP.Commands.Slash {
                     message.ChannelId = ctx.Channel.Id;
                     message.Sender = ctx.User.Id;
                     message.Type = CommandEnum.SETTINGS_REMOVE_WELCOME;
-                    message.AddData(Placeholder.TEXT1, $"executed command");
+                    message.AddData(Placeholder.TEXT1, $"Successfully executed command.");
                     message.AddData(Placeholder.TEXT2, $"removed ####### from **`welcome channel`**.");
 
                     // Save settings
@@ -330,7 +330,7 @@ namespace APP.Commands.Slash {
                     message.ChannelId = ctx.Channel.Id;
                     message.Sender = ctx.User.Id;
                     message.Type = CommandEnum.SETTINGS_REMOVE_INTRODUCTION;
-                    message.AddData(Placeholder.TEXT1, $"executed command");
+                    message.AddData(Placeholder.TEXT1, $"Successfully executed command.");
                     message.AddData(Placeholder.TEXT2, $"removed ####### from **`introduction channel`**.");
 
                     // Save settings
@@ -359,7 +359,7 @@ namespace APP.Commands.Slash {
                     message.ChannelId = ctx.Channel.Id;
                     message.Sender = ctx.User.Id;
                     message.Type = CommandEnum.SETTINGS_REMOVE_LOG;
-                    message.AddData(Placeholder.TEXT1, $"executed command");
+                    message.AddData(Placeholder.TEXT1, $"Successfully executed command.");
                     message.AddData(Placeholder.TEXT2, $"removed ####### from **`log channel`**.");
 
                     // Save settings
@@ -388,7 +388,7 @@ namespace APP.Commands.Slash {
                     message.ChannelId = ctx.Channel.Id;
                     message.Sender = ctx.User.Id;
                     message.Type = CommandEnum.SETTINGS_REMOVE_CHANEGLOG;
-                    message.AddData(Placeholder.TEXT1, $"executed command");
+                    message.AddData(Placeholder.TEXT1, $"Successfully executed command.");
                     message.AddData(Placeholder.TEXT2, $"removed ####### from **`changelog channel`**.");
 
                     // Save settings
@@ -417,7 +417,7 @@ namespace APP.Commands.Slash {
                     message.ChannelId = ctx.Channel.Id;
                     message.Sender = ctx.User.Id;
                     message.Type = CommandEnum.SETTINGS_REMOVE_INACTIVITY;
-                    message.AddData(Placeholder.TEXT1, $"executed command");
+                    message.AddData(Placeholder.TEXT1, $"Successfully executed command.");
                     message.AddData(Placeholder.TEXT2, $"removed ####### from **`inactivity channel`**.");
 
                     // Save settings
@@ -446,7 +446,7 @@ namespace APP.Commands.Slash {
                     message.ChannelId = ctx.Channel.Id;
                     message.Sender = ctx.User.Id;
                     message.Type = CommandEnum.SETTINGS_REMOVE_PUNISHMENT;
-                    message.AddData(Placeholder.TEXT1, $"executed command");
+                    message.AddData(Placeholder.TEXT1, $"Successfully executed command.");
                     message.AddData(Placeholder.TEXT2, $"removed ####### from **`punishment channel`**.");
 
                     // Save settings
@@ -475,7 +475,7 @@ namespace APP.Commands.Slash {
                     message.ChannelId = ctx.Channel.Id;
                     message.Sender = ctx.User.Id;
                     message.Type = CommandEnum.SETTINGS_REMOVE_STRIKE;
-                    message.AddData(Placeholder.TEXT1, $"executed command");
+                    message.AddData(Placeholder.TEXT1, $"Successfully executed command.");
                     message.AddData(Placeholder.TEXT2, $"removed ####### from **`strike channel`**.");
 
                     // Save settings
@@ -504,7 +504,7 @@ namespace APP.Commands.Slash {
                     message.ChannelId = ctx.Channel.Id;
                     message.Sender = ctx.User.Id;
                     message.Type = CommandEnum.SETTINGS_REMOVE_VERIFY;
-                    message.AddData(Placeholder.TEXT1, $"executed command");
+                    message.AddData(Placeholder.TEXT1, $"Successfully executed command.");
                     message.AddData(Placeholder.TEXT2, $"removed ####### from **`verify channel`**.");
 
                     // Save settings

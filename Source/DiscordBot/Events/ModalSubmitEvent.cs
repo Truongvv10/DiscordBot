@@ -78,6 +78,9 @@ namespace APP.Events {
             embed.AddField("Introduction", description, false);
             embed.WithColor(color);
 
+            message.GuildId = e.Interaction.Guild.Id;
+            message.ChannelId = channel.Id;
+
             await discordUtil.CreateMessageToChannelAsync(CommandEnum.INTRODUCTION, e.Interaction, message, channel);
             await discordUtil.SendActionMessage(e.Interaction, TemplateMessage.ACTION_SUCCESS, $"created introduction");
         }
