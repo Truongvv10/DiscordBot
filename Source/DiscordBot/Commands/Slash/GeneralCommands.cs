@@ -142,15 +142,17 @@ namespace APP.Commands.Slash {
                 var modal = new DiscordInteractionResponseBuilder();
                 modal.WithTitle($"INTRODUCTION").WithCustomId(id)
                     .AddComponents(new TextInputComponent(
-                        "INTRODUCTION", 
-                        Identity.MODAL_DATA_INTRODUCTION_TEXT, 
-                        $"Write about yourself...", 
-                        $"Hi, my name is {ctx.User.Username}. I'm {DateTime.Now.Year - parsedBirthdayDate.Year} years old and live in {country}.", 
+                        "INTRODUCTION",
+                        Identity.MODAL_DATA_INTRODUCTION_TEXT,
+                        $"Write about yourself...",
+                        $"Hi, my name is {ctx.User.Username}. I'm {DateTime.Now.Year - parsedBirthdayDate.Year} years old and live in {country}.",
                         true, TextInputStyle.Paragraph, 32, 2048));
 
                 // Create response model
                 await ctx.Interaction.CreateResponseAsync(InteractionResponseType.Modal, modal);
 
+            } catch (CommandException ex) {
+                await DiscordUtil.SendActionMessage(ctx.Interaction, MessageTemplate.ACTION_FAILED, ex.Message);
             } catch (Exception ex) {
                 throw new CommandException($"An error occured using the command: /{INTRODUCTION}", ex);
             }
