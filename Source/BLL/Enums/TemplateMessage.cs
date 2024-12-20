@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace BLL.Enums {
-    public enum MessageTemplate {
+    public enum TemplateMessage {
         EMBED_CREATE = 0,
         TIMESTAMP = 1,
         TEMPLATES = 2,

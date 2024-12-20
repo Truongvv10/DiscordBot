@@ -1,4 +1,5 @@
-﻿using BLL.Model;
+﻿using BLL.Enums;
+using BLL.Model;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -36,6 +37,7 @@ namespace BLL.Interfaces {
         public Task<bool> AnyMessageAsync(ulong guildId, ulong messageId);
         // Template
         public Task<Template> AddTemplateAsync(Template template);
+        public Task<Template?> GetTemplateAsync(ulong guildId, TemplateMessage name);
         public Task<Template?> GetTemplateAsync(ulong guildId, string name);
         public Task<List<Template>> GetAllTemplatesAsync(ulong guildId);
         public Task<Template> UpdateTemplateAsync(Template template);

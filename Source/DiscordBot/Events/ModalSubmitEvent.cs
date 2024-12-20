@@ -67,7 +67,7 @@ namespace APP.Events {
             var birthday = DateTime.ParseExact(data[4], "dd/MM/yyyy", null, System.Globalization.DateTimeStyles.None);
             var pronouns = (PronounsEnum)int.Parse(data[5]);
             var color = data[6];
-            var template = await dataService.GetTemplateAsync(e.Interaction.Guild.Id, Identity.TEMPLATE_INTRODUCTION);
+            var template = await dataService.GetTemplateAsync(e.Interaction.Guild.Id, TemplateMessage.INTRODUCTION);
             var message = template!.Message;
             var description = filter.CensorText(e.Values.Values.First().ToString());
             var embed = message.Embed;
@@ -79,7 +79,7 @@ namespace APP.Events {
             embed.WithColor(color);
 
             await discordUtil.CreateMessageToChannelAsync(CommandEnum.INTRODUCTION, e.Interaction, message, channel);
-            await discordUtil.SendActionMessage(e.Interaction, MessageTemplate.ACTION_SUCCESS, $"created introduction");
+            await discordUtil.SendActionMessage(e.Interaction, TemplateMessage.ACTION_SUCCESS, $"created introduction");
         }
 
         private async Task UseEmbed(ModalSubmitEventArgs e) {
@@ -392,7 +392,7 @@ namespace APP.Events {
             try {
                 // Variables
                 var data = e.Values;
-                var template = await dataService.GetTemplateAsync(e.Interaction.Guild.Id, Identity.TEMPLATE_TIMESTAMP);
+                var template = await dataService.GetTemplateAsync(e.Interaction.Guild.Id, TemplateMessage.TIMESTAMP);
                 var message = template.Message;
 
                 // Check modals

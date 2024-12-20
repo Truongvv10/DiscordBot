@@ -30,7 +30,7 @@ namespace APP.Events {
                     // Check if the failed check is a RequirePermissionAttribute
                     if (check is RequirePermissionAttribute att) {
                         var interaction = e.Context.Interaction;
-                        var message = (await dataService.GetTemplateAsync(interaction.Guild.Id, Identity.TEMPLATE_NO_PERMISSION)).Message;
+                        var message = (await dataService.GetTemplateAsync(interaction.Guild.Id, TemplateMessage.NO_PERMISSION.ToString())).Message;
                         await discordUtil.CreateMessageAsync(CommandEnum.NONE, interaction, message, interaction.Channel.Id, message.IsEphemeral);
                     }
                 }

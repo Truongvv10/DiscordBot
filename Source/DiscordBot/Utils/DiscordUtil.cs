@@ -467,7 +467,7 @@ namespace APP.Utils {
             return result;
         }
 
-        public async Task SendActionMessage(DiscordInteraction interaction, MessageTemplate template, string title, string text = "") {
+        public async Task SendActionMessage(DiscordInteraction interaction, TemplateMessage template, string title, string text = "") {
             var message = (await dataService.GetTemplateAsync(interaction.Guild.Id, template.ToString().ToUpper()))!.Message;
             message.SetData(Placeholder.TEXT1, title);
             message.SetData(Placeholder.TEXT2, text);

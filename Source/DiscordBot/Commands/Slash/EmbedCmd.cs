@@ -86,7 +86,7 @@ namespace APP.Commands.Slash {
         public async Task Templates(InteractionContext ctx) {
             try {
                 // Build the embed message with default values
-                var template = await DataService.GetTemplateAsync(ctx.Guild.Id, Identity.TEMPLATE_TEMPLATES);
+                var template = await DataService.GetTemplateAsync(ctx.Guild.Id, TemplateMessage.TEMPLATES.ToString());
                 var message = template!.Message;
 
                 // Create embed message

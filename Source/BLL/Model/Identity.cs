@@ -148,16 +148,5 @@
         public const string MODAL_DATA_INTRODUCTION_PRONOUNCE = $"{MODAL_DATA_INTRODUCTION}.pronounce";
         public const string MODAL_DATA_INTRODUCTION_TEXT = $"{MODAL_DATA_INTRODUCTION}.text";
         #endregion
-
-        #region Templates
-        public const string TEMPLATE_EMBED_CREATE = "EMBED_CREATE";
-        public const string TEMPLATE_TIMESTAMP = "TIMESTAMP";
-        public const string TEMPLATE_TEMPLATES = "TEMPLATES";
-        public const string TEMPLATE_NITRO = "NITRO";
-        public const string TEMPLATE_NO_PERMISSION = "NO_PERMISSION";
-        public const string TEMPLATE_ACTION_SUCCESS = "ACTION_SUCCESS";
-        public const string TEMPLATE_ACTION_INVALID = "ACTION_INVALID";
-        public const string TEMPLATE_INTRODUCTION = "INTRODUCTION";
-        #endregion
     }
 }

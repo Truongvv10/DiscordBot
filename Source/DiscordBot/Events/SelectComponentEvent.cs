@@ -130,7 +130,7 @@ namespace APP.Events {
                             break;
 
                         case Identity.SELECTION_TEMPLATE_LIST:
-                            var template = await dataService.GetTemplateAsync(e.Guild.Id, Identity.TEMPLATE_TEMPLATES);
+                            var template = await dataService.GetTemplateAsync(e.Guild.Id, TemplateMessage.TEMPLATES);
                             var templateMessage = template!.Message;
                             await discordUtil.CreateMessageAsync(CommandEnum.TEMPLATES, e.Interaction, templateMessage, e.Channel.Id, true);
                             break;

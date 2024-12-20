@@ -1,4 +1,5 @@
-﻿using BLL.Exceptions;
+﻿using BLL.Enums;
+using BLL.Exceptions;
 using BLL.Interfaces;
 using BLL.Model;
 using DLL.Contexts;
@@ -143,6 +144,18 @@ namespace DLL.Repositories {
                 .FirstOrDefaultAsync();
             if (template == null) {
                 return cacheData.GetTemplate(name);
+            } else {
+                return new Template(template.GuildId, template.Name, template.Message.DeepClone());
+            }
+        }
+
+        public async Task<Template?> GetTemplateAsync(ulong guildId, TemplateMessage name) {
+            var template = await dataContext.Templates
+                .Where(t => t.GuildId == guildId && t.Name == name.ToString())
+                .AsNoTracking()
+                .FirstOrDefaultAsync();
+            if (template == null) {
+                return cacheData.GetTemplate(name.ToString());
             } else {
                 return new Template(template.GuildId, template.Name, template.Message.DeepClone());
             }

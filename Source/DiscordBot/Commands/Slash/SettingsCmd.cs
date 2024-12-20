@@ -54,7 +54,7 @@ namespace APP.Commands.Slash {
                 try {
 
                     // Build the embed message with default values
-                    var template = await DataService.GetTemplateAsync(ctx.Guild.Id, Identity.TEMPLATE_ACTION_SUCCESS);
+                    var template = await DataService.GetTemplateAsync(ctx.Guild.Id, TemplateMessage.ACTION_SUCCESS);
                     var message = template!.Message;
                     message.ChannelId = channel.Id;
                     message.Sender = ctx.User.Id;
@@ -83,7 +83,7 @@ namespace APP.Commands.Slash {
                 try {
 
                     // Build the embed message with default values
-                    var template = await DataService.GetTemplateAsync(ctx.Guild.Id, Identity.TEMPLATE_ACTION_SUCCESS);
+                    var template = await DataService.GetTemplateAsync(ctx.Guild.Id, TemplateMessage.ACTION_SUCCESS);
                     var message = template!.Message;
                     message.ChannelId = channel.Id;
                     message.Sender = ctx.User.Id;
@@ -112,7 +112,7 @@ namespace APP.Commands.Slash {
                 try {
 
                     // Build the embed message with default values
-                    var template = await DataService.GetTemplateAsync(ctx.Guild.Id, Identity.TEMPLATE_ACTION_SUCCESS);
+                    var template = await DataService.GetTemplateAsync(ctx.Guild.Id, TemplateMessage.ACTION_SUCCESS);
                     var message = template!.Message;
                     message.ChannelId = channel.Id;
                     message.Sender = ctx.User.Id;
@@ -141,7 +141,7 @@ namespace APP.Commands.Slash {
                 try {
 
                     // Build the embed message with default values
-                    var template = await DataService.GetTemplateAsync(ctx.Guild.Id, Identity.TEMPLATE_ACTION_SUCCESS);
+                    var template = await DataService.GetTemplateAsync(ctx.Guild.Id, TemplateMessage.ACTION_SUCCESS);
                     var message = template!.Message;
                     message.ChannelId = channel.Id;
                     message.Sender = ctx.User.Id;
@@ -170,7 +170,7 @@ namespace APP.Commands.Slash {
                 try {
 
                     // Build the embed message with default values
-                    var template = await DataService.GetTemplateAsync(ctx.Guild.Id, Identity.TEMPLATE_ACTION_SUCCESS);
+                    var template = await DataService.GetTemplateAsync(ctx.Guild.Id, TemplateMessage.ACTION_SUCCESS);
                     var message = template!.Message;
                     message.ChannelId = channel.Id;
                     message.Sender = ctx.User.Id;
@@ -199,7 +199,7 @@ namespace APP.Commands.Slash {
                 try {
 
                     // Build the embed message with default values
-                    var template = await DataService.GetTemplateAsync(ctx.Guild.Id, Identity.TEMPLATE_ACTION_SUCCESS);
+                    var template = await DataService.GetTemplateAsync(ctx.Guild.Id, TemplateMessage.ACTION_SUCCESS);
                     var message = template!.Message;
                     message.ChannelId = channel.Id;
                     message.Sender = ctx.User.Id;
@@ -228,7 +228,7 @@ namespace APP.Commands.Slash {
                 try {
 
                     // Build the embed message with default values
-                    var template = await DataService.GetTemplateAsync(ctx.Guild.Id, Identity.TEMPLATE_ACTION_SUCCESS);
+                    var template = await DataService.GetTemplateAsync(ctx.Guild.Id, TemplateMessage.ACTION_SUCCESS);
                     var message = template!.Message;
                     message.ChannelId = channel.Id;
                     message.Sender = ctx.User.Id;
@@ -257,7 +257,7 @@ namespace APP.Commands.Slash {
                 try {
 
                     // Build the embed message with default values
-                    var template = await DataService.GetTemplateAsync(ctx.Guild.Id, Identity.TEMPLATE_ACTION_SUCCESS);
+                    var template = await DataService.GetTemplateAsync(ctx.Guild.Id, TemplateMessage.ACTION_SUCCESS);
                     var message = template!.Message;
                     message.ChannelId = channel.Id;
                     message.Sender = ctx.User.Id;
@@ -296,7 +296,7 @@ namespace APP.Commands.Slash {
                 try {
 
                     // Build the embed message with default values
-                    var template = await DataService.GetTemplateAsync(ctx.Guild.Id, Identity.TEMPLATE_ACTION_SUCCESS);
+                    var template = await DataService.GetTemplateAsync(ctx.Guild.Id, TemplateMessage.ACTION_SUCCESS);
                     var message = template!.Message;
                     message.ChannelId = ctx.Channel.Id;
                     message.Sender = ctx.User.Id;
@@ -325,7 +325,7 @@ namespace APP.Commands.Slash {
                 try {
 
                     // Build the embed message with default values
-                    var template = await DataService.GetTemplateAsync(ctx.Guild.Id, Identity.TEMPLATE_ACTION_SUCCESS);
+                    var template = await DataService.GetTemplateAsync(ctx.Guild.Id, TemplateMessage.ACTION_SUCCESS);
                     var message = template!.Message;
                     message.ChannelId = ctx.Channel.Id;
                     message.Sender = ctx.User.Id;
@@ -354,7 +354,7 @@ namespace APP.Commands.Slash {
                 try {
 
                     // Build the embed message with default values
-                    var template = await DataService.GetTemplateAsync(ctx.Guild.Id, Identity.TEMPLATE_ACTION_SUCCESS);
+                    var template = await DataService.GetTemplateAsync(ctx.Guild.Id, TemplateMessage.ACTION_SUCCESS);
                     var message = template!.Message;
                     message.ChannelId = ctx.Channel.Id;
                     message.Sender = ctx.User.Id;
@@ -383,7 +383,7 @@ namespace APP.Commands.Slash {
                 try {
 
                     // Build the embed message with default values
-                    var template = await DataService.GetTemplateAsync(ctx.Guild.Id, Identity.TEMPLATE_ACTION_SUCCESS);
+                    var template = await DataService.GetTemplateAsync(ctx.Guild.Id, TemplateMessage.ACTION_SUCCESS);
                     var message = template!.Message;
                     message.ChannelId = ctx.Channel.Id;
                     message.Sender = ctx.User.Id;
@@ -412,7 +412,7 @@ namespace APP.Commands.Slash {
                 try {
 
                     // Build the embed message with default values
-                    var template = await DataService.GetTemplateAsync(ctx.Guild.Id, Identity.TEMPLATE_ACTION_SUCCESS);
+                    var template = await DataService.GetTemplateAsync(ctx.Guild.Id, TemplateMessage.ACTION_SUCCESS);
                     var message = template!.Message;
                     message.ChannelId = ctx.Channel.Id;
                     message.Sender = ctx.User.Id;
@@ -441,7 +441,7 @@ namespace APP.Commands.Slash {
                 try {
 
                     // Build the embed message with default values
-                    var template = await DataService.GetTemplateAsync(ctx.Guild.Id, Identity.TEMPLATE_ACTION_SUCCESS);
+                    var template = await DataService.GetTemplateAsync(ctx.Guild.Id, TemplateMessage.ACTION_SUCCESS);
                     var message = template!.Message;
                     message.ChannelId = ctx.Channel.Id;
                     message.Sender = ctx.User.Id;
@@ -470,7 +470,7 @@ namespace APP.Commands.Slash {
                 try {
 
                     // Build the embed message with default values
-                    var template = await DataService.GetTemplateAsync(ctx.Guild.Id, Identity.TEMPLATE_ACTION_SUCCESS);
+                    var template = await DataService.GetTemplateAsync(ctx.Guild.Id, TemplateMessage.ACTION_SUCCESS);
                     var message = template!.Message;
                     message.ChannelId = ctx.Channel.Id;
                     message.Sender = ctx.User.Id;
@@ -499,7 +499,7 @@ namespace APP.Commands.Slash {
                 try {
 
                     // Build the embed message with default values
-                    var template = await DataService.GetTemplateAsync(ctx.Guild.Id, Identity.TEMPLATE_ACTION_SUCCESS);
+                    var template = await DataService.GetTemplateAsync(ctx.Guild.Id, TemplateMessage.ACTION_SUCCESS);
                     var message = template!.Message;
                     message.ChannelId = ctx.Channel.Id;
                     message.Sender = ctx.User.Id;

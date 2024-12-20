@@ -79,7 +79,7 @@ namespace APP.Commands.Slash {
             [Option("expire", "The expire time (in minutes) of this nitro.")] double expire) {
             try {
                 // Build the embed message with default values
-                var template = await DataService.GetTemplateAsync(ctx.Guild.Id, Identity.TEMPLATE_NITRO);
+                var template = await DataService.GetTemplateAsync(ctx.Guild.Id, TemplateMessage.NITRO);
                 var message = template!.Message;
                 var date = DateTime.Now.AddMinutes(expire);
                 message.SetData(Placeholder.DATE_END, date.ToString("dd/MM/yyyy HH:mm"));
@@ -97,7 +97,7 @@ namespace APP.Commands.Slash {
         public async Task Templates(InteractionContext ctx) {
             try {
                 // Build the embed message with default values
-                var template = await DataService.GetTemplateAsync(ctx.Guild.Id, Identity.TEMPLATE_TEMPLATES);
+                var template = await DataService.GetTemplateAsync(ctx.Guild.Id, TemplateMessage.TEMPLATES);
                 var message = template!.Message;
 
                 // Create embed message
@@ -120,15 +120,15 @@ namespace APP.Commands.Slash {
             try {
                 // Check if parameters are valid
                 if (string.IsNullOrWhiteSpace(country) || !CountryUtil.IsValidCountry(country)) {
-                    await DiscordUtil.SendActionMessage(ctx.Interaction, MessageTemplate.ACTION_INVALID, $"country \"{country}\" was given.");
+                    await DiscordUtil.SendActionMessage(ctx.Interaction, TemplateMessage.ACTION_INVALID, $"country \"{country}\" was given.");
                     return;
                 }
                 if (!DateTime.TryParseExact(birthday, "dd/MM/yyyy", null, System.Globalization.DateTimeStyles.None, out var parsedBirthdayDate)) {
-                    await DiscordUtil.SendActionMessage(ctx.Interaction, MessageTemplate.ACTION_INVALID, $"date \"{birthday}\" was given.");
+                    await DiscordUtil.SendActionMessage(ctx.Interaction, TemplateMessage.ACTION_INVALID, $"date \"{birthday}\" was given.");
                     return;
                 }
                 if (!Regex.IsMatch(color!, @"#[a-fA-F0-9]{6}")) {
-                    await DiscordUtil.SendActionMessage(ctx.Interaction, MessageTemplate.ACTION_INVALID, $"color \"{color}\" was given.");
+                    await DiscordUtil.SendActionMessage(ctx.Interaction, TemplateMessage.ACTION_INVALID, $"color \"{color}\" was given.");
                     return;
                 }
 
@@ -152,7 +152,7 @@ namespace APP.Commands.Slash {
                 await ctx.Interaction.CreateResponseAsync(InteractionResponseType.Modal, modal);
 
             } catch (CommandException ex) {
-                await DiscordUtil.SendActionMessage(ctx.Interaction, MessageTemplate.ACTION_FAILED, ex.Message);
+                await DiscordUtil.SendActionMessage(ctx.Interaction, TemplateMessage.ACTION_FAILED, ex.Message);
             } catch (Exception ex) {
                 throw new CommandException($"An error occured using the command: /{INTRODUCTION}", ex);
             }
