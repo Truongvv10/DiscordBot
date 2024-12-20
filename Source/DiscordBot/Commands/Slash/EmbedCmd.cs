@@ -41,7 +41,7 @@ namespace APP.Commands.Slash {
             try {
 
                 // Build the embed message with default values
-                var template = await DataService.GetTemplateAsync(ctx.Guild.Id, $"{EMBED}_{EMBED_CREATE}");
+                var template = await DataService.GetTemplateAsync(ctx.Guild.Id, TemplateMessage.EMBED);
                 var message = template!.Message;
                 message.ChannelId = channel.Id;
                 message.Sender = ctx.User.Id;
@@ -86,7 +86,7 @@ namespace APP.Commands.Slash {
         public async Task Templates(InteractionContext ctx) {
             try {
                 // Build the embed message with default values
-                var template = await DataService.GetTemplateAsync(ctx.Guild.Id, TemplateMessage.TEMPLATES.ToString());
+                var template = await DataService.GetTemplateAsync(ctx.Guild.Id, TemplateMessage.TEMPLATES);
                 var message = template!.Message;
 
                 // Create embed message

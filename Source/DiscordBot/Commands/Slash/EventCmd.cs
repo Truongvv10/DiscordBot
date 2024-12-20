@@ -41,7 +41,7 @@ namespace APP.Commands.Slash {
             [Option("ping", "The server roles that are pinged on sending event message.")] DiscordRole? pingrole = null) {
             try {
                 // Build the embed message with default values
-                var template = await DataService.GetTemplateAsync(ctx.Guild.Id, $"{EVENT}_{EVENT_CREATE}");
+                var template = await DataService.GetTemplateAsync(ctx.Guild.Id, TemplateMessage.EVENT);
                 var message = template!.Message;
                 message.ChannelId = channel.Id;
                 message.Sender = ctx.User.Id;

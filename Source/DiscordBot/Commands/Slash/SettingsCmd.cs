@@ -68,7 +68,7 @@ namespace APP.Commands.Slash {
                     await DataService.UpdateSettingsAsync(settings);
 
                     // Create the embed message
-                    await DiscordUtil.CreateMessageAsync(message.Type, ctx.Interaction, message, channel.Id, true);
+                    await DiscordUtil.CreateMessageAsync(message.Type, ctx.Interaction, message, ctx.Channel.Id, true);
 
                 } catch (Exception ex) {
                     throw new CommandException($"An error occured using the command: /{SETTINGS} {SETTINGS_SET} {SETTINGS_WELCOME}", ex);
@@ -97,7 +97,7 @@ namespace APP.Commands.Slash {
                     await DataService.UpdateSettingsAsync(settings);
 
                     // Create the embed message
-                    await DiscordUtil.CreateMessageAsync(message.Type, ctx.Interaction, message, channel.Id, true);
+                    await DiscordUtil.CreateMessageAsync(message.Type, ctx.Interaction, message, ctx.Channel.Id, true);
 
                 } catch (Exception ex) {
                     throw new CommandException($"An error occured using the command: /{SETTINGS} {SETTINGS_SET} {SETTINGS_INTRODUCTION}", ex);
@@ -126,7 +126,7 @@ namespace APP.Commands.Slash {
                     await DataService.UpdateSettingsAsync(settings);
 
                     // Create the embed message
-                    await DiscordUtil.CreateMessageAsync(message.Type, ctx.Interaction, message, channel.Id, true);
+                    await DiscordUtil.CreateMessageAsync(message.Type, ctx.Interaction, message, ctx.Channel.Id, true);
 
                 } catch (Exception ex) {
                     throw new CommandException($"An error occured using the command: /{SETTINGS} {SETTINGS_SET} {SETTINGS_LOG}", ex);
@@ -155,7 +155,7 @@ namespace APP.Commands.Slash {
                     await DataService.UpdateSettingsAsync(settings);
 
                     // Create the embed message
-                    await DiscordUtil.CreateMessageAsync(message.Type, ctx.Interaction, message, channel.Id, true);
+                    await DiscordUtil.CreateMessageAsync(message.Type, ctx.Interaction, message, ctx.Channel.Id, true);
 
                 } catch (Exception ex) {
                     throw new CommandException($"An error occured using the command: /{SETTINGS} {SETTINGS_SET} {SETTINGS_CHANGELOG}", ex);
@@ -184,7 +184,7 @@ namespace APP.Commands.Slash {
                     await DataService.UpdateSettingsAsync(settings);
 
                     // Create the embed message
-                    await DiscordUtil.CreateMessageAsync(message.Type, ctx.Interaction, message, channel.Id, true);
+                    await DiscordUtil.CreateMessageAsync(message.Type, ctx.Interaction, message, ctx.Channel.Id, true);
 
                 } catch (Exception ex) {
                     throw new CommandException($"An error occured using the command: /{SETTINGS} {SETTINGS_SET} {SETTINGS_INACTIVITY}", ex);
@@ -213,7 +213,7 @@ namespace APP.Commands.Slash {
                     await DataService.UpdateSettingsAsync(settings);
 
                     // Create the embed message
-                    await DiscordUtil.CreateMessageAsync(message.Type, ctx.Interaction, message, channel.Id, true);
+                    await DiscordUtil.CreateMessageAsync(message.Type, ctx.Interaction, message, ctx.Channel.Id, true);
 
                 } catch (Exception ex) {
                     throw new CommandException($"An error occured using the command: /{SETTINGS} {SETTINGS_SET} {SETTINGS_PUNISHMENT}", ex);
@@ -242,7 +242,7 @@ namespace APP.Commands.Slash {
                     await DataService.UpdateSettingsAsync(settings);
 
                     // Create the embed message
-                    await DiscordUtil.CreateMessageAsync(message.Type, ctx.Interaction, message, channel.Id, true);
+                    await DiscordUtil.CreateMessageAsync(message.Type, ctx.Interaction, message, ctx.Channel.Id, true);
 
                 } catch (Exception ex) {
                     throw new CommandException($"An error occured using the command: /{SETTINGS} {SETTINGS_SET} {SETTINGS_STRIKE}", ex);
@@ -271,7 +271,7 @@ namespace APP.Commands.Slash {
                     await DataService.UpdateSettingsAsync(settings);
 
                     // Create the embed message
-                    await DiscordUtil.CreateMessageAsync(message.Type, ctx.Interaction, message, channel.Id, true);
+                    await DiscordUtil.CreateMessageAsync(message.Type, ctx.Interaction, message, ctx.Channel.Id, true);
 
                 } catch (Exception ex) {
                     throw new CommandException($"An error occured using the command: /{SETTINGS} {SETTINGS_SET} {SETTINGS_VERIFY}", ex);
@@ -310,7 +310,7 @@ namespace APP.Commands.Slash {
                     await DataService.UpdateSettingsAsync(settings);
 
                     // Create the embed message
-                    await DiscordUtil.CreateMessageAsync(message.Type, ctx.Interaction, message, message.ChannelId, true);
+                    await DiscordUtil.CreateMessageAsync(message.Type, ctx.Interaction, message, ctx.Channel.Id, true);
 
                 } catch (Exception ex) {
                     throw new CommandException($"An error occured using the command: /{SETTINGS} {SETTINGS_REMOVE} {SETTINGS_WELCOME}", ex);
@@ -339,7 +339,7 @@ namespace APP.Commands.Slash {
                     await DataService.UpdateSettingsAsync(settings);
 
                     // Create the embed message
-                    await DiscordUtil.CreateMessageAsync(message.Type, ctx.Interaction, message, message.ChannelId, true);
+                    await DiscordUtil.CreateMessageAsync(message.Type, ctx.Interaction, message, ctx.Channel.Id, true);
 
                 } catch (Exception ex) {
                     throw new CommandException($"An error occured using the command: /{SETTINGS} {SETTINGS_REMOVE} {SETTINGS_INTRODUCTION}", ex);
@@ -368,7 +368,7 @@ namespace APP.Commands.Slash {
                     await DataService.UpdateSettingsAsync(settings);
 
                     // Create the embed message
-                    await DiscordUtil.CreateMessageAsync(message.Type, ctx.Interaction, message, message.ChannelId, true);
+                    await DiscordUtil.CreateMessageAsync(message.Type, ctx.Interaction, message, ctx.Channel.Id, true);
 
                 } catch (Exception ex) {
                     throw new CommandException($"An error occured using the command: /{SETTINGS} {SETTINGS_REMOVE} {SETTINGS_LOG}", ex);
@@ -397,7 +397,7 @@ namespace APP.Commands.Slash {
                     await DataService.UpdateSettingsAsync(settings);
 
                     // Create the embed message
-                    await DiscordUtil.CreateMessageAsync(message.Type, ctx.Interaction, message, message.ChannelId, true);
+                    await DiscordUtil.CreateMessageAsync(message.Type, ctx.Interaction, message, ctx.Channel.Id, true);
 
                 } catch (Exception ex) {
                     throw new CommandException($"An error occured using the command: /{SETTINGS} {SETTINGS_REMOVE} {SETTINGS_CHANGELOG}", ex);
@@ -426,7 +426,7 @@ namespace APP.Commands.Slash {
                     await DataService.UpdateSettingsAsync(settings);
 
                     // Create the embed message
-                    await DiscordUtil.CreateMessageAsync(message.Type, ctx.Interaction, message, message.ChannelId, true);
+                    await DiscordUtil.CreateMessageAsync(message.Type, ctx.Interaction, message, ctx.Channel.Id, true);
 
                 } catch (Exception ex) {
                     throw new CommandException($"An error occured using the command: /{SETTINGS} {SETTINGS_REMOVE} {SETTINGS_INACTIVITY}", ex);
@@ -455,7 +455,7 @@ namespace APP.Commands.Slash {
                     await DataService.UpdateSettingsAsync(settings);
 
                     // Create the embed message
-                    await DiscordUtil.CreateMessageAsync(message.Type, ctx.Interaction, message, message.ChannelId, true);
+                    await DiscordUtil.CreateMessageAsync(message.Type, ctx.Interaction, message, ctx.Channel.Id, true);
 
                 } catch (Exception ex) {
                     throw new CommandException($"An error occured using the command: /{SETTINGS} {SETTINGS_REMOVE} {SETTINGS_PUNISHMENT}", ex);
@@ -484,7 +484,7 @@ namespace APP.Commands.Slash {
                     await DataService.UpdateSettingsAsync(settings);
 
                     // Create the embed message
-                    await DiscordUtil.CreateMessageAsync(message.Type, ctx.Interaction, message, message.ChannelId, true);
+                    await DiscordUtil.CreateMessageAsync(message.Type, ctx.Interaction, message, ctx.Channel.Id, true);
 
                 } catch (Exception ex) {
                     throw new CommandException($"An error occured using the command: /{SETTINGS} {SETTINGS_REMOVE} {SETTINGS_STRIKE}", ex);
@@ -513,7 +513,7 @@ namespace APP.Commands.Slash {
                     await DataService.UpdateSettingsAsync(settings);
 
                     // Create the embed message
-                    await DiscordUtil.CreateMessageAsync(message.Type, ctx.Interaction, message, message.ChannelId, true);
+                    await DiscordUtil.CreateMessageAsync(message.Type, ctx.Interaction, message, ctx.Channel.Id, true);
 
                 } catch (Exception ex) {
                     throw new CommandException($"An error occured using the command: /{SETTINGS} {SETTINGS_REMOVE} {SETTINGS_VERIFY}", ex);

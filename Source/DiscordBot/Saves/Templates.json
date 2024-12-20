@@ -1,5 +1,5 @@
 {
-    "EMBED_CREATE": {
+    "EMBED": {
         "embed": {
             "title": "This is an example title",
             "description": "This is the description text.",
@@ -10,7 +10,7 @@
             "timestamp": true
         }
     },
-    "EVENT_CREATE": {
+    "EVENT": {
         "embed": {
             "footer": "Hosted by {data.user.name}",
             "footer_url": "{data.user.avatarurl}",
@@ -177,7 +177,7 @@
     },
     "ACTION_SUCCESS": {
         "embed": {
-            "author": "Successfully {data.text.1}.",
+            "author": "{data.text.1}",
             "author_url": "https://cdn-icons-png.flaticon.com/128/190/190411.png",
             "description": "{data.text.2}",
             "color": "#4bdc66",
@@ -191,10 +191,10 @@
     },
     "ACTION_FAILED": {
         "embed": {
-            "author": "Failed to {data.text.1}.",
-            "author_url": "https://cdn-icons-png.flaticon.com/128/190/190411.png",
+            "author": "{data.text.1}",
+            "author_url": "https://cdn-icons-png.flaticon.com/512/1304/1304038.png",
             "description": "{data.text.2}",
-            "color": "#4bdc66",
+            "color": "#d82b40",
             "timestamp": false
         },
         "data": {
@@ -205,10 +205,10 @@
     },
     "ACTION_INVALID": {
         "embed": {
-            "author": "Invalid {data.text.1}.",
-            "author_url": "https://cdn-icons-png.flaticon.com/128/190/190411.png",
+            "author": "{data.text.1}",
+            "author_url": "https://cdn-icons-png.flaticon.com/512/6785/6785368.png",
             "description": "{data.text.2}",
-            "color": "#4bdc66",
+            "color": "#d82b40",
             "timestamp": false
         },
         "data": {
