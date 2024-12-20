@@ -8,6 +8,7 @@ using BLL.Interfaces;
 using Microsoft.VisualBasic;
 using DSharpPlus.Entities;
 using System;
+using APP.Enums;
 
 namespace APP.Events {
     public class ModalSubmitEvent {
@@ -48,7 +49,34 @@ namespace APP.Events {
                 if (modalId.Contains(Identity.MODAL_TIMESTAMP))
                     await UseTimestamp(e);
 
+                if (modalId.Contains(Identity.MODAL_INTRODUCTION))
+                    await UseIntroduction(e);
+
             }
+        }
+
+        private async Task UseIntroduction(ModalSubmitEventArgs e) {
+            // Variables
+            var data = e.Interaction.Data.CustomId.Split(";");
+            var channel = await discordUtil.GetChannelByIdAsync(e.Interaction.Guild, ulong.Parse(data[1]));
+            var country = data[2];
+            var timezone = (TimeZoneEnum)int.Parse(data[3]);
+            var birthday = DateTime.ParseExact(data[4], "dd/MM/yyyy", null, System.Globalization.DateTimeStyles.None);
+            var pronouns = (PronounsEnum)int.Parse(data[5]);
+            var color = data[6];
+            var template = await dataService.GetTemplateAsync(e.Interaction.Guild.Id, Identity.TEMPLATE_INTRODUCTION);
+            var message = template!.Message;
+            var description = e.Values.Values.First().ToString();
+            var embed = message.Embed;
+
+            embed.AddField("Country", country);
+            embed.AddField("Birthday", await DateTimeUtil.TranslateToDynamicTimestamp(birthday, timezone.ToString(), TimestampEnum.SHORT_DATE));
+            embed.AddField("Pronouns", pronouns.ToString());
+            embed.AddField("Introduction", description, false);
+            embed.WithColor(color);
+
+            await discordUtil.CreateMessageToChannelAsync(CommandEnum.INTRODUCTION, e.Interaction, message, channel);
+            await discordUtil.SendActionMessage(e.Interaction, MessageTemplate.ACTION_SUCCESS, $"created introduction");
         }
 
         private async Task UseEmbed(ModalSubmitEventArgs e) {

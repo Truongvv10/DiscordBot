@@ -12,6 +12,8 @@ using BLL.Services;
 using BLL.Interfaces;
 using Microsoft.VisualBasic;
 using System.Xml;
+using System.Threading.Channels;
+using Microsoft.IdentityModel.Tokens;
 
 namespace APP.Utils {
     public class DiscordUtil {
@@ -37,7 +39,14 @@ namespace APP.Utils {
 
                 // Create the response
                 var response = await CreateResponseAsync(type, interaction, translated, channelId, hidden);
-                await interaction.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, response);
+                if (interaction.Channel.Id == channelId) {
+                    await interaction.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, response);
+                } else {
+                    var channel = await GetChannelByIdAsync(interaction.Guild, channelId);
+                    foreach (var embed in response.Embeds) {
+                        await channel.SendMessageAsync(response.Content, embed);
+                    }
+                }
 
                 // Stop the stopwatch and log the elapsed time
                 stopwatch.Stop();
@@ -54,7 +63,48 @@ namespace APP.Utils {
                 Console.WriteLine(
                     $"{AnsiColor.RESET}[{DateTime.Now}] " +
                     $"{AnsiColor.BRIGHT_GREEN}-> Message creation took {AnsiColor.YELLOW}{stopwatch.ElapsedMilliseconds}ms " +
-                    $"{AnsiColor.RESET}(message: {original.Id})");
+                    $"{AnsiColor.RESET}({original.Id}) " +
+                    $"{AnsiColor.RESET}({interaction.User.Username})");
+
+            } catch (Exception ex) {
+                throw new CommandException($"Embed.CreateMessageAsync: {ex.Message}", ex);
+            }
+        }
+
+        public async Task CreateMessageToChannelAsync(CommandEnum type, DiscordInteraction interaction, Message message, DiscordChannel channel) {
+            try {
+                // Start the stopwatch
+                Stopwatch stopwatch = Stopwatch.StartNew();
+
+                // Translate the placeholders
+                var translated = message.DeepClone();
+                await translated.TranslatePlaceholders(interaction, dataService);
+
+                // Create the response
+                var response = await CreateResponseAsync(type, interaction, translated, channel.Id);
+                DiscordMessage original;
+                if (response.Embeds.Count() == 0) {
+                    original = await channel.SendMessageAsync(response.Content);
+                } else {
+                    original = await channel.SendMessageAsync(response.Content, response.Embeds.First());
+                }
+
+                // Stop the stopwatch and log the elapsed time
+                stopwatch.Stop();
+
+                // Store the message ID and components for future reference
+                message.WithMessageId(original.Id);
+                message.GuildId = interaction.Guild.Id;
+
+                // Store the embed in the cache
+                await dataService.AddMessageAsync(message);
+
+                // Logger
+                Console.WriteLine(
+                    $"{AnsiColor.RESET}[{DateTime.Now}] " +
+                    $"{AnsiColor.BRIGHT_GREEN}-> Message creation took {AnsiColor.YELLOW}{stopwatch.ElapsedMilliseconds}ms " +
+                    $"{AnsiColor.RESET}({original.Id}) " +
+                    $"{AnsiColor.RESET}({interaction.User.Username})");
 
             } catch (Exception ex) {
                 throw new CommandException($"Embed.CreateMessageAsync: {ex.Message}", ex);
@@ -88,7 +138,8 @@ namespace APP.Utils {
                     Console.WriteLine(
                         $"{AnsiColor.RESET}[{DateTime.Now}] " +
                         $"{AnsiColor.BRIGHT_GREEN}-> Message update took {AnsiColor.YELLOW}{stopwatch.ElapsedMilliseconds}ms " +
-                        $"{AnsiColor.RESET}(message: {message.MessageId})");
+                        $"{AnsiColor.RESET}({original.Id}) " +
+                        $"{AnsiColor.RESET}({interaction.User.Username})");
 
                 } else throw new UtilException($"Could not create response because message was null");
             } catch (Exception ex) {
@@ -125,7 +176,8 @@ namespace APP.Utils {
                 Console.WriteLine(
                     $"{AnsiColor.RESET}[{DateTime.Now}] " +
                     $"{AnsiColor.BRIGHT_GREEN}-> Message modify took {AnsiColor.YELLOW}{stopwatch.ElapsedMilliseconds}ms " +
-                    $"{AnsiColor.RESET}(message: {message.MessageId})");
+                    $"{AnsiColor.RESET}({original.Id}) " +
+                    $"{AnsiColor.RESET}({interaction.User.Username})");
 
             } catch (Exception ex) {
                 throw new CommandException($"Embed.UpdateMessageAsync: {ex.Message}", ex);
@@ -413,6 +465,13 @@ namespace APP.Utils {
                 result += pings;
             }
             return result;
+        }
+
+        public async Task SendActionMessage(DiscordInteraction interaction, MessageTemplate template, string title, string text = "") {
+            var message = (await dataService.GetTemplateAsync(interaction.Guild.Id, template.ToString().ToUpper()))!.Message;
+            message.SetData(Placeholder.TEXT1, title);
+            message.SetData(Placeholder.TEXT2, text);
+            await CreateMessageAsync(CommandEnum.NONE, interaction, message, interaction.Channel.Id, true);
         }
     }
 }

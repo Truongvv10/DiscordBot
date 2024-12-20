@@ -165,6 +165,16 @@
             ]
         }
     },
+    "INTRODUCTION": {
+        "embed": {
+            "author": "{data.user.name}",
+            "author_url": "{data.user.avatarurl}",
+            "thumbnail": "{data.user.avatarurl}",
+            "color": "#0681cd",
+            "timestamp": true
+        },
+        "ephemeral": false
+    },
     "ACTION_SUCCESS": {
         "embed": {
             "author": "Successfully {data.text.1}.",
@@ -175,6 +185,34 @@
         },
         "data": {
             "data.text.1": "executed action",
+            "data.text.2": ""
+        },
+        "ephemeral": true
+    },
+    "ACTION_FAILED": {
+        "embed": {
+            "author": "Failed to {data.text.1}.",
+            "author_url": "https://cdn-icons-png.flaticon.com/128/190/190411.png",
+            "description": "{data.text.2}",
+            "color": "#4bdc66",
+            "timestamp": false
+        },
+        "data": {
+            "data.text.1": "execute action",
+            "data.text.2": ""
+        },
+        "ephemeral": true
+    },
+    "ACTION_INVALID": {
+        "embed": {
+            "author": "Invalid {data.text.1}.",
+            "author_url": "https://cdn-icons-png.flaticon.com/128/190/190411.png",
+            "description": "{data.text.2}",
+            "color": "#4bdc66",
+            "timestamp": false
+        },
+        "data": {
+            "data.text.1": "action",
             "data.text.2": ""
         },
         "ephemeral": true

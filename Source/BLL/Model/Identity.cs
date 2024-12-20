@@ -77,6 +77,7 @@
         public const string MODAL_TEMPLATES = $"{PREFIX}.modal.templates";
         public const string MODAL_TIMESTAMP = $"{PREFIX}.modal.timestamp";
         public const string MODAL_PLACEHOLDER = $"{PREFIX}.modal.placeholder";
+        public const string MODAL_INTRODUCTION = $"{PREFIX}.modal.introduction";
 
         // Modal Default
         private const string MODAL_DATA = $"{MODAL_EMBED}.component";
@@ -140,6 +141,12 @@
         private const string MODAL_DATA_TIMESTAMPS = $"{MODAL_TIMESTAMP}.component";
         public const string MODAL_DATA_TIMESTAMPS_TIMEZONE = $"{MODAL_DATA_TIMESTAMPS}.timezone";
         public const string MODAL_DATA_TIMESTAMPS_TIME = $"{MODAL_DATA_TIMESTAMPS}.time";
+
+        // Modal Introduction
+        private const string MODAL_DATA_INTRODUCTION = $"{MODAL_INTRODUCTION}.component";
+        public const string MODAL_DATA_INTRODUCTION_BIRTHDAY = $"{MODAL_DATA_INTRODUCTION}.birthday";
+        public const string MODAL_DATA_INTRODUCTION_PRONOUNCE = $"{MODAL_DATA_INTRODUCTION}.pronounce";
+        public const string MODAL_DATA_INTRODUCTION_TEXT = $"{MODAL_DATA_INTRODUCTION}.text";
         #endregion
 
         #region Templates
@@ -149,6 +156,8 @@
         public const string TEMPLATE_NITRO = "NITRO";
         public const string TEMPLATE_NO_PERMISSION = "NO_PERMISSION";
         public const string TEMPLATE_ACTION_SUCCESS = "ACTION_SUCCESS";
+        public const string TEMPLATE_ACTION_INVALID = "ACTION_INVALID";
+        public const string TEMPLATE_INTRODUCTION = "INTRODUCTION";
         #endregion
     }
 }

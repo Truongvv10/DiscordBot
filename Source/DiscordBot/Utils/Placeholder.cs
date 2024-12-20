@@ -29,6 +29,8 @@ namespace APP.Utils {
         public const string TEXT4 = PREFIX + "data.text.4";
         public const string DATE_END = PREFIX + "data.date.end";
         public const string USER_NAME = PREFIX + "data.user.name";
+        public const string USER_USERNAME = PREFIX + "data.user.username";
+        public const string USER_MENTION = PREFIX + "data.user.mention";
         public const string USER_AVATARURL = PREFIX + "data.user.avatarurl";
         public const string CHANNEL_ID = PREFIX + "data.channel.id";
         public const string GUILD_ID = PREFIX + "data.guild.id";
@@ -41,7 +43,12 @@ namespace APP.Utils {
 
         static Placeholder() {
             placeholders.AddRange(new[] {
-                ID, CUSTOM, TIMEZONE, DATE_START, DATE_END, URL1, URL2, URL3, URL4, TEXT1, TEXT2, TEXT3, TEXT4, USER_NAME, USER_AVATARURL, CHANNEL_ID, GUILD_ID, MESSAGE_ID, LIST_USERS, LIST_REACTIONS, LIST_TEMPLATES, LIST_TEMPLATES_GUILD});
+                ID, CUSTOM, TIMEZONE, DATE_START, DATE_END, 
+                URL1, URL2, URL3, URL4, 
+                TEXT1, TEXT2, TEXT3, TEXT4, 
+                USER_NAME, USER_AVATARURL, USER_MENTION, 
+                CHANNEL_ID, GUILD_ID, MESSAGE_ID, 
+                LIST_USERS, LIST_REACTIONS, LIST_TEMPLATES, LIST_TEMPLATES_GUILD});
         }
 
         public static async Task<string> Translate(string input, Dictionary<string, string> data, DiscordInteraction interaction, IDataRepository dataService) {
@@ -54,6 +61,9 @@ namespace APP.Utils {
                         break;
                     case USER_AVATARURL:
                         input = input.Replace(toReplace, interaction.User.AvatarUrl);
+                        break;
+                    case USER_MENTION:
+                        input = input.Replace(toReplace, interaction.User.Mention);
                         break;
                     case LIST_TEMPLATES:
                         var cache = new CacheData();

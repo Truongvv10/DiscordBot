@@ -58,6 +58,9 @@ namespace BLL.Enums {
         [Description("/nitro")]
         NITRO = 305,
 
+        [Description("/introduction")]
+        INTRODUCTION = 310,
+
 
         [Description("/broadcast")]
         BROADCAST = 400,
