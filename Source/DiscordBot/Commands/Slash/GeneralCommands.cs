@@ -120,22 +120,22 @@ namespace APP.Commands.Slash {
             try {
                 // Check if parameters are valid
                 if (string.IsNullOrWhiteSpace(country) || !CountryUtil.IsValidCountry(country)) {
-                    await DiscordUtil.SendActionMessage(ctx.Interaction, TemplateMessage.ACTION_INVALID, $"country \"{country}\" was given.");
+                    await DiscordUtil.SendActionMessage(ctx.Interaction, TemplateMessage.ACTION_INVALID, $"Invalid country \"{country}\" was given.");
                     return;
                 }
                 if (!DateTime.TryParseExact(birthday, "dd/MM/yyyy", null, System.Globalization.DateTimeStyles.None, out var parsedBirthdayDate)) {
-                    await DiscordUtil.SendActionMessage(ctx.Interaction, TemplateMessage.ACTION_INVALID, $"date \"{birthday}\" was given.");
+                    await DiscordUtil.SendActionMessage(ctx.Interaction, TemplateMessage.ACTION_INVALID, $"Invalid date \"{birthday}\" was given.");
                     return;
                 }
                 if (!Regex.IsMatch(color!, @"#[a-fA-F0-9]{6}")) {
-                    await DiscordUtil.SendActionMessage(ctx.Interaction, TemplateMessage.ACTION_INVALID, $"color \"{color}\" was given.");
+                    await DiscordUtil.SendActionMessage(ctx.Interaction, TemplateMessage.ACTION_INVALID, $"Invalid color \"{color}\" was given.");
                     return;
                 }
 
                 // Check if introduction channel is setup
                 var settings = await DataService.GetSettingsAsync(ctx.Guild.Id) ?? throw new CommandException($"Settings was not found.");
-                var channelId = settings.IntroductionChannel ?? throw new CommandException($"Introduction settings was not setup yet.");
-                var channel = await DiscordUtil.GetChannelByIdAsync(ctx.Guild, channelId) ?? throw new CommandException($"Introduction settings was not setup yet.");
+                var channelId = settings.IntroductionChannel ?? throw new CommandException($"Introduction was not setup yet.");
+                var channel = await DiscordUtil.GetChannelByIdAsync(ctx.Guild, channelId) ?? throw new CommandException($"Introduction was not setup yet.");
                 var id = $"{Identity.MODAL_INTRODUCTION};{channelId};{country};{(int)timeZone};{parsedBirthdayDate.ToString("dd/MM/yyyy")};{(int)pronouns};{color}";
 
                 // Create embed message
