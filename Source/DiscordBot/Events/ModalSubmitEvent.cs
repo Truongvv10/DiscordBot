@@ -74,7 +74,7 @@ namespace APP.Events {
 
             embed.AddField("Country", country);
             embed.AddField("Birthday", await DateTimeUtil.TranslateToDynamicTimestamp(birthday, timezone.ToString(), TimestampEnum.SHORT_DATE));
-            embed.AddField("Pronouns", pronouns.ToString());
+            embed.AddField("Pronouns", pronouns.GetEnumChoiceName());
             embed.AddField("Introduction", description, false);
             embed.WithColor(color);
 

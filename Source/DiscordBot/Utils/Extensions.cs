@@ -2,6 +2,8 @@
 using BLL.Exceptions;
 using DSharpPlus.Entities;
 using BLL.Interfaces;
+using System.Reflection;
+using DSharpPlus.SlashCommands;
 
 namespace APP.Utils {
     public static class Extensions {
@@ -97,6 +99,16 @@ namespace APP.Utils {
             } catch (Exception ex) {
                 throw new DomainException("An error occurred while building embed", ex);
             }
+        }
+        public static string GetEnumChoiceName(this Enum value) {
+            FieldInfo field = value.GetType().GetField(value.ToString());
+            if (field != null) {
+                var attribute = field.GetCustomAttribute<ChoiceNameAttribute>();
+                if (attribute != null) {
+                    return attribute.Name;
+                }
+            }
+            return value.ToString(); // Fallback to the enum name
         }
     }
 }
