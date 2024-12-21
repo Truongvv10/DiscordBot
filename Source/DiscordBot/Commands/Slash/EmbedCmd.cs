@@ -71,7 +71,7 @@ namespace APP.Commands.Slash {
                 // Check if the id is a valid ulong
                 if (ulong.TryParse(id, out ulong messageid)) {
                     var message = await DataService.GetMessageAsync(ctx.Guild.Id, messageid);
-                    await DiscordUtil.CreateMessageAsync(message.Type, ctx.Interaction, message, (ulong)message.ChannelId!, hidden);
+                    await DiscordUtil.CreateMessageAsync(CommandEnum.EMBED_CREATE, ctx.Interaction, message, (ulong)message.ChannelId!, hidden);
                 }
 
             } catch (Exception ex) {
