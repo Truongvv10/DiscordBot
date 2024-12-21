@@ -62,7 +62,7 @@ namespace APP.Events {
             var data = e.Interaction.Data.CustomId.Split(";");
             var filter = new ProfanityService();
             var channel = await discordUtil.GetChannelByIdAsync(e.Interaction.Guild, ulong.Parse(data[1]));
-            var country = data[2];
+            var country = int.TryParse(data[2], out int result) ? (CountryUtil.GetCountryName(result) ?? "Invalid") : "Invalid";
             var timezone = (TimeZoneEnum)int.Parse(data[3]);
             var birthday = DateTime.ParseExact(data[4], "dd/MM/yyyy", null, System.Globalization.DateTimeStyles.None);
             var pronouns = (PronounsEnum)int.Parse(data[5]);
@@ -71,6 +71,8 @@ namespace APP.Events {
             var message = template!.Message;
             var description = filter.CensorText(e.Values.Values.First().ToString());
             var embed = message.Embed;
+
+            Console.WriteLine(string.Join(", ", e.Interaction.Data.Values));
 
             embed.AddField("Country", country);
             embed.AddField("Birthday", await DateTimeUtil.TranslateToDynamicTimestamp(birthday, timezone.ToString(), TimestampEnum.SHORT_DATE));

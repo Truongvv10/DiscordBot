@@ -14,8 +14,8 @@ using DSharpPlus.SlashCommands.Attributes;
 using System.Threading.Channels;
 using System;
 using System.Text.RegularExpressions;
-using ISO3166;
 using APP.Choices;
+using Nager.Country;
 
 namespace APP.Commands.Slash {
     public class GeneralCommands : ApplicationCommandModule {
@@ -110,7 +110,6 @@ namespace APP.Commands.Slash {
 
         [SlashCommand(INTRODUCTION, "Introduce yourself to everyone in the server")]
         [SlashCooldown(9999, 60, SlashCooldownBucketType.Guild)]
-        [SlashCommandPermissions(Permissions.SendMessages)]
         public async Task Introduction(InteractionContext ctx,
             [Autocomplete(typeof(CountryChoiceProvider))][Option("country", "Which country are you from?")] string country,
             [Option("time-zone", "The time zone you live in.")] TimeZoneEnum timeZone,
@@ -136,7 +135,8 @@ namespace APP.Commands.Slash {
                 var settings = await DataService.GetSettingsAsync(ctx.Guild.Id) ?? throw new CommandException($"Settings was not found.");
                 var channelId = settings.IntroductionChannel ?? throw new CommandException($"Introduction was not setup yet.");
                 var channel = await DiscordUtil.GetChannelByIdAsync(ctx.Guild, channelId) ?? throw new CommandException($"Introduction was not setup yet.");
-                var id = $"{Identity.MODAL_INTRODUCTION};{channelId};{country};{(int)timeZone};{parsedBirthdayDate.ToString("dd/MM/yyyy")};{(int)pronouns};{color}";
+                var id = $"{Identity.MODAL_INTRODUCTION};{channelId};{CountryUtil.GetCountryCode(country)};{(int)timeZone};{parsedBirthdayDate.ToString("dd/MM/yyyy")};{(int)pronouns};{color}";
+                Console.WriteLine(id);
 
                 // Create embed message
                 var modal = new DiscordInteractionResponseBuilder();
