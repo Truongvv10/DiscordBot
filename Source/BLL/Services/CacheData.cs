@@ -61,6 +61,7 @@ namespace BLL.Services {
             foreach (var zone in DateTimeZoneProviders.Tzdb.GetAllZones()) {
                 timeZones.Add(zone.Id);
             }
+            Console.WriteLine(string.Join(", ", DateTimeZoneProviders.Tzdb.GetAllZones().Select(x => x.Id)));
         }
         #endregion
 

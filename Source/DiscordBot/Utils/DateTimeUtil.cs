@@ -107,6 +107,9 @@ namespace APP.Utils {
             if (copy == TimeZoneEnum.NZST.ToString())
                 return "Etc/GMT+12";
 
+            if (copy == TimeZoneEnum.NZDT.ToString())
+                return "Pacific/Tongatapu";
+
             if (copy == TimeZoneEnum.HST.ToString())
                 return "US/Hawaii";
 

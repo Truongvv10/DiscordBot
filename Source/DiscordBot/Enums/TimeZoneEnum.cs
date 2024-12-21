@@ -73,6 +73,10 @@ namespace APP.Enums {
         [ChoiceName("NZST (New Zealand Standard Time)")]
         NZST,
 
+        [Description("GMT (UTC ±13:00)")]
+        [ChoiceName("NZST (New Zealand Daylight Time)")]
+        NZDT,
+
         [Description("GMT (UTC -10:00)")]
         [ChoiceName("HST (Hawaii Standard Time)")]
         HST,
