@@ -209,6 +209,12 @@ namespace APP.Utils {
                         components.Add(new DiscordActionRowComponent(buttonComponent));
                         break;
 
+                    case CommandEnum.EMBED_EDIT:
+                        components.Add(DefaultComponent().First());
+                        components.Add(PlaceholderComponent(message).First());
+                        components.Add(new DiscordActionRowComponent(buttonComponent));
+                        break;
+
                     case CommandEnum.EVENTS_CREATE:
                         components.Add(DefaultComponent().First());
                         components.Add(PlaceholderComponent(message).First());
@@ -235,9 +241,6 @@ namespace APP.Utils {
                         break;
 
                     default:
-                        components.Add(DefaultComponent().First());
-                        components.Add(PlaceholderComponent(message).First());
-                        components.Add(new DiscordActionRowComponent(buttonComponent));
                         break;
                 }
 

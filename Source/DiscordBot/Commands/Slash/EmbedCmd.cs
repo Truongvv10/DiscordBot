@@ -70,10 +70,9 @@ namespace APP.Commands.Slash {
             try {
                 // Check if the id is a valid ulong
                 if (ulong.TryParse(id, out ulong messageid)) {
-                    var message = await DataService.GetMessageAsync(ctx.Guild.Id, messageid);
-                    await DiscordUtil.CreateMessageAsync(message.Type, ctx.Interaction, message, (ulong)message.ChannelId!, hidden);
+                    var message = await DataService.GetMessageAsync(ctx.Guild.Id, messageid) ?? throw new CommandException($"Message with id \"{id}\" in guild \"{ctx.Guild.Id}\" was not found.");
+                    await DiscordUtil.CreateMessageAsync(CommandEnum.EMBED_EDIT, ctx.Interaction, message, message.ChannelId!, hidden);
                 }
-
             } catch (Exception ex) {
                 throw new CommandException($"An error occured using the command: /{EMBED} {EMBED_EDIT}", ex);
             }
