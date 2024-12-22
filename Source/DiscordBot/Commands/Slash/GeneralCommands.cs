@@ -122,7 +122,7 @@ namespace APP.Commands.Slash {
                     await DiscordUtil.SendActionMessage(ctx.Interaction, TemplateMessage.ACTION_INVALID, $"Invalid country \"{country}\" was given.");
                     return;
                 }
-                if (!DateTime.TryParseExact(birthday, "dd/MM/yyyy", null, System.Globalization.DateTimeStyles.None, out var parsedBirthdayDate)) {
+                if (!DateTime.TryParseExact($"birthday 00:00", "dd/MM/yyyy HH:mm", null, System.Globalization.DateTimeStyles.None, out var parsedBirthdayDate)) {
                     await DiscordUtil.SendActionMessage(ctx.Interaction, TemplateMessage.ACTION_INVALID, $"Invalid date \"{birthday}\" was given.");
                     return;
                 }

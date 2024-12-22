@@ -88,14 +88,14 @@ namespace APP.Utils {
                         if (data.TryGetValue(placeholder, out var replacement)) {
                             input = input.Replace(toReplace, replacement);
                         } else if (Regex.IsMatch(placeholder, @"^data\.date\.(start|end)(\.\d+)?$")) {
-                            string timezone = data[TIMEZONE] ?? "CET";
-                            DateTime date = DateTime.Now;
-                            if (placeholder.Contains(DATE_START)) date = DateTime.ParseExact(data[DATE_START], "dd/MM/yyyy HH:mm", null);
-                            if (placeholder.Contains(DATE_END)) date = DateTime.ParseExact(data[DATE_END], "dd/MM/yyyy HH:mm", null);
-                            var timestamp = await TranslateTime(date, timezone, placeholder);
+                            string timezone = data.ContainsKey(TIMEZONE) ? data[TIMEZONE] : TimeZoneEnum.CET.ToString();
+                            string date = DateTime.Now.ToString("dd/MM/yyyy HH:mm");
+                            if (placeholder.Contains(DATE_START)) date = data[DATE_START];
+                            if (placeholder.Contains(DATE_END)) date = data[DATE_END];
+                            var timestamp = TranslateTime(placeholder, date, timezone, TimeZoneEnum.CET.ToString());
                             input = input.Replace(toReplace, timestamp);
                         } else if (placeholder == TIMEZONE) {
-                            input = input.Replace(toReplace, "CET");
+                            input = input.Replace(toReplace, TimeZoneEnum.CET.ToString());
                         }
                         break;
                 }
@@ -128,30 +128,33 @@ namespace APP.Utils {
             return foundPlaceholders.OrderBy(x => !x.StartsWith(CUSTOM)).ToList();
         }
 
-        private static async Task<string> TranslateTime(DateTime date, string timeZone, string placeholder) {
+        private static string TranslateTime(string placeholder, string date, string sourceTimeZoneId, string targetTimeZoneId) {
+
+            var sourceTimeZone = DateTimeUtil.CheckTimeZone(sourceTimeZoneId);
+            var targetTimeZone = DateTimeUtil.CheckTimeZone(targetTimeZoneId);
 
             if (Regex.IsMatch(placeholder, @".*\.1$"))
-                return await DateTimeUtil.TranslateToDynamicTimestamp(date, timeZone, TimestampEnum.LONG_DATE_WITH_DAY_OF_WEEK_AND_SHORT_TIME);
+                return DateTimeUtil.ConvertDateTimeToDiscordTimestamp(date, sourceTimeZone, targetTimeZone, TimestampEnum.LONG_DATE_WITH_DAY_OF_WEEK_AND_SHORT_TIME);
 
             if (Regex.IsMatch(placeholder, @".*\.2$"))
-                return await DateTimeUtil.TranslateToDynamicTimestamp(date, timeZone, TimestampEnum.LONG_DATE_AND_SHORT_TIME);
+                return DateTimeUtil.ConvertDateTimeToDiscordTimestamp(date, sourceTimeZone, targetTimeZone, TimestampEnum.LONG_DATE_AND_SHORT_TIME);
 
             if (Regex.IsMatch(placeholder, @".*\.3$"))
-                return await DateTimeUtil.TranslateToDynamicTimestamp(date, timeZone, TimestampEnum.LONG_DATE);
+                return DateTimeUtil.ConvertDateTimeToDiscordTimestamp(date, sourceTimeZone, targetTimeZone, TimestampEnum.LONG_DATE);
 
             if (Regex.IsMatch(placeholder, @".*\.4$"))
-                return await DateTimeUtil.TranslateToDynamicTimestamp(date, timeZone, TimestampEnum.SHORT_DATE);
+                return DateTimeUtil.ConvertDateTimeToDiscordTimestamp(date, sourceTimeZone, targetTimeZone, TimestampEnum.SHORT_DATE);
 
             if (Regex.IsMatch(placeholder, @".*\.5$"))
-                return await DateTimeUtil.TranslateToDynamicTimestamp(date, timeZone, TimestampEnum.LONG_TIME);
+                return DateTimeUtil.ConvertDateTimeToDiscordTimestamp(date, sourceTimeZone, targetTimeZone, TimestampEnum.LONG_TIME);
 
             if (Regex.IsMatch(placeholder, @".*\.6$"))
-                return await DateTimeUtil.TranslateToDynamicTimestamp(date, timeZone, TimestampEnum.SHORT_TIME);
+                return DateTimeUtil.ConvertDateTimeToDiscordTimestamp(date, sourceTimeZone, targetTimeZone, TimestampEnum.SHORT_TIME);
 
             if (Regex.IsMatch(placeholder, @".*\.7$"))
-                return await DateTimeUtil.TranslateToDynamicTimestamp(date, timeZone, TimestampEnum.RELATIVE);
+                return DateTimeUtil.ConvertDateTimeToDiscordTimestamp(date, sourceTimeZone, targetTimeZone, TimestampEnum.RELATIVE);
 
-            var result = await DateTimeUtil.TranslateToDynamicTimestamp(date, timeZone, TimestampEnum.LONG_DATE_WITH_DAY_OF_WEEK_AND_SHORT_TIME);
+            var result = DateTimeUtil.ConvertDateTimeToDiscordTimestamp(date, sourceTimeZone, targetTimeZone, TimestampEnum.LONG_DATE_WITH_DAY_OF_WEEK_AND_SHORT_TIME);
             return result;
         }
     }

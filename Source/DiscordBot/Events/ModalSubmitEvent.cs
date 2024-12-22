@@ -259,8 +259,8 @@ namespace APP.Events {
                         var end = data[Identity.MODAL_DATA_EVENT_END];
 
                         if (!DateTimeUtil.ExistInNodaTimeZone(timezone)) throw new EventException($"\"{timezone}\" is not a valid timezone.");
-                        if (!DateTimeUtil.IsStringValidDate(start)) throw new EventException($"\"{start}\" was not a valid date.");
-                        if (!DateTimeUtil.IsStringValidDate(end)) throw new EventException($"\"{end}\" was not a valid date.");
+                        if (!DateTimeUtil.IsStringValidDateTime(start)) throw new EventException($"\"{start}\" was not a valid date.");
+                        if (!DateTimeUtil.IsStringValidDateTime(end)) throw new EventException($"\"{end}\" was not a valid date.");
 
                         message.AddData(Placeholder.ID, name);
                         message.AddData(Placeholder.TIMEZONE, timezone);
@@ -318,8 +318,8 @@ namespace APP.Events {
                         var end = data[Identity.MODAL_DATA_PLACEHOLDER_DATE_END];
 
                         if (!DateTimeUtil.ExistInNodaTimeZone(timezone)) throw new EventException($"\"{timezone}\" is not a valid timezone.");
-                        if (!DateTimeUtil.IsStringValidDate(start)) throw new EventException($"\"{start}\" was not a valid date.");
-                        if (!DateTimeUtil.IsStringValidDate(end)) throw new EventException($"\"{end}\" was not a valid date.");
+                        if (!DateTimeUtil.IsStringValidDateTime(start)) throw new EventException($"\"{start}\" was not a valid date.");
+                        if (!DateTimeUtil.IsStringValidDateTime(end)) throw new EventException($"\"{end}\" was not a valid date.");
 
                         if (!string.IsNullOrWhiteSpace(timezone)) message.AddData(Placeholder.TIMEZONE, timezone);
                         else { if (message.Data.ContainsKey(Placeholder.TIMEZONE)) message.RemoveData(Placeholder.TIMEZONE); };

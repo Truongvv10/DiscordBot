@@ -14,6 +14,7 @@ using Microsoft.VisualBasic;
 using System.Xml;
 using System.Threading.Channels;
 using Microsoft.IdentityModel.Tokens;
+using NodaTime.Text;
 
 namespace APP.Utils {
     public class DiscordUtil {
@@ -234,6 +235,9 @@ namespace APP.Utils {
                         break;
 
                     default:
+                        components.Add(DefaultComponent().First());
+                        components.Add(PlaceholderComponent(message).First());
+                        components.Add(new DiscordActionRowComponent(buttonComponent));
                         break;
                 }
 
