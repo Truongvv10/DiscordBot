@@ -405,3 +405,5 @@ Source/DLLSQLServer/Migrations
 Source/DLLSQLite/Migrations
 /Source/DiscordBot/Saves/Data.db
 /Source/DLLSQLite/Data.db
+/Source/TestProjectxUnit
+/Source/TestConsoleApp
