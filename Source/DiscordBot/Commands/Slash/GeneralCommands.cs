@@ -108,7 +108,7 @@ namespace APP.Commands.Slash {
             }
         }
 
-        [SlashCommand(INTRODUCTION, "Introduce yourself to everyone in the server")]
+        [SlashCommand(INTRODUCTION, "Introduce yourself to the server. Once the command is executed, a form will popup to introduce yourself.")]
         [SlashCooldown(9999, 60, SlashCooldownBucketType.Guild)]
         public async Task Introduction(InteractionContext ctx,
             [Autocomplete(typeof(CountryChoiceProvider))][Option("country", "Which country are you from?")] string country,
@@ -122,8 +122,8 @@ namespace APP.Commands.Slash {
                     await DiscordUtil.SendActionMessage(ctx.Interaction, TemplateMessage.ACTION_INVALID, $"Invalid country \"{country}\" was given.");
                     return;
                 }
-                if (!DateTime.TryParseExact($"birthday 00:00", "dd/MM/yyyy HH:mm", null, System.Globalization.DateTimeStyles.None, out var parsedBirthdayDate)) {
-                    await DiscordUtil.SendActionMessage(ctx.Interaction, TemplateMessage.ACTION_INVALID, $"Invalid date \"{birthday}\" was given.");
+                if (!DateTime.TryParseExact($"{birthday} 00:00", "dd/MM/yyyy HH:mm", null, System.Globalization.DateTimeStyles.None, out var parsedBirthdayDate)) {
+                    await DiscordUtil.SendActionMessage(ctx.Interaction, TemplateMessage.ACTION_INVALID, $"Invalid format with date \"{birthday}\".");
                     return;
                 }
                 if (!Regex.IsMatch(color!, @"#[a-fA-F0-9]{6}")) {

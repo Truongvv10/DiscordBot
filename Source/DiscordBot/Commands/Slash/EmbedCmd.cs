@@ -65,13 +65,17 @@ namespace APP.Commands.Slash {
         [SlashCommand(EMBED_EDIT, "Edit an existing embeded message from the bot")]
         [RequirePermission(CommandEnum.EMBED_EDIT, [Permissions.ManageChannels, Permissions.ManageMessages])]
         public async Task Edit(InteractionContext ctx,
-            [Option("message-id", "The id of the embeded message you want to edit.")] string id,
-            [Option("hidden", "If only you can see this embeded message, default is true")] bool hidden = true) {
+            [Option("message-id", "The id of the embeded message you want to edit.")] string id) {
             try {
                 // Check if the id is a valid ulong
                 if (ulong.TryParse(id, out ulong messageid)) {
                     var message = await DataService.GetMessageAsync(ctx.Guild.Id, messageid) ?? throw new CommandException($"Message with id \"{id}\" in guild \"{ctx.Guild.Id}\" was not found.");
-                    await DiscordUtil.CreateMessageAsync(CommandEnum.EMBED_EDIT, ctx.Interaction, message, message.ChannelId!, hidden);
+                    var copy = message.DeepClone();
+                    copy.Type = CommandEnum.EMBED_EDIT;
+                    copy.Sender = ctx.User.Id;
+                    copy.ChannelId = ctx.Channel.Id;
+                    copy.GuildId = ctx.Guild.Id;
+                    await DiscordUtil.CreateMessageAsync(CommandEnum.EMBED_EDIT, ctx.Interaction, copy, copy.ChannelId!, false);
                 }
             } catch (Exception ex) {
                 throw new CommandException($"An error occured using the command: /{EMBED} {EMBED_EDIT}", ex);

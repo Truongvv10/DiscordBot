@@ -212,7 +212,10 @@ namespace APP.Utils {
                     case CommandEnum.EMBED_EDIT:
                         components.Add(DefaultComponent().First());
                         components.Add(PlaceholderComponent(message).First());
-                        components.Add(new DiscordActionRowComponent(buttonComponent));
+                        var updateComponent = new List<DiscordComponent> {
+                            new DiscordButtonComponent(ButtonStyle.Primary, Identity.BUTTON_UPDATE, "Update"),
+                            new DiscordButtonComponent(ButtonStyle.Danger, Identity.BUTTON_CANCEL, "Cancel", hidden)};
+                        components.Add(new DiscordActionRowComponent(updateComponent));
                         break;
 
                     case CommandEnum.EVENTS_CREATE:

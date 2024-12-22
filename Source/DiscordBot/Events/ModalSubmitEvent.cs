@@ -64,7 +64,7 @@ namespace APP.Events {
             var channel = await discordUtil.GetChannelByIdAsync(e.Interaction.Guild, ulong.Parse(data[1]));
             var country = int.TryParse(data[2], out int result) ? (CountryUtil.GetCountryName(result) ?? "Invalid") : "Invalid";
             var timezone = (TimeZoneEnum)int.Parse(data[3]);
-            var birthday = DateTime.ParseExact(data[4], "dd/MM/yyyy", null, System.Globalization.DateTimeStyles.None);
+            var birthday = data[4];
             var pronouns = (PronounsEnum)int.Parse(data[5]);
             var color = data[6];
             var template = await dataService.GetTemplateAsync(e.Interaction.Guild.Id, TemplateMessage.INTRODUCTION);
@@ -74,17 +74,22 @@ namespace APP.Events {
 
             Console.WriteLine(string.Join(", ", e.Interaction.Data.Values));
 
-            embed.AddField("Country", country);
-            embed.AddField("Birthday", await DateTimeUtil.TranslateToDynamicTimestamp(birthday, timezone.ToString(), TimestampEnum.SHORT_DATE));
-            embed.AddField("Pronouns", pronouns.GetEnumChoiceName());
-            embed.AddField("Introduction", description, false);
+            message.AddData($"{Placeholder.CUSTOM}.introduction.country", country);
+            message.AddData($"{Placeholder.CUSTOM}.introduction.birthday", birthday);
+            message.AddData($"{Placeholder.CUSTOM}.introduction.pronouns", pronouns.GetEnumChoiceName());
+            message.AddData($"{Placeholder.CUSTOM}.introduction.text", description);
+
+            embed.AddField("Country", $"{{{Placeholder.CUSTOM}.introduction.country}}");
+            embed.AddField("Birthday", $"{{{Placeholder.CUSTOM}.introduction.birthday}}");
+            embed.AddField("Pronouns", $"{{{Placeholder.CUSTOM}.introduction.pronouns}}");
+            embed.AddField("Introduction", $"{{{Placeholder.CUSTOM}.introduction.text}}", false);
             embed.WithColor(color);
 
             message.GuildId = e.Interaction.Guild.Id;
             message.ChannelId = channel.Id;
 
             await discordUtil.CreateMessageToChannelAsync(CommandEnum.INTRODUCTION, e.Interaction, message, channel);
-            await discordUtil.SendActionMessage(e.Interaction, TemplateMessage.ACTION_SUCCESS, $"created introduction");
+            await discordUtil.SendActionMessage(e.Interaction, TemplateMessage.ACTION_SUCCESS, $"Successfully created introduction.");
         }
 
         private async Task UseEmbed(ModalSubmitEventArgs e) {
