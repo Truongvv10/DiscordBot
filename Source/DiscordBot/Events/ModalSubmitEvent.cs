@@ -72,8 +72,6 @@ namespace APP.Events {
             var description = filter.CensorText(e.Values.Values.First().ToString());
             var embed = message.Embed;
 
-            Console.WriteLine(string.Join(", ", e.Interaction.Data.Values));
-
             message.AddData($"{Placeholder.CUSTOM}.introduction.country", country);
             message.AddData($"{Placeholder.CUSTOM}.introduction.birthday", birthday);
             message.AddData($"{Placeholder.CUSTOM}.introduction.pronouns", pronouns.GetEnumChoiceName());

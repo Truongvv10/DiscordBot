@@ -108,7 +108,7 @@ namespace APP.Commands.Slash {
             }
         }
 
-        [SlashCommand(INTRODUCTION, "Introduce yourself to the server. Once the command is executed, a form will popup to introduce yourself.")]
+        [SlashCommand(INTRODUCTION, "Introduce yourself to the server.")]
         [SlashCooldown(9999, 60, SlashCooldownBucketType.Guild)]
         public async Task Introduction(InteractionContext ctx,
             [Autocomplete(typeof(CountryChoiceProvider))][Option("country", "Which country are you from?")] string country,
@@ -136,7 +136,6 @@ namespace APP.Commands.Slash {
                 var channelId = settings.IntroductionChannel ?? throw new CommandException($"Introduction was not setup yet.");
                 var channel = await DiscordUtil.GetChannelByIdAsync(ctx.Guild, channelId) ?? throw new CommandException($"Introduction was not setup yet.");
                 var id = $"{Identity.MODAL_INTRODUCTION};{channelId};{CountryUtil.GetCountryCode(country)};{(int)timeZone};{parsedBirthdayDate.ToString("dd/MM/yyyy")};{(int)pronouns};{color}";
-                Console.WriteLine(id);
 
                 // Create embed message
                 var modal = new DiscordInteractionResponseBuilder();
