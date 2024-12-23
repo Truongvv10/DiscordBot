@@ -85,7 +85,7 @@ namespace APP.Commands.Slash {
                 message.SetData(Placeholder.DATE_END, date.ToString("dd/MM/yyyy HH:mm"));
 
                 // Create embed message
-                await DiscordUtil.CreateMessageAsync(CommandEnum.NITRO, ctx.Interaction, message, ctx.Channel.Id);
+                await DiscordUtil.CreateMessageAsync(CommandEnum.NITRO, ctx.Interaction, message);
 
             } catch (Exception ex) {
                 throw new CommandException($"An error occured using the command: /{NITRO}", ex);
@@ -101,7 +101,7 @@ namespace APP.Commands.Slash {
                 var message = template!.Message;
 
                 // Create embed message
-                await DiscordUtil.CreateMessageAsync(CommandEnum.TEMPLATES, ctx.Interaction, message, ctx.Channel.Id, true);
+                await DiscordUtil.CreateMessageAsync(CommandEnum.TEMPLATES, ctx.Interaction, message, true);
 
             } catch (Exception ex) {
                 throw new CommandException($"An error occured using the command: /{TEMPLATES}", ex);

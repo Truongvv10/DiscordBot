@@ -146,13 +146,13 @@ namespace APP.Events {
                     case Identity.SELECTION_IMAGE:
                         embed.Image = data[Identity.MODAL_DATA_IMAGE];
                         await e.Interaction.CreateResponseAsync(InteractionResponseType.DeferredMessageUpdate);
-                        await discordUtil.ModifyMessageAsync(message.Type, e.Interaction, message, (ulong)message.ChannelId!, message.IsEphemeral);
+                        await discordUtil.ModifyMessageAsync(message.Type, e.Interaction, message, message.IsEphemeral);
                         return;
 
                     case Identity.SELECTION_THUMBNAIL:
                         embed.Thumbnail = data[Identity.MODAL_DATA_THUMBNAIL];
                         await e.Interaction.CreateResponseAsync(InteractionResponseType.DeferredMessageUpdate);
-                        await discordUtil.ModifyMessageAsync(message.Type, e.Interaction, message, (ulong)message.ChannelId!, message.IsEphemeral);
+                        await discordUtil.ModifyMessageAsync(message.Type, e.Interaction, message, message.IsEphemeral);
                         return;
 
                     case Identity.SELECTION_PINGROLE:
@@ -224,7 +224,7 @@ namespace APP.Events {
                         templateUseMessage.ChannelId = message.ChannelId;
                         templateUseMessage.IsEphemeral = message.IsEphemeral;
                         templateUseMessage.Childs = message.Childs;
-                        await discordUtil.ModifyMessageAsync(templateUseMessage.Type, e.Interaction, templateUseMessage, templateUseMessage.ChannelId, templateUseMessage.IsEphemeral);
+                        await discordUtil.ModifyMessageAsync(templateUseMessage.Type, e.Interaction, templateUseMessage, templateUseMessage.IsEphemeral);
                         return;
 
                     default:
@@ -416,7 +416,7 @@ namespace APP.Events {
                 message.AddData(Placeholder.TIMEZONE, timeZone);
                 message.AddData(Placeholder.DATE_START, parsedTime.ToString("dd/MM/yyyy HH:mm"));
 
-                await discordUtil.CreateMessageAsync(CommandEnum.TIMESTAMP, e.Interaction, message, e.Interaction.Channel.Id, message.IsEphemeral);
+                await discordUtil.CreateMessageAsync(CommandEnum.TIMESTAMP, e.Interaction, message, message.IsEphemeral);
 
             } catch (UtilException ex) {
                 throw new EventException(ex.Message);

@@ -62,6 +62,9 @@ namespace APP.Events {
                     case Identity.BUTTON_CHANNEL:
                         await e.Interaction.CreateResponseAsync(InteractionResponseType.DeferredMessageUpdate);
                         var channel = await discordUtil.GetChannelByIdAsync(e.Guild, message.ChannelId!);
+                        if (message.Data.ContainsKey(Identity.INTERNAL_SEND_CHANNEL)) {
+                            channel = await discordUtil.GetChannelByIdAsync(e.Guild, ulong.Parse(message.Data[Identity.INTERNAL_SEND_CHANNEL]));
+                        }
                         var response = discordUtil.ResolveImageAttachment(translated);
                         if (!string.IsNullOrWhiteSpace(pingRoles)) response.WithContent(pingRoles);
                         var sentMessage = await channel.SendMessageAsync(response);

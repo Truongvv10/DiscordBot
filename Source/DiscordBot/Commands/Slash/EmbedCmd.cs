@@ -43,8 +43,7 @@ namespace APP.Commands.Slash {
                 // Build the embed message with default values
                 var template = await DataService.GetTemplateAsync(ctx.Guild.Id, TemplateMessage.EMBED);
                 var message = template!.Message;
-                message.ChannelId = channel.Id;
-                message.Sender = ctx.User.Id;
+                message.AddData(Identity.INTERNAL_SEND_CHANNEL, channel.Id.ToString());
                 message.Type = CommandEnum.EMBED_CREATE;
 
                 // Add the optional values
@@ -53,7 +52,7 @@ namespace APP.Commands.Slash {
                 if (pingrole is not null) message.AddRole(pingrole.Id);
 
                 // Create the embed message
-                await DiscordUtil.CreateMessageAsync(CommandEnum.EMBED_CREATE, ctx.Interaction, message, channel.Id, hidden);
+                await DiscordUtil.CreateMessageAsync(CommandEnum.EMBED_CREATE, ctx.Interaction, message, hidden);
 
             } catch (Exception ex) {
                 throw new CommandException($"An error occured using the command: /{EMBED} {EMBED_CREATE}", ex);
@@ -72,10 +71,7 @@ namespace APP.Commands.Slash {
                     var message = await DataService.GetMessageAsync(ctx.Guild.Id, messageid) ?? throw new CommandException($"Message with id \"{id}\" in guild \"{ctx.Guild.Id}\" was not found.");
                     var copy = message.DeepClone();
                     copy.Type = CommandEnum.EMBED_EDIT;
-                    copy.Sender = ctx.User.Id;
-                    copy.ChannelId = ctx.Channel.Id;
-                    copy.GuildId = ctx.Guild.Id;
-                    await DiscordUtil.CreateMessageAsync(CommandEnum.EMBED_EDIT, ctx.Interaction, copy, copy.ChannelId!, false);
+                    await DiscordUtil.CreateMessageAsync(CommandEnum.EMBED_EDIT, ctx.Interaction, copy, false);
                 }
             } catch (Exception ex) {
                 throw new CommandException($"An error occured using the command: /{EMBED} {EMBED_EDIT}", ex);
@@ -93,7 +89,7 @@ namespace APP.Commands.Slash {
                 var message = template!.Message;
 
                 // Create embed message
-                await DiscordUtil.CreateMessageAsync(CommandEnum.TEMPLATES, ctx.Interaction, message, ctx.Channel.Id, true);
+                await DiscordUtil.CreateMessageAsync(CommandEnum.TEMPLATES, ctx.Interaction, message, true);
 
             } catch (Exception ex) {
                 throw new CommandException($"An error occured using the command: /{EMBED_TEMPLATES}", ex);

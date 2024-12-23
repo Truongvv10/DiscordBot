@@ -148,5 +148,9 @@
         public const string MODAL_DATA_INTRODUCTION_PRONOUNCE = $"{MODAL_DATA_INTRODUCTION}.pronounce";
         public const string MODAL_DATA_INTRODUCTION_TEXT = $"{MODAL_DATA_INTRODUCTION}.text";
         #endregion
+
+        #region Internal
+        public const string INTERNAL_SEND_CHANNEL = $"{PREFIX}.internal.send.channel";
+        #endregion
     }
 }

@@ -43,8 +43,7 @@ namespace APP.Commands.Slash {
                 // Build the embed message with default values
                 var template = await DataService.GetTemplateAsync(ctx.Guild.Id, TemplateMessage.EVENT);
                 var message = template!.Message;
-                message.ChannelId = channel.Id;
-                message.Sender = ctx.User.Id;
+                message.AddData(Identity.INTERNAL_SEND_CHANNEL, channel.Id.ToString());
                 message.Type = CommandEnum.EVENTS_CREATE;
 
                 // Set the values
@@ -59,7 +58,7 @@ namespace APP.Commands.Slash {
                 if (pingrole is not null) message.AddRole(pingrole.Id);
 
                 // Create the embed message
-                await DiscordUtil.CreateMessageAsync(CommandEnum.EVENTS_SETUP, ctx.Interaction, message, channel.Id, hidden);
+                await DiscordUtil.CreateMessageAsync(CommandEnum.EVENTS_SETUP, ctx.Interaction, message, hidden);
             } catch (Exception ex) {
                 throw new CommandException($"Embed.UseEmbedCommand: {ex}");
             }

@@ -29,25 +29,23 @@ namespace APP.Utils {
         }
         #endregion
 
-        public async Task CreateMessageAsync(CommandEnum type, DiscordInteraction interaction, Message message, ulong channelId, bool hidden = false) {
+        public async Task CreateMessageAsync(CommandEnum type, DiscordInteraction interaction, Message message, bool hidden = false) {
             try {
                 // Start the stopwatch
                 Stopwatch stopwatch = Stopwatch.StartNew();
+
+                // Set the guild and channel id
+                message.GuildId = interaction.Guild.Id;
+                message.ChannelId = interaction.Channel.Id;
+                message.Sender = interaction.User.Id;
 
                 // Translate the placeholders
                 var translated = message.DeepClone();
                 await translated.TranslatePlaceholders(interaction, dataService);
 
                 // Create the response
-                var response = await CreateResponseAsync(type, interaction, translated, channelId, hidden);
-                if (interaction.Channel.Id == channelId) {
-                    await interaction.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, response);
-                } else {
-                    var channel = await GetChannelByIdAsync(interaction.Guild, channelId);
-                    foreach (var embed in response.Embeds) {
-                        await channel.SendMessageAsync(response.Content, embed);
-                    }
-                }
+                var response = await CreateResponseAsync(type, interaction, translated, hidden);
+                await interaction.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, response);
 
                 // Stop the stopwatch and log the elapsed time
                 stopwatch.Stop();
@@ -77,12 +75,17 @@ namespace APP.Utils {
                 // Start the stopwatch
                 Stopwatch stopwatch = Stopwatch.StartNew();
 
+                // Set the guild and channel id
+                message.GuildId = interaction.Guild.Id;
+                message.ChannelId = interaction.Channel.Id;
+                message.Sender = interaction.User.Id;
+
                 // Translate the placeholders
                 var translated = message.DeepClone();
                 await translated.TranslatePlaceholders(interaction, dataService);
 
                 // Create the response
-                var response = await CreateResponseAsync(type, interaction, translated, channel.Id);
+                var response = await CreateResponseAsync(type, interaction, translated);
                 DiscordMessage original;
                 if (response.Embeds.Count() == 0) {
                     original = await channel.SendMessageAsync(response.Content);
@@ -118,6 +121,11 @@ namespace APP.Utils {
                     // Start the stopwatch
                     Stopwatch stopwatch = Stopwatch.StartNew();
 
+                    // Set the guild and channel id
+                    message.GuildId = interaction.Guild.Id;
+                    message.ChannelId = interaction.Channel.Id;
+                    message.Sender = interaction.User.Id;
+
                     // Translate the placeholders
                     var translated = message.DeepClone();
                     await translated.TranslatePlaceholders(interaction, dataService);
@@ -125,7 +133,7 @@ namespace APP.Utils {
 
                     // Create the response
                     if (isDeferMessageUpdate) await interaction.CreateResponseAsync(InteractionResponseType.DeferredMessageUpdate);
-                    var response = await CreateResponseAsync(message.Type, interaction, translated, message.ChannelId!, message.IsEphemeral);
+                    var response = await CreateResponseAsync(message.Type, interaction, translated, message.IsEphemeral);
                     var original = await interaction.GetOriginalResponseAsync();
                     await original.ModifyAsync(new DiscordMessageBuilder()
                         .WithContent(response.Content)
@@ -149,7 +157,7 @@ namespace APP.Utils {
             }
         }
 
-        public async Task ModifyMessageAsync(CommandEnum type, DiscordInteraction interaction, Message message, ulong channelId, bool hidden = false) {
+        public async Task ModifyMessageAsync(CommandEnum type, DiscordInteraction interaction, Message message, bool hidden = false) {
             try {
                 // Start the stopwatch
                 Stopwatch stopwatch = Stopwatch.StartNew();
@@ -159,7 +167,7 @@ namespace APP.Utils {
                 await translated.TranslatePlaceholders(interaction, dataService);
                 var embed = translated.Embed;
 
-                var response = await CreateResponseAsync(type, interaction, translated, message.ChannelId!, message.IsEphemeral);
+                var response = await CreateResponseAsync(type, interaction, translated, message.IsEphemeral);
                 var original = await interaction.GetOriginalResponseAsync();
                 await original.ModifyAsync(new DiscordMessageBuilder()
                     .WithContent(response.Content)
@@ -185,11 +193,14 @@ namespace APP.Utils {
             }
         }
 
-        private async Task<DiscordInteractionResponseBuilder> CreateResponseAsync(CommandEnum type, DiscordInteraction interaction, Message message, ulong toChannelId, bool hidden = false) {
+        private async Task<DiscordInteractionResponseBuilder> CreateResponseAsync(CommandEnum type, DiscordInteraction interaction, Message message, bool hidden = false) {
             try {
 
                 // Get discord channel through channel id
-                DiscordChannel channel = await GetChannelByIdAsync(interaction.Guild, toChannelId);
+                DiscordChannel channel = await GetChannelByIdAsync(interaction.Guild, message.ChannelId);
+                if (message.Data.ContainsKey(Identity.INTERNAL_SEND_CHANNEL)) {
+                    channel = await GetChannelByIdAsync(interaction.Guild, ulong.Parse(message.Data[Identity.INTERNAL_SEND_CHANNEL]));
+                }
 
                 // List of components
                 List<DiscordActionRowComponent> components = new();
@@ -481,7 +492,7 @@ namespace APP.Utils {
             var message = (await dataService.GetTemplateAsync(interaction.Guild.Id, template.ToString().ToUpper()))!.Message;
             message.SetData(Placeholder.TEXT1, title);
             message.SetData(Placeholder.TEXT2, text);
-            await CreateMessageAsync(CommandEnum.NONE, interaction, message, interaction.Channel.Id, true);
+            await CreateMessageAsync(CommandEnum.NONE, interaction, message, true);
         }
     }
 }
