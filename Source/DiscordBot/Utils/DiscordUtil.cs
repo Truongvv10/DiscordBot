@@ -77,7 +77,7 @@ namespace APP.Utils {
 
                 // Set the guild and channel id
                 message.GuildId = interaction.Guild.Id;
-                message.ChannelId = interaction.Channel.Id;
+                message.ChannelId = channel.Id;
                 message.Sender = interaction.User.Id;
 
                 // Translate the placeholders

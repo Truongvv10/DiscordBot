@@ -70,6 +70,7 @@ namespace APP.Commands.Slash {
                 if (ulong.TryParse(id, out ulong messageid)) {
                     var message = await DataService.GetMessageAsync(ctx.Guild.Id, messageid) ?? throw new CommandException($"Message with id \"{id}\" in guild \"{ctx.Guild.Id}\" was not found.");
                     var copy = message.DeepClone();
+                    copy.AddChild(ulong.Parse(id), message.ChannelId);
                     copy.Type = CommandEnum.EMBED_EDIT;
                     await DiscordUtil.CreateMessageAsync(CommandEnum.EMBED_EDIT, ctx.Interaction, copy, false);
                 }
