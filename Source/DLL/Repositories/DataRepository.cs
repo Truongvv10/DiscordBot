@@ -33,14 +33,14 @@ namespace DLL.Repositories {
             if (message.MessageId == 0)
                 throw new ServiceException($"Message Id can not be null.");
             await dataContext.Messages.AddAsync(message);
-            await dataContext.SaveChangesAsync();
+            await CtxSaveAndClear();
             cacheData.AddMessage(message.GuildId, message);
             return message;
         }
 
         public async Task AddServerAsync(ulong guildId) {
             await dataContext.AddAsync(new Guild(guildId));
-            await dataContext.SaveChangesAsync();
+            await CtxSaveAndClear();
         }
 
         public async Task<Settings> AddSettingsAsync(Settings settings) {
@@ -49,14 +49,14 @@ namespace DLL.Repositories {
             if (settings.GuildId == 0)
                 throw new ServiceException($"Guild Id can not be null.");
             await dataContext.Settings.AddAsync(settings);
-            await dataContext.SaveChangesAsync();
+            await CtxSaveAndClear();
             cacheData.AddSettings(settings.GuildId, settings);
             return settings;
         }
 
         public async Task<Template> AddTemplateAsync(Template template) {
             await dataContext.Templates.AddAsync(template);
-            await dataContext.SaveChangesAsync();
+            await CtxSaveAndClear();
             return template;
         }
 
