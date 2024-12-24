@@ -33,6 +33,7 @@ namespace APP.Commands.Slash {
         public required DiscordUtil DiscordUtil { private get; set; }
         #endregion
 
+        #region Command: Send
         [SlashCommand(SEND, "Send a plain message")]
         [RequirePermission(CommandEnum.MESSAGE)]
         public async Task Timestamp(InteractionContext ctx,
@@ -53,7 +54,9 @@ namespace APP.Commands.Slash {
                 throw new CommandException($"An error occured using the command: /{SEND}", ex);
             }
         }
+        #endregion
 
+        #region Command: Timestamp
         [SlashCommand(TIMESTAMP, "Generate dynamic discord timestamp")]
         [RequirePermission(CommandEnum.NONE)]
         public async Task Timestamp(InteractionContext ctx,
@@ -72,7 +75,9 @@ namespace APP.Commands.Slash {
                 throw new CommandException($"An error occured using the command: /{TIMESTAMP}", ex);
             }
         }
+        #endregion
 
+        #region Command: Nitro
         [SlashCommand(NITRO, "Create nitro giveaway")]
         [RequirePermission(CommandEnum.NITRO)]
         public async Task Nitro(InteractionContext ctx,
@@ -91,7 +96,9 @@ namespace APP.Commands.Slash {
                 throw new CommandException($"An error occured using the command: /{NITRO}", ex);
             }
         }
+        #endregion
 
+        #region Command: Templates
         [SlashCommand(TEMPLATES, "View all available templates")]
         [RequirePermission(CommandEnum.TEMPLATES, [Permissions.ManageChannels, Permissions.ManageMessages])]
         public async Task Templates(InteractionContext ctx) {
@@ -107,7 +114,9 @@ namespace APP.Commands.Slash {
                 throw new CommandException($"An error occured using the command: /{TEMPLATES}", ex);
             }
         }
+        #endregion
 
+        #region Command: Introduction
         [SlashCommand(INTRODUCTION, "Introduce yourself to the server.")]
         [SlashCooldown(9999, 60, SlashCooldownBucketType.Guild)]
         public async Task Introduction(InteractionContext ctx,
@@ -174,5 +183,6 @@ namespace APP.Commands.Slash {
                 throw new CommandException($"An error occured using the command: /{INTRODUCTION}", ex);
             }
         }
+        #endregion
     }
 }
