@@ -38,6 +38,7 @@ namespace APP.Utils {
                 throw new DomainException("An error occurred while building embed", ex);
             }
         }
+
         public static async Task<Message> TranslatePlaceholders(this Message message, DiscordInteraction interaction, IDataRepository data) {
             try {
 
@@ -45,49 +46,49 @@ namespace APP.Utils {
 
                 for (int i = 0; i < 2; i++) {
                     if (!string.IsNullOrWhiteSpace(message.Content))
-                        message.Content = await Placeholder.Translate(message.Content, message.Data, interaction, data);
+                        message.Content = await Placeholder.Translate(message.Content, message, interaction, data);
 
                     if (embed != null) {
                         if (!string.IsNullOrWhiteSpace(embed.Title))
-                            embed.Title = await Placeholder.Translate(embed.Title, message.Data, interaction, data);
+                            embed.Title = await Placeholder.Translate(embed.Title, message, interaction, data);
 
                         if (!string.IsNullOrWhiteSpace(embed.TitleUrl))
-                            embed.TitleUrl = await Placeholder.Translate(embed.TitleUrl, message.Data, interaction, data);
+                            embed.TitleUrl = await Placeholder.Translate(embed.TitleUrl, message, interaction, data);
 
                         if (!string.IsNullOrWhiteSpace(embed.Author))
-                            embed.Author = await Placeholder.Translate(embed.Author, message.Data, interaction, data);
+                            embed.Author = await Placeholder.Translate(embed.Author, message, interaction, data);
 
                         if (!string.IsNullOrWhiteSpace(embed.AuthorUrl))
-                            embed.AuthorUrl = await Placeholder.Translate(embed.AuthorUrl, message.Data, interaction, data);
+                            embed.AuthorUrl = await Placeholder.Translate(embed.AuthorUrl, message, interaction, data);
 
                         if (!string.IsNullOrWhiteSpace(embed.AuthorLink))
-                            embed.AuthorLink = await Placeholder.Translate(embed.AuthorLink, message.Data, interaction, data);
+                            embed.AuthorLink = await Placeholder.Translate(embed.AuthorLink, message, interaction, data);
 
                         if (!string.IsNullOrWhiteSpace(embed.Thumbnail))
-                            embed.Thumbnail = await Placeholder.Translate(embed.Thumbnail, message.Data, interaction, data);
+                            embed.Thumbnail = await Placeholder.Translate(embed.Thumbnail, message, interaction, data);
 
                         if (!string.IsNullOrWhiteSpace(embed.Image))
-                            embed.Image = await Placeholder.Translate(embed.Image, message.Data, interaction, data);
+                            embed.Image = await Placeholder.Translate(embed.Image, message, interaction, data);
 
                         if (!string.IsNullOrWhiteSpace(embed.Author))
-                            embed.Author = await Placeholder.Translate(embed.Author, message.Data, interaction, data);
+                            embed.Author = await Placeholder.Translate(embed.Author, message, interaction, data);
 
                         if (!string.IsNullOrWhiteSpace(embed.Description))
-                            embed.Description = await Placeholder.Translate(embed.Description, message.Data, interaction, data);
+                            embed.Description = await Placeholder.Translate(embed.Description, message, interaction, data);
 
                         if (!string.IsNullOrWhiteSpace(embed.Footer))
-                            embed.Footer = await Placeholder.Translate(embed.Footer, message.Data, interaction, data);
+                            embed.Footer = await Placeholder.Translate(embed.Footer, message, interaction, data);
 
                         if (!string.IsNullOrWhiteSpace(embed.FooterUrl))
-                            embed.FooterUrl = await Placeholder.Translate(embed.FooterUrl, message.Data, interaction, data);
+                            embed.FooterUrl = await Placeholder.Translate(embed.FooterUrl, message, interaction, data);
 
                         if (embed.Fields.Count > 0) {
                             var fields = embed.Fields.ToList();
                             embed.ClearFields();
                             foreach (var field in fields) {
                                 embed.AddField(
-                                    await Placeholder.Translate(field.Item1, message.Data, interaction, data),
-                                    await Placeholder.Translate(field.Item2, message.Data, interaction, data),
+                                    await Placeholder.Translate(field.Item1, message, interaction, data),
+                                    await Placeholder.Translate(field.Item2, message, interaction, data),
                                     field.Item3);
                             }
                         }
@@ -100,6 +101,7 @@ namespace APP.Utils {
                 throw new DomainException("An error occurred while building embed", ex);
             }
         }
+
         public static string GetEnumChoiceName(this Enum value) {
             FieldInfo field = value.GetType().GetField(value.ToString());
             if (field != null) {

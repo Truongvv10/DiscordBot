@@ -51,7 +51,8 @@ namespace APP.Utils {
                 LIST_USERS, LIST_REACTIONS, LIST_TEMPLATES, LIST_TEMPLATES_GUILD});
         }
 
-        public static async Task<string> Translate(string input, Dictionary<string, string> data, DiscordInteraction interaction, IDataRepository dataService) {
+        public static async Task<string> Translate(string input, Message message, DiscordInteraction interaction, IDataRepository dataService) {
+            var data = message.Data;
             var extractedPlaceholders = ExtractPlaceholders(input);
             foreach (var placeholder in extractedPlaceholders) {
                 string toReplace = $"{{{placeholder}}}";
@@ -83,6 +84,18 @@ namespace APP.Utils {
                         break;
                     case GUILD_ID:
                         input = input.Replace(toReplace, interaction.Guild.Id.ToString());
+                        break;
+                    case LIST_USERS:
+                        if (message.Users.Count() == 0) {
+                            input = input.Replace(toReplace, "No one...");
+                        } else {
+                            var userTasks = message.Users.Select(async x => await interaction.Guild.GetMemberAsync(x));
+                            var userResults = await Task.WhenAll(userTasks); // Run the tasks in parallel and wait for completion
+                            var users = userResults.Select(x => x.Username)
+                                                   .Aggregate("", (current, next) => string.IsNullOrEmpty(current) ? next : current + ", " + next);
+                            input = input.Replace(toReplace, users);
+
+                        }
                         break;
                     default:
                         if (data.TryGetValue(placeholder, out var replacement)) {

@@ -10,6 +10,7 @@ using Newtonsoft.Json;
 using Microsoft.VisualBasic;
 using BLL.Exceptions;
 using System.Runtime.InteropServices;
+using System.Linq;
 
 namespace APP.Events {
     public class ButtonClickEvent {
@@ -31,14 +32,52 @@ namespace APP.Events {
             if (e.Interaction.Data.ComponentType == ComponentType.Button) {
                 if (e.Id.Contains(Identity.BUTTON_EMBED)) await UseEmbed(sender, e);
             }
-            //if (e.Interaction.Data.ComponentType == ComponentType.Button) {
-            //    if (e.Id.Contains(Identity.BUTTON_TEMPLATES)) await UseTemplate(e);
-            //}
             if (e.Interaction.Data.ComponentType == ComponentType.Button) {
                 if (e.Id.Contains(Identity.BUTTON_NITRO)) await UseNitro(e);
             }
             if (e.Interaction.Data.ComponentType == ComponentType.Button) {
                 if (e.Id.Contains(Identity.BUTTON_EVENT)) await UseEvent(e);
+            }
+            if (e.Interaction.Data.ComponentType == ComponentType.Button) {
+                if (e.Id.Contains(Identity.BUTTON_INACTIVITY)) await UseInactivity(e);
+            }
+        }
+
+        private async Task UseInactivity(ComponentInteractionCreateEventArgs e) {
+            try {
+                // Get the message
+                var message = await dataService.GetMessageAsync(e.Guild.Id, e.Message.Id) ?? throw new Exception($"Message does not exists");
+                var embed = message.Embed;
+                var user = e.Interaction.User;
+
+                // Translate the placeholders
+                switch (e.Id) {
+                    case Identity.BUTTON_INACTIVITY_SEEN:
+                        if (message.Users.Contains(user.Id))
+                            message.RemoveUser(user.Id);
+                        else message.AddUser(user.Id);
+                        await discordUtil.UpdateMessageAsync(e.Interaction, message);
+                        break;
+                    case Identity.BUTTON_INACTIVITY_EDIT:
+                        if (message.Sender == e.User.Id) {
+                            var modal = new DiscordInteractionResponseBuilder();
+                            modal.WithTitle($"INACTIVE NOTICE")
+                                .WithCustomId(Identity.MODAL_INACTIVITY)
+                                .AddComponents(new TextInputComponent("START DATE", Identity.MODAL_DATA_INACTIVITY_START, "day/month/year", message.Data[$"{Placeholder.CUSTOM}.inactivity.start"], true))
+                                .AddComponents(new TextInputComponent("END DATE", Identity.MODAL_DATA_INACTIVITY_END, "day/month/year", message.Data[$"{Placeholder.CUSTOM}.inactivity.end"], true))
+                                .AddComponents(new TextInputComponent("REASON", Identity.MODAL_DATA_INACTIVITY_REASON, "Reason of inactivity...", message.Data[$"{Placeholder.CUSTOM}.inactivity.reason"], true, TextInputStyle.Paragraph, 0, 2048));
+                            await e.Interaction.CreateResponseAsync(InteractionResponseType.Modal, modal);
+                            dataService.AddCacheModalData(e.Guild.Id, e.User.Id, message);
+                        } else {
+                            await e.Interaction.CreateResponseAsync(InteractionResponseType.DeferredMessageUpdate);
+                            await discordUtil.SendActionMessage(e.Interaction, TemplateMessage.ACTION_FAILED, "This is not your inactivity notice.");
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            } catch (Exception ex) {
+                throw new EventException("An error occured using the button for inactivity", ex);
             }
         }
 
@@ -47,7 +86,7 @@ namespace APP.Events {
                 // Get the message
                 var messageId = e.Message.Id;
                 var guildId = e.Guild.Id;
-                var message = await dataService.GetMessageAsync(e.Guild.Id, messageId) ?? throw new Exception($"nawinwinr");
+                var message = await dataService.GetMessageAsync(e.Guild.Id, messageId) ?? throw new Exception($"Message does not exists");
 
                 // Translate the placeholders
                 var translated = message.DeepClone();

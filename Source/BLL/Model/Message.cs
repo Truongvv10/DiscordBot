@@ -21,6 +21,7 @@ namespace BLL.Model {
         private Dictionary<string, string> data = new();
         private Dictionary<ulong, ulong> childs = new();
         private List<ulong> roles = new();
+        private List<ulong> users = new();
         private Embed embed;
         #endregion
 
@@ -118,6 +119,13 @@ namespace BLL.Model {
             set => roles = value != null ? new List<ulong>(value) : new List<ulong>();
         }
 
+        [Column("users")]
+        [JsonProperty("users", NullValueHandling = NullValueHandling.Ignore)]
+        public List<ulong> Users {
+            get => users;
+            set => users = value != null ? new List<ulong>(value) : new List<ulong>();
+        }
+
         [Column("type")]
         [JsonProperty("type", NullValueHandling = NullValueHandling.Ignore)]
         public CommandEnum Type {
@@ -137,7 +145,7 @@ namespace BLL.Model {
             this.type = type;
             return this;
         }
-        public Message WithContext(string content) {
+        public Message WithContent(string content) {
             this.content = content;
             return this;
         }
@@ -212,6 +220,29 @@ namespace BLL.Model {
         }
         public Message ClearRoles() {
             roles.Clear();
+            return this;
+        }
+        public Message AddUser(ulong userId) {
+            users.Add(userId);
+            return this;
+        }
+        public Message SetUser(ulong userId) {
+            users.Clear();
+            users.Add(userId);
+            return this;
+        }
+        public Message SetUser(ulong[] userIds) {
+            users.Clear();
+            if (userIds.Count() > 0)
+                foreach (var id in userIds) users.Add(id);
+            return this;
+        }
+        public Message RemoveUser(ulong userId) {
+            users.Remove(userId);
+            return this;
+        }
+        public Message ClearUsers() {
+            users.Clear();
             return this;
         }
         public Message WithEmbed(Embed embed) {

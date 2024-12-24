@@ -34,6 +34,7 @@ namespace BLL.Interfaces {
         public bool AddModalData(ulong guildId, ulong userId, Message message);
         public bool SetModalData(ulong guildId, ulong userId, Message message);
         public Message GetModalData(ulong guildId, ulong userId);
+        public bool AnyModalData(ulong guildId, ulong userId);
 
         // Message Data
         public bool AnyMessage(ulong guildId, ulong messageId);

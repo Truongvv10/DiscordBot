@@ -86,12 +86,15 @@ namespace APP.Utils {
 
                 // Create the response
                 var response = await CreateResponseAsync(type, interaction, translated);
-                DiscordMessage original;
-                if (response.Embeds.Count() == 0) {
-                    original = await channel.SendMessageAsync(response.Content);
-                } else {
-                    original = await channel.SendMessageAsync(response.Content, response.Embeds.First());
-                }
+
+                // Build the message with components
+                var messageBuilder = new DiscordMessageBuilder()
+                    .WithContent(response.Content)
+                    .AddEmbeds(response.Embeds)
+                    .AddComponents(response.Components);
+
+                // Send the message
+                var original = await channel.SendMessageAsync(messageBuilder);
 
                 // Stop the stopwatch and log the elapsed time
                 stopwatch.Stop();
@@ -109,7 +112,6 @@ namespace APP.Utils {
                     $"{AnsiColor.BRIGHT_GREEN}-> Message creation took {AnsiColor.YELLOW}{stopwatch.ElapsedMilliseconds}ms " +
                     $"{AnsiColor.RESET}({original.Id}) " +
                     $"{AnsiColor.RESET}({interaction.User.Username})");
-
             } catch (Exception ex) {
                 throw new CommandException($"Embed.CreateMessageAsync: {ex.Message}", ex);
             }
@@ -117,40 +119,42 @@ namespace APP.Utils {
 
         public async Task UpdateMessageAsync(DiscordInteraction interaction, Message message, bool isDeferMessageUpdate = true) {
             try {
-                if (message.MessageId != null) {
-                    // Start the stopwatch
-                    Stopwatch stopwatch = Stopwatch.StartNew();
+                // Deferring the message update
+                if (isDeferMessageUpdate) await interaction.CreateResponseAsync(InteractionResponseType.DeferredMessageUpdate);
 
-                    // Set the guild and channel id
-                    message.GuildId = interaction.Guild.Id;
-                    message.ChannelId = interaction.Channel.Id;
-                    message.Sender = interaction.User.Id;
+                // Start the stopwatch
+                Stopwatch stopwatch = Stopwatch.StartNew();
 
-                    // Translate the placeholders
-                    var translated = message.DeepClone();
-                    await translated.TranslatePlaceholders(interaction, dataService);
-                    var embed = translated.Embed.Build();
+                // Set the guild and channel id
+                message.GuildId = interaction.Guild.Id;
+                message.ChannelId = interaction.Channel.Id;
+                message.Sender = interaction.User.Id;
 
-                    // Create the response
-                    if (isDeferMessageUpdate) await interaction.CreateResponseAsync(InteractionResponseType.DeferredMessageUpdate);
-                    var response = await CreateResponseAsync(message.Type, interaction, translated, message.IsEphemeral);
-                    var original = await interaction.GetOriginalResponseAsync();
-                    await original.ModifyAsync(new DiscordMessageBuilder()
-                        .WithContent(response.Content)
-                        .AddEmbeds(response.Embeds)
-                        .AddComponents(response.Components));
+                // Translate the placeholders
+                var translated = message.DeepClone();
+                await translated.TranslatePlaceholders(interaction, dataService);
+                var embed = translated.Embed.Build();
 
-                    // Stop the stopwatch and log the elapsed time
-                    stopwatch.Stop();
+                // Create the response
+                var response = await CreateResponseAsync(message.Type, interaction, translated, message.IsEphemeral);
+                var original = await interaction.GetOriginalResponseAsync();
+                await original.ModifyAsync(new DiscordMessageBuilder()
+                    .WithContent(response.Content)
+                    .AddEmbeds(response.Embeds)
+                    .AddComponents(response.Components));
 
-                    // Logger
-                    Console.WriteLine(
-                        $"{AnsiColor.RESET}[{DateTime.Now}] " +
-                        $"{AnsiColor.BRIGHT_GREEN}-> Message update took {AnsiColor.YELLOW}{stopwatch.ElapsedMilliseconds}ms " +
-                        $"{AnsiColor.RESET}({original.Id}) " +
-                        $"{AnsiColor.RESET}({interaction.User.Username})");
+                // Stop the stopwatch and log the elapsed time
+                stopwatch.Stop();
 
-                } else throw new UtilException($"Could not create response because message was null");
+                // Store the message
+                await dataService.UpdateMessageAsync(message);
+
+                // Logger
+                Console.WriteLine(
+                    $"{AnsiColor.RESET}[{DateTime.Now}] " +
+                    $"{AnsiColor.BRIGHT_GREEN}-> Message update took {AnsiColor.YELLOW}{stopwatch.ElapsedMilliseconds}ms " +
+                    $"{AnsiColor.RESET}({original.Id}) " +
+                    $"{AnsiColor.RESET}({interaction.User.Username})");
             } catch (Exception ex) {
                 Console.WriteLine(ex);
                 throw new UtilException($"Could not create response: {ex.Message}", ex);
@@ -227,6 +231,13 @@ namespace APP.Utils {
                             new DiscordButtonComponent(ButtonStyle.Primary, Identity.BUTTON_UPDATE, "Update"),
                             new DiscordButtonComponent(ButtonStyle.Danger, Identity.BUTTON_CANCEL, "Cancel", hidden)};
                         components.Add(new DiscordActionRowComponent(updateComponent));
+                        break;
+
+                    case CommandEnum.INACTIVITY:
+                        var inactivityComponent = new List<DiscordComponent> {
+                            new DiscordButtonComponent(ButtonStyle.Primary, Identity.BUTTON_INACTIVITY_SEEN, "Mark as seen"),
+                            new DiscordButtonComponent(ButtonStyle.Danger, Identity.BUTTON_INACTIVITY_EDIT, "Edit")};
+                        components.Add(new DiscordActionRowComponent(inactivityComponent));
                         break;
 
                     case CommandEnum.EVENTS_CREATE:

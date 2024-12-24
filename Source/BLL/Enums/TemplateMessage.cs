@@ -12,6 +12,7 @@ namespace BLL.Enums {
         NITRO = 3,
         NO_PERMISSION = 4,
         INTRODUCTION = 5,
+        INACTIVITY = 6,
 
         EVENT = 200,
 

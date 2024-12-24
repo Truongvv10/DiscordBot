@@ -11,6 +11,10 @@ using System;
 using APP.Enums;
 using APP.Services;
 using Notion.Client;
+using static NodaTime.TimeZones.TzdbZone1970Location;
+using static System.Net.Mime.MediaTypeNames;
+using System.Drawing;
+using System.Threading.Channels;
 
 namespace APP.Events {
     public class ModalSubmitEvent {
@@ -35,25 +39,46 @@ namespace APP.Events {
             // Check if the interaction type is a modal submit
             if (interactionType == InteractionType.ModalSubmit) {
 
-                // Check if the custom ID contains "embed modal"
                 if (modalId.Contains(Identity.MODAL_EMBED))
                     await UseEmbed(e);
 
-                // Check if the custom ID contains "event modal"
                 if (modalId.Contains(Identity.MODAL_EVENT))
                     await UseEvent(e);
 
-                // Check if the custom ID contains "placeholder modal"
                 if (modalId.Contains(Identity.MODAL_PLACEHOLDER))
                     await UsePlaceholder(e);
 
-                // Check if the custom ID contains "timestamp modal"
                 if (modalId.Contains(Identity.MODAL_TIMESTAMP))
                     await UseTimestamp(e);
 
                 if (modalId.Contains(Identity.MODAL_INTRODUCTION))
                     await UseIntroduction(e);
 
+                if (modalId.Contains(Identity.MODAL_INACTIVITY))
+                    await UseInactivity(e);
+            }
+        }
+
+        private async Task UseInactivity(ModalSubmitEventArgs e) {
+            // Saving data to cache
+            var message = dataService.GetCacheModalData(e.Interaction.Guild.Id, e.Interaction.User.Id);
+            var channel = await discordUtil.GetChannelByIdAsync(e.Interaction.Guild, ulong.Parse(message.Data[Identity.INTERNAL_SEND_CHANNEL]));
+            var start = e.Values[Identity.MODAL_DATA_INACTIVITY_START];
+            var end = e.Values[Identity.MODAL_DATA_INACTIVITY_END];
+            var reason = e.Values[Identity.MODAL_DATA_INACTIVITY_REASON];
+
+            message.AddData($"{Placeholder.CUSTOM}.inactivity.start", start);
+            message.AddData($"{Placeholder.CUSTOM}.inactivity.end", end);
+            message.AddData($"{Placeholder.CUSTOM}.inactivity.reason", reason);
+
+            var existingMessage = await discordUtil.GetMessageByIdAsync(channel, message.MessageId);
+            if (existingMessage != null) {
+                var timestamp = DateTimeUtil.ConvertDateTimeToDiscordTimestamp(DateTime.Now.ToString("dd/MM/yyyy HH:mm"), TimeZoneEnum.CET, TimeZoneEnum.CET);
+                message.WithContent($"**`Edited on`** {timestamp}");
+                await discordUtil.UpdateMessageAsync(e.Interaction, message);
+            } else {
+                await discordUtil.CreateMessageToChannelAsync(CommandEnum.INACTIVITY, e.Interaction, message, channel);
+                await discordUtil.SendActionMessage(e.Interaction, TemplateMessage.ACTION_SUCCESS, $"Successfully created inactivity notice.");
             }
         }
 

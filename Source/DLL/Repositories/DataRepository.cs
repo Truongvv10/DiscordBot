@@ -66,6 +66,10 @@ namespace DLL.Repositories {
             return template;
         }
 
+        public bool AnyCacheModalData(ulong guildId, ulong userId) {
+            return cacheData.AnyModalData(guildId, userId);
+        }
+
         public async Task<bool> AnyMessageAsync(ulong guildId, ulong messageId) {
             return await dataContext.Messages
                 .AsNoTracking()

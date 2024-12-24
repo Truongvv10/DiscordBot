@@ -54,6 +54,7 @@
         public const string BUTTON_TEMPLATE = $"{BUTTON_EMBED}.template";
         public const string BUTTON_UPDATE = $"{BUTTON_EMBED}.update";
         public const string BUTTON_CANCEL = $"{BUTTON_EMBED}.cancel";
+        public const string BUTTON_EDIT = $"{BUTTON_EMBED}.edit";
 
         // Button Templates
         public const string BUTTON_TEMPLATES = $"{PREFIX}.button.template";
@@ -69,6 +70,11 @@
         // Button Event
         public const string BUTTON_EVENT = $"{PREFIX}.button.event";
         public const string BUTTON_EVENT_SETUP = $"{BUTTON_EVENT}.setup";
+
+        // Button Inactivity
+        public const string BUTTON_INACTIVITY = $"{PREFIX}.button.inactivity";
+        public const string BUTTON_INACTIVITY_SEEN = $"{BUTTON_INACTIVITY}.seen";
+        public const string BUTTON_INACTIVITY_EDIT = $"{BUTTON_INACTIVITY}.edit";
         #endregion
 
         #region Modals
@@ -78,6 +84,7 @@
         public const string MODAL_TIMESTAMP = $"{PREFIX}.modal.timestamp";
         public const string MODAL_PLACEHOLDER = $"{PREFIX}.modal.placeholder";
         public const string MODAL_INTRODUCTION = $"{PREFIX}.modal.introduction";
+        public const string MODAL_INACTIVITY = $"{PREFIX}.modal.inactivity";
 
         // Modal Default
         private const string MODAL_DATA = $"{MODAL_EMBED}.component";
@@ -147,6 +154,12 @@
         public const string MODAL_DATA_INTRODUCTION_BIRTHDAY = $"{MODAL_DATA_INTRODUCTION}.birthday";
         public const string MODAL_DATA_INTRODUCTION_PRONOUNCE = $"{MODAL_DATA_INTRODUCTION}.pronounce";
         public const string MODAL_DATA_INTRODUCTION_TEXT = $"{MODAL_DATA_INTRODUCTION}.text";
+
+        // Modal Inactivity
+        private const string MODAL_DATA_INACTIVITY = $"{MODAL_INTRODUCTION}.component";
+        public const string MODAL_DATA_INACTIVITY_START = $"{MODAL_DATA_INACTIVITY}.start";
+        public const string MODAL_DATA_INACTIVITY_END = $"{MODAL_DATA_INACTIVITY}.end";
+        public const string MODAL_DATA_INACTIVITY_REASON = $"{MODAL_DATA_INACTIVITY}.reason";
         #endregion
 
         #region Internal

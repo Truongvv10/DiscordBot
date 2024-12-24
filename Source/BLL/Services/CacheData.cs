@@ -117,6 +117,9 @@ namespace BLL.Services {
         #endregion
 
         #region Modal Data
+        public bool AnyModalData(ulong guildId, ulong userId) {
+            return modalData.ContainsKey((guildId, userId));
+        }
         public Message GetModalData(ulong guildId, ulong userId) {
             if (modalData.ContainsKey((guildId, userId))) {
                 return modalData[(guildId, userId)];

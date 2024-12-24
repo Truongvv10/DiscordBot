@@ -95,25 +95,35 @@
     },
     "INACTIVITY": {
         "embed": {
-            "author": "{plchldr.user.name}",
-            "author_url": "{plchldr.user.avatarurl}",
             "color": "#d82b40",
-            "timestamp": false,
+            "author": "Inacitivity Notice",
+            "author_url": "https://cdn-icons-png.flaticon.com/512/249/249205.png",
+            "timestamp": true,
             "fields": [
                 {
-                    "Item1": "➡️ Start Date",
-                    "Item2": "> {plchldr.time.start}",
+                    "Item1": "User",
+                    "Item2": "```{data.user.name}```",
                     "Item3": true
                 },
                 {
-                    "Item1": "📅 End Date",
-                    "Item2": "> plchldr.time.end",
+                    "Item1": "Start Date",
+                    "Item2": "```{data.custom.inactivity.start}```",
                     "Item3": true
                 },
                 {
-                    "Item1": "✅ Count Down",
-                    "Item2": "> {plchldr.time.end.relative}",
+                    "Item1": "End Date",
+                    "Item2": "```{data.custom.inactivity.end}```",
                     "Item3": true
+                },
+                {
+                    "Item1": "Reason",
+                    "Item2": "```{data.custom.inactivity.reason}```",
+                    "Item3": false
+                },
+                {
+                    "Item1": "Seen By",
+                    "Item2": "```{data.list.users}```",
+                    "Item3": false
                 }
             ]
         },

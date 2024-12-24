@@ -15,7 +15,7 @@ namespace BLL.Interfaces {
         public Message GetCacheModalData(ulong guildId, ulong userId);
         public bool AddCacheModalData(ulong guildId, ulong userId, Message message);
         public bool SetCacheModalData(ulong guildId, ulong userId, Message message);
-
+        public bool AnyCacheModalData(ulong guildId, ulong userId);
         // Loading Data
         public Task LoadTemplatesAsync();
         public Task LoadTimeZonesAsync();

@@ -26,6 +26,7 @@ namespace APP.Commands.Slash {
         private const string NITRO = "NITRO";
         private const string TEMPLATES = "TEMPLATES";
         private const string INTRODUCTION = "INTRODUCTION";
+        private const string INACTIVITY = "INACTIVITY";
         #endregion
 
         #region Properties
@@ -177,6 +178,46 @@ namespace APP.Commands.Slash {
                 embed.WithColor(color!);
                 DataService.AddCacheModalData(ctx.Guild.Id, ctx.User.Id, message);
 
+            } catch (CommandException ex) {
+                await DiscordUtil.SendActionMessage(ctx.Interaction, TemplateMessage.ACTION_FAILED, ex.Message);
+            } catch (Exception ex) {
+                throw new CommandException($"An error occured using the command: /{INTRODUCTION}", ex);
+            }
+        }
+        #endregion
+
+        #region Command: Inactivity
+        [SlashCommand(INACTIVITY, "Give an inactivity notice.")]
+        public async Task Inactivity(InteractionContext ctx) {
+            try {
+                // Check if introduction channel is setup
+                var settings = await DataService.GetSettingsAsync(ctx.Guild.Id) ?? throw new CommandException($"Settings was not found.");
+                var channelId = settings.InactivityChannel ?? throw new CommandException($"Inactivity channel was not setup yet.");
+                var channel = await DiscordUtil.GetChannelByIdAsync(ctx.Guild, channelId) ?? throw new CommandException($"Inactivity channel was not setup yet.");
+
+                // Create modal
+                var date = DateTimeUtil.RoundDateTime(DateTime.Now);
+                var modal = new DiscordInteractionResponseBuilder();
+                modal.WithTitle($"{INACTIVITY} NOTICE")
+                    .WithCustomId(Identity.MODAL_INACTIVITY)
+                    .AddComponents(new TextInputComponent("START DATE", Identity.MODAL_DATA_INACTIVITY_START, "day/month/yea.", date.ToString("dd/MM/yyyy"), true))
+                    .AddComponents(new TextInputComponent("END DATE", Identity.MODAL_DATA_INACTIVITY_END, "day/month/year", date.ToString("dd/MM/yyyy"), true))
+                    .AddComponents(new TextInputComponent("REASON", Identity.MODAL_DATA_INACTIVITY_REASON, "Reason of inactivity...", null, true, TextInputStyle.Paragraph, 16, 2048));
+
+                // Create response model
+                await ctx.Interaction.CreateResponseAsync(InteractionResponseType.Modal, modal);
+
+                // Saving modal data to cache
+                var template = await DataService.GetTemplateAsync(ctx.Interaction.Guild.Id, TemplateMessage.INACTIVITY);
+                var message = template!.Message;
+                var embed = message.Embed;
+
+                embed.ReplaceFieldAt(0, "User", $"```{ctx.Interaction.User.Username}```");
+                embed.WithFooter(ctx.User.Username, ctx.User.AvatarUrl);
+                message.Type = CommandEnum.INACTIVITY;
+                message.AddData(Identity.INTERNAL_SEND_CHANNEL, channel.Id.ToString());
+
+                DataService.AddCacheModalData(ctx.Guild.Id, ctx.User.Id, message);
             } catch (CommandException ex) {
                 await DiscordUtil.SendActionMessage(ctx.Interaction, TemplateMessage.ACTION_FAILED, ex.Message);
             } catch (Exception ex) {

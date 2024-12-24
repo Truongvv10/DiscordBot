@@ -61,6 +61,9 @@ namespace BLL.Enums {
         [Description("/introduction")]
         INTRODUCTION = 310,
 
+        [Description("/inactivity")]
+        INACTIVITY = 315,
+
 
         [Description("/broadcast")]
         BROADCAST = 400,

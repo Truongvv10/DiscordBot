@@ -244,6 +244,14 @@ namespace BLL.Model {
             }
             return this;
         }
+        public Embed InsertFieldAt(int index, string title, string description, bool isInline = true) {
+            fields.Insert(index, (title, description, isInline));
+            return this;
+        }
+        public Embed ReplaceFieldAt(int index, string title, string description, bool isInline = true) {
+            fields[index] = (title, description, isInline);
+            return this;
+        }
         public Embed RemoveFieldAt(int index) {
             fields.RemoveAt(index);
             return this;
