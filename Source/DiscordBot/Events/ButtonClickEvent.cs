@@ -92,7 +92,7 @@ namespace APP.Events {
                                 if (oldMessage != null) {
                                     var newResponse = discordUtil.ResolveImageAttachment(translated);
                                     newResponse.WithContent(pingRoles);
-                                    await oldMessage.ModifyAsync(newResponse);
+                                    var newMessage = await oldMessage.ModifyAsync(newResponse);
                                 }
                             }
                         }

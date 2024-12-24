@@ -18,6 +18,7 @@ namespace BLL.Services {
         private Dictionary<(ulong, ulong), Message> messages = new();
         private Dictionary<ulong, Settings> settings = new();
         private Dictionary<string, Message> templates = new();
+        private Dictionary<(ulong, ulong), Message> modalData = new();
         private List<string> timeZones = new();
         #endregion
 
@@ -34,6 +35,9 @@ namespace BLL.Services {
         }
         public IReadOnlyDictionary<string, Message> Templates {
             get => templates;
+        }
+        public IReadOnlyDictionary<(ulong, ulong), Message> ModalData {
+            get => modalData;
         }
         public IReadOnlyCollection<string> TimeZones {
             get => timeZones;
@@ -109,6 +113,30 @@ namespace BLL.Services {
                 var message = templates[name].DeepClone();
                 return new Template(name, message);
             } else throw new UtilException($"Template with name \"{name}\" doesn't exists in cache.");
+        }
+        #endregion
+
+        #region Modal Data
+        public Message GetModalData(ulong guildId, ulong userId) {
+            if (modalData.ContainsKey((guildId, userId))) {
+                return modalData[(guildId, userId)];
+            } else throw new UtilException($"Modal data on guild \"{guildId}\" and user \"{userId}\" doesn't exists in cache.");
+        }
+        public bool AddModalData(ulong guildId, ulong userId, Message message) {
+            if (!modalData.ContainsKey((guildId, userId))) {
+                modalData.Add((guildId, userId), message);
+                return true;
+            } else {
+                return SetModalData(guildId, userId, message);
+            }
+        }
+        public bool SetModalData(ulong guildId, ulong userId, Message message) {
+            if (modalData.ContainsKey((guildId, userId))) {
+                modalData[(guildId, userId)] = message;
+                return true;
+            } else {
+                return AddModalData(guildId, userId, message);
+            }
         }
         #endregion
 

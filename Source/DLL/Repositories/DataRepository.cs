@@ -25,6 +25,12 @@ namespace DLL.Repositories {
         #endregion
 
         #region Methods
+        public bool AddCacheModalData(ulong guildId, ulong userId, Message message) {
+            if (message == null)
+                throw new ServiceException($"Message can not be null.");
+            return cacheData.AddModalData(guildId, userId, message);
+        }
+
         public async Task<Message> AddMessageAsync(Message message) {
             if (message == null)
                 throw new ServiceException($"Message can not be null.");
@@ -99,6 +105,10 @@ namespace DLL.Repositories {
                 .Where(t => t.GuildId == guildId)
                 .AsNoTracking()
                 .ToListAsync();
+        }
+
+        public Message GetCacheModalData(ulong guildId, ulong userId) {
+            return cacheData.GetModalData(guildId, userId);
         }
 
         public async Task<Message?> GetMessageAsync(ulong guildId, ulong messageId) {
@@ -205,6 +215,12 @@ namespace DLL.Repositories {
             await CtxSaveAndClear();
         }
 
+        public bool SetCacheModalData(ulong guildId, ulong userId, Message message) {
+            if (message == null)
+                throw new ServiceException($"Message can not be null.");
+            return cacheData.SetModalData(guildId, userId, message);
+        }
+
         public async Task<Message> UpdateMessageAsync(Message message) {
             if (message == null)
                 throw new ServiceException($"Message can not be null.");
@@ -213,9 +229,9 @@ namespace DLL.Repositories {
             if (message.MessageId == 0)
                 throw new ServiceException($"Message Id can not be null.");
 
-            await RemoveMessageAsync(message);
-            cacheData.DeleteMessage(message.GuildId, message.MessageId);
-            await AddMessageAsync(message);
+            dataContext.Messages.Update(message);
+            cacheData.UpdateMessage(message.GuildId, message);
+            await CtxSaveAndClear();
             return message;
         }
 

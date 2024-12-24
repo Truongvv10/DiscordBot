@@ -58,36 +58,8 @@ namespace APP.Events {
         }
 
         private async Task UseIntroduction(ModalSubmitEventArgs e) {
-            // Variables
-            var data = e.Interaction.Data.CustomId.Split(";");
-            var filter = new ProfanityService();
-            var channel = await discordUtil.GetChannelByIdAsync(e.Interaction.Guild, ulong.Parse(data[1]));
-            var country = int.TryParse(data[2], out int result) ? (CountryUtil.GetCountryName(result) ?? "Invalid") : "Invalid";
-            var timezone = (TimeZoneEnum)int.Parse(data[3]);
-            var birthday = data[4];
-            var pronouns = (PronounsEnum)int.Parse(data[5]);
-            var color = data[6];
-            var template = await dataService.GetTemplateAsync(e.Interaction.Guild.Id, TemplateMessage.INTRODUCTION);
-            var message = template!.Message;
-            var description = filter.CensorText(e.Values.Values.First().ToString());
-            var embed = message.Embed;
-
-            message.Embed.WithAuthor(e.Interaction.User.Username, e.Interaction.User.AvatarUrl);
-
-            message.AddData($"{Placeholder.CUSTOM}.introduction.country", country);
-            message.AddData($"{Placeholder.CUSTOM}.introduction.birthday", birthday);
-            message.AddData($"{Placeholder.CUSTOM}.introduction.pronouns", pronouns.GetEnumChoiceName());
-            message.AddData($"{Placeholder.CUSTOM}.introduction.text", description);
-
-            embed.AddField("Country", $"{{{Placeholder.CUSTOM}.introduction.country}}");
-            embed.AddField("Birthday", $"{{{Placeholder.CUSTOM}.introduction.birthday}}");
-            embed.AddField("Pronouns", $"{{{Placeholder.CUSTOM}.introduction.pronouns}}");
-            embed.AddField("Introduction", $"{{{Placeholder.CUSTOM}.introduction.text}}", false);
-            embed.WithColor(color);
-
-            message.GuildId = e.Interaction.Guild.Id;
-            message.ChannelId = channel.Id;
-
+            var message = dataService.GetCacheModalData(e.Interaction.Guild.Id, e.Interaction.User.Id);
+            var channel = await discordUtil.GetChannelByIdAsync(e.Interaction.Guild, ulong.Parse(message.Data[Identity.INTERNAL_SEND_CHANNEL]));
             await discordUtil.CreateMessageToChannelAsync(CommandEnum.INTRODUCTION, e.Interaction, message, channel);
             await discordUtil.SendActionMessage(e.Interaction, TemplateMessage.ACTION_SUCCESS, $"Successfully created introduction.");
         }

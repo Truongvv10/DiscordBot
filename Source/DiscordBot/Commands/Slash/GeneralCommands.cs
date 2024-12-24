@@ -115,40 +115,58 @@ namespace APP.Commands.Slash {
             [Option("time-zone", "The time zone you live in.")] TimeZoneEnum timeZone,
             [Option("birthday", "Birthday in the format days/month/year.")] string birthday,
             [Option("pronouns", "The pronouns that others should call you with.")] PronounsEnum pronouns,
+            [Option("text", "An introduction about yourself. (not required)")] string? text = null,
             [Option("color", "Your favorite colors in hex code. (example: #ffffff)")] string? color = "#0681cd") {
             try {
                 // Check if parameters are valid
                 if (string.IsNullOrWhiteSpace(country) || !CountryUtil.IsValidCountry(country)) {
-                    await DiscordUtil.SendActionMessage(ctx.Interaction, TemplateMessage.ACTION_INVALID, $"Invalid country \"{country}\" was given.");
+                    await DiscordUtil.SendActionMessage(ctx.Interaction, TemplateMessage.ACTION_INVALID, $"Invalid country \"{country}\" was given.", $"Please use the tabbed countries.");
                     return;
                 }
                 if (!DateTime.TryParseExact($"{birthday} 00:00", "dd/MM/yyyy HH:mm", null, System.Globalization.DateTimeStyles.None, out var parsedBirthdayDate)) {
-                    await DiscordUtil.SendActionMessage(ctx.Interaction, TemplateMessage.ACTION_INVALID, $"Invalid format with date \"{birthday}\".");
+                    await DiscordUtil.SendActionMessage(ctx.Interaction, TemplateMessage.ACTION_INVALID, $"Invalid format with date \"{birthday}\".", "Please use the format \"day/month/year\".");
                     return;
                 }
                 if (!Regex.IsMatch(color!, @"#[a-fA-F0-9]{6}")) {
-                    await DiscordUtil.SendActionMessage(ctx.Interaction, TemplateMessage.ACTION_INVALID, $"Invalid color \"{color}\" was given.");
+                    await DiscordUtil.SendActionMessage(ctx.Interaction, TemplateMessage.ACTION_INVALID, $"Invalid color \"{color}\" was given.", "Please use the format \"#hexcolor\".");
                     return;
+                }
+                if (string.IsNullOrWhiteSpace(text)) {
+                    text = $"Hi, my name is {ctx.User.Username}. I'm {DateTime.Now.Year - parsedBirthdayDate.Year} years old and live in {country}.";
                 }
 
                 // Check if introduction channel is setup
                 var settings = await DataService.GetSettingsAsync(ctx.Guild.Id) ?? throw new CommandException($"Settings was not found.");
                 var channelId = settings.IntroductionChannel ?? throw new CommandException($"Introduction was not setup yet.");
                 var channel = await DiscordUtil.GetChannelByIdAsync(ctx.Guild, channelId) ?? throw new CommandException($"Introduction was not setup yet.");
-                var id = $"{Identity.MODAL_INTRODUCTION};{channelId};{CountryUtil.GetCountryCode(country)};{(int)timeZone};{parsedBirthdayDate.ToString("dd/MM/yyyy")};{(int)pronouns};{color}";
 
                 // Create embed message
                 var modal = new DiscordInteractionResponseBuilder();
-                modal.WithTitle($"INTRODUCTION").WithCustomId(id)
-                    .AddComponents(new TextInputComponent(
-                        "INTRODUCTION",
-                        Identity.MODAL_DATA_INTRODUCTION_TEXT,
-                        $"Write about yourself...",
-                        $"Hi, my name is {ctx.User.Username}. I'm {DateTime.Now.Year - parsedBirthdayDate.Year} years old and live in {country}.",
-                        true, TextInputStyle.Paragraph, 32, 2048));
+                modal.WithTitle($"INTRODUCTION")
+                    .WithCustomId(Identity.MODAL_INTRODUCTION)
+                    .AddComponents(new TextInputComponent("INTRODUCTION", Identity.MODAL_DATA_INTRODUCTION_TEXT, "Write about yourself...", text, true, TextInputStyle.Paragraph, 0, 2048));
 
                 // Create response model
                 await ctx.Interaction.CreateResponseAsync(InteractionResponseType.Modal, modal);
+
+                // Saving data to cache
+                var template = await DataService.GetTemplateAsync(ctx.Interaction.Guild.Id, TemplateMessage.INTRODUCTION);
+                var message = template!.Message;
+                var embed = message.Embed;
+
+                message.AddData($"{Placeholder.CUSTOM}.introduction.country", country);
+                message.AddData($"{Placeholder.CUSTOM}.introduction.birthday", birthday);
+                message.AddData($"{Placeholder.CUSTOM}.introduction.pronouns", pronouns.GetEnumChoiceName());
+                message.AddData($"{Placeholder.CUSTOM}.introduction.text", text);
+                message.AddData(Identity.INTERNAL_SEND_CHANNEL, channel.Id.ToString());
+
+                embed.AddField("Country", $"{{{Placeholder.CUSTOM}.introduction.country}}");
+                embed.AddField("Birthday", $"{{{Placeholder.CUSTOM}.introduction.birthday}}");
+                embed.AddField("Pronouns", $"{{{Placeholder.CUSTOM}.introduction.pronouns}}");
+                embed.AddField("Introduction", $"{{{Placeholder.CUSTOM}.introduction.text}}", false);
+                embed.WithAuthor(ctx.Interaction.User.Username, ctx.Interaction.User.AvatarUrl);
+                embed.WithColor(color!);
+                DataService.AddCacheModalData(ctx.Guild.Id, ctx.User.Id, message);
 
             } catch (CommandException ex) {
                 await DiscordUtil.SendActionMessage(ctx.Interaction, TemplateMessage.ACTION_FAILED, ex.Message);
