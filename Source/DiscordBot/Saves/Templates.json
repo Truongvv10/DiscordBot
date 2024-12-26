@@ -61,16 +61,6 @@
         },
         "ephemeral": true
     },
-    "TEMPLATES_SAVE": {
-        "embed": {
-            "description": "Template **`{template.name}`** has been saved.",
-            "author": "Template Saved",
-            "author_url": "https://cdn-icons-png.flaticon.com/512/580/580259.png",
-            "color": "#ed9955",
-            "timestamp": true
-        },
-        "ephemeral": true
-    },
     "NITRO": {
         "embed": {
             "description": "### Claim a free nitro subscription!\n\nClaim a free nitro for **1 month**!\nExpires **{data.date.end.7}**\n\n[**Disclaimer**](https://www.youtube.com/watch?v=xvFZjo5PgG0)",
@@ -84,19 +74,10 @@
             "data.timezone": "CET"
         }
     },
-    "NO_PERMISSION": {
-        "embed": {
-            "author": "You don't have permission'",
-            "author_url": "https://cdn-icons-png.flaticon.com/512/1304/1304038.png",
-            "color": "#d82b40",
-            "timestamp": false
-        },
-        "ephemeral": true
-    },
     "INACTIVITY": {
         "embed": {
             "color": "#d82b40",
-            "author": "Inacitivity Notice",
+            "author": "Inactivity Notice",
             "author_url": "https://cdn-icons-png.flaticon.com/512/249/249205.png",
             "timestamp": true,
             "fields": [
