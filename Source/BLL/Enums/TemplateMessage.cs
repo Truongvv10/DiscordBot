@@ -10,7 +10,7 @@ namespace BLL.Enums {
         TIMESTAMP = 1,
         TEMPLATES = 2,
         NITRO = 3,
-        NO_PERMISSION = 4,
+        BROADCAST = 4,
         INTRODUCTION = 5,
         INACTIVITY = 6,
 
