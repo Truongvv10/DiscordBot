@@ -119,7 +119,7 @@ namespace APP.Commands.Slash {
 
         #region Command: Introduction
         [SlashCommand(INTRODUCTION, "Introduce yourself to the server.")]
-        [SlashCooldown(9999, 60, SlashCooldownBucketType.Guild)]
+        [SlashCooldown(1, 60, SlashCooldownBucketType.Guild)]
         public async Task Introduction(InteractionContext ctx,
             [Autocomplete(typeof(CountryChoiceProvider))][Option("country", "Which country are you from?")] string country,
             [Option("time-zone", "The time zone you live in.")] TimeZoneEnum timeZone,
