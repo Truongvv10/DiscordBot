@@ -128,7 +128,6 @@ namespace APP.Utils {
                 // Set the guild and channel id
                 message.GuildId = interaction.Guild.Id;
                 message.ChannelId = interaction.Channel.Id;
-                message.Sender = interaction.User.Id;
 
                 // Translate the placeholders
                 var translated = message.DeepClone();
@@ -197,7 +196,7 @@ namespace APP.Utils {
             }
         }
 
-        private async Task<DiscordInteractionResponseBuilder> CreateResponseAsync(CommandEnum type, DiscordInteraction interaction, Message message, bool hidden = false) {
+        public async Task<DiscordInteractionResponseBuilder> CreateResponseAsync(CommandEnum type, DiscordInteraction interaction, Message message, bool hidden = false) {
             try {
 
                 // Get discord channel through channel id

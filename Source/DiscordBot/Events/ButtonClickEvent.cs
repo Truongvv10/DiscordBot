@@ -69,7 +69,6 @@ namespace APP.Events {
                             await e.Interaction.CreateResponseAsync(InteractionResponseType.Modal, modal);
                             dataService.AddCacheModalData(e.Guild.Id, e.User.Id, message);
                         } else {
-                            await e.Interaction.CreateResponseAsync(InteractionResponseType.DeferredMessageUpdate);
                             await discordUtil.SendActionMessage(e.Interaction, TemplateMessage.ACTION_FAILED, "This is not your inactivity notice.");
                         }
                         break;
