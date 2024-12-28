@@ -23,6 +23,8 @@ namespace BLL.Model {
         private List<ulong> roles = new();
         private List<ulong> users = new();
         private Embed embed;
+        private ComponentButtons componentButtons;
+        private ComponentSelectOptions componentSelectOptions;
         #endregion
 
         #region Constructors
@@ -138,6 +140,20 @@ namespace BLL.Model {
             get => embed;
             set => embed = value != null ? value : new Embed();
         }
+
+        [Column("component_buttons")]
+        [JsonProperty("component_buttons", NullValueHandling = NullValueHandling.Ignore)]
+        public ComponentButtons ComponentButtons {
+            get => componentButtons;
+            set => componentButtons = value;
+        }
+
+        [Column("component_select_options")]
+        [JsonProperty("component_select_options", NullValueHandling = NullValueHandling.Ignore)]
+        public ComponentSelectOptions ComponentSelectOptions {
+            get => componentSelectOptions;
+            set => componentSelectOptions = value;
+        }
         #endregion
 
         #region Methods
@@ -247,6 +263,14 @@ namespace BLL.Model {
         }
         public Message WithEmbed(Embed embed) {
             this.embed = embed;
+            return this;
+        }
+        public Message SetButtonComponents(ComponentButtons component) {
+            componentButtons = component;
+            return this;
+        }
+        public Message SetSelectOptionComponents(ComponentSelectOptions component) {
+            componentSelectOptions = component;
             return this;
         }
         public Message DeepClone() {

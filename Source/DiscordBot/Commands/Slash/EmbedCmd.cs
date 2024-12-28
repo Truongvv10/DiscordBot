@@ -1,4 +1,5 @@
 ﻿using APP.Attributes;
+using APP.Choices;
 using APP.Services;
 using APP.Utils;
 using BLL.Enums;
@@ -21,6 +22,7 @@ namespace APP.Commands.Slash {
         private const string EMBED = "EMBED";
         private const string EMBED_CREATE = "CREATE";
         private const string EMBED_EDIT = "EDIT";
+        private const string EMBED_MODIFY = "MODIFY";
         private const string EMBED_TEMPLATES = "TEMPLATES";
         #endregion
 
@@ -74,6 +76,31 @@ namespace APP.Commands.Slash {
                     copy.Type = CommandEnum.EMBED_EDIT;
                     await DiscordUtil.CreateMessageAsync(CommandEnum.EMBED_EDIT, ctx.Interaction, copy, false);
                 }
+            } catch (Exception ex) {
+                throw new CommandException($"An error occured using the command: /{EMBED} {EMBED_EDIT}", ex);
+            }
+        }
+        #endregion
+
+        #region Command: /embed modify
+        [SlashCommand(EMBED_MODIFY, "Modify an existing embeded message from the bot")]
+        [RequirePermission(CommandEnum.EMBED_EDIT, [Permissions.ManageChannels, Permissions.ManageMessages])]
+        public async Task Modify(InteractionContext ctx,
+            [Option("message-id", "The id of the embeded message you want to edit.")] string id,
+            [Option("channel", "The channel where the message was in.")] DiscordChannel channel,
+            [Option("template", "Modify message to a template?")] TemplateMessage templateId = TemplateMessage.EMBED,
+            [Option("buttons", "What buttons should be added?")] ComponentButtons button = ComponentButtons.NONE) {
+            try {
+                // Build the embed message with default values
+                var template = await DataService.GetTemplateAsync(ctx.Guild.Id, templateId);
+                var message = template!.Message;
+                message.SetType(CommandEnum.EMBED_EDIT);
+                message.SetButtonComponents(button);
+                message.AddChild(ulong.Parse(id), channel.Id);
+
+                // Create embed message
+                await DiscordUtil.CreateMessageAsync(CommandEnum.EMBED_EDIT, ctx.Interaction, message, false);
+
             } catch (Exception ex) {
                 throw new CommandException($"An error occured using the command: /{EMBED} {EMBED_EDIT}", ex);
             }
