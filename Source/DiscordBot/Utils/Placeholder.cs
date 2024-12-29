@@ -36,6 +36,9 @@ namespace APP.Utils {
         public const string GUILD_ID = PREFIX + "data.guild.id";
         public const string MESSAGE_ID = PREFIX + "data.message.id";
         public const string LIST_USERS = PREFIX + "data.list.users";
+        public const string LIST_USERS_MENTION = PREFIX + "data.list.users.mention";
+        public const string LIST_ROLES = PREFIX + "data.list.roles";
+        public const string LIST_ROLES_MENTION = PREFIX + "data.list.roles.mention";
         public const string LIST_REACTIONS = PREFIX + "data.list.reactions";
         public const string LIST_TEMPLATES = PREFIX + "data.list.templates";
         public const string LIST_TEMPLATES_GUILD = PREFIX + "data.list.templates.guild";
@@ -48,7 +51,9 @@ namespace APP.Utils {
                 TEXT1, TEXT2, TEXT3, TEXT4, 
                 USER_NAME, USER_AVATARURL, USER_MENTION, 
                 CHANNEL_ID, GUILD_ID, MESSAGE_ID, 
-                LIST_USERS, LIST_REACTIONS, LIST_TEMPLATES, LIST_TEMPLATES_GUILD});
+                LIST_USERS, LIST_USERS_MENTION,
+                LIST_ROLES, LIST_ROLES_MENTION,
+                LIST_REACTIONS, LIST_TEMPLATES, LIST_TEMPLATES_GUILD});
         }
 
         public static async Task<string> Translate(string input, Message message, DiscordInteraction interaction, IDataRepository dataService) {
@@ -94,7 +99,37 @@ namespace APP.Utils {
                             var users = userResults.Select(x => x.Username)
                                                    .Aggregate("", (current, next) => string.IsNullOrEmpty(current) ? next : current + ", " + next);
                             input = input.Replace(toReplace, users);
-
+                        }
+                        break;
+                    case LIST_USERS_MENTION:
+                        if (message.Users.Count() == 0) {
+                            input = input.Replace(toReplace, "No one...");
+                        } else {
+                            var userTasks = message.Users.Select(async x => await interaction.Guild.GetMemberAsync(x));
+                            var userResults = await Task.WhenAll(userTasks); // Run the tasks in parallel and wait for completion
+                            var users = userResults.Select(x => x.Mention)
+                                                   .Aggregate("", (current, next) => string.IsNullOrEmpty(current) ? next : current + ", " + next);
+                            input = input.Replace(toReplace, users);
+                        }
+                        break;
+                    case LIST_ROLES:
+                        if (message.Users.Count() == 0) {
+                            input = input.Replace(toReplace, "No roles found...");
+                        } else {
+                            var roleResults = message.Roles.Select(x => interaction.Guild.GetRole(x));
+                            var roles = roleResults.Select(x => x.Name)
+                                                   .Aggregate("", (current, next) => string.IsNullOrEmpty(current) ? next : current + ", " + next);
+                            input = input.Replace(toReplace, roles);
+                        }
+                        break;
+                    case LIST_ROLES_MENTION:
+                        if (message.Users.Count() == 0) {
+                            input = input.Replace(toReplace, "No roles found...");
+                        } else {
+                            var roleResults = message.Roles.Select(x => interaction.Guild.GetRole(x));
+                            var roles = roleResults.Select(x => x.Mention)
+                                                   .Aggregate("", (current, next) => string.IsNullOrEmpty(current) ? next : current + ", " + next);
+                            input = input.Replace(toReplace, roles);
                         }
                         break;
                     default:
