@@ -113,7 +113,7 @@ namespace APP.Utils {
                         }
                         break;
                     case LIST_ROLES:
-                        if (message.Users.Count() == 0) {
+                        if (message.Roles.Count() == 0) {
                             input = input.Replace(toReplace, "No roles found...");
                         } else {
                             var roleResults = message.Roles.Select(x => interaction.Guild.GetRole(x));
@@ -123,7 +123,7 @@ namespace APP.Utils {
                         }
                         break;
                     case LIST_ROLES_MENTION:
-                        if (message.Users.Count() == 0) {
+                        if (message.Roles.Count() == 0) {
                             input = input.Replace(toReplace, "No roles found...");
                         } else {
                             var roleResults = message.Roles.Select(x => interaction.Guild.GetRole(x));
