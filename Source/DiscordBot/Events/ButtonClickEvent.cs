@@ -101,7 +101,7 @@ namespace APP.Events {
                             channel = await discordUtil.GetChannelByIdAsync(e.Guild, ulong.Parse(message.Data[Identity.INTERNAL_SEND_CHANNEL]));
                         }
                         var response = discordUtil.ResolveImageAttachment(translated);
-                        if (!string.IsNullOrWhiteSpace(message.Content)) response.WithContent(message.Content);
+                        if (!string.IsNullOrWhiteSpace(translated.Content)) response.WithContent(translated.Content);
                         var sentMessage = await channel.SendMessageAsync(response);
                         message.AddChild(sentMessage.Id, sentMessage.Channel.Id);
                         var sentMessageClone = message.DeepClone();
