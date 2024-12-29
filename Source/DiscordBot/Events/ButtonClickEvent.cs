@@ -126,7 +126,7 @@ namespace APP.Events {
                                 var oldMessage = await childChannel.GetMessageAsync(m.Key);
                                 if (oldMessage != null) {
                                     var newResponse = discordUtil.ResolveImageAttachment(translated);
-                                    if (!string.IsNullOrWhiteSpace(message.Content)) newResponse.WithContent(message.Content);
+                                    if (!string.IsNullOrWhiteSpace(translated.Content)) newResponse.WithContent(translated.Content);
                                     var newMessage = await oldMessage.ModifyAsync(newResponse);
                                 }
                             }
