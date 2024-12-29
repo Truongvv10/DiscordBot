@@ -8,7 +8,10 @@
             "thumbnail": "local://template_thumbnail.png",
             "color": "#0681cd",
             "timestamp": true
-        }
+        },
+        "ephemeral": false,
+        "buttons": [ 1 ],
+        "select_options": [ 0, 1 ]
     },
     "EVENT": {
         "embed": {
@@ -37,7 +40,9 @@
             "data.custom.time.start": "**Starts at:**\n{data.date.start.1} ({data.date.start.7})",
             "data.custom.time.end": "**Ends at:**\n{data.date.end.1}",
             "data.custom.time.reaction": "*Reacted with a `✅` if you are coming to the event!*\n*Reacted with a `❌` if you are going to miss out...*"
-        }
+        },
+        "ephemeral": false,
+        "buttons": [ 2 ]
     },
     "TEMPLATES": {
         "embed": {
@@ -68,11 +73,12 @@
             "color": "#7688d4",
             "timestamp": false
         },
-        "ephemeral": false,
         "data": {
             "data.date.end": "01/01/2024 00:00",
             "data.timezone": "CET"
-        }
+        },
+        "ephemeral": false,
+        "buttons": [ 4 ]
     },
     "INACTIVITY": {
         "embed": {
@@ -108,7 +114,7 @@
                 }
             ]
         },
-        "ephemeral": true
+        "buttons": [ 3 ]
     },
     "TIMESTAMP": {
         "embed": {

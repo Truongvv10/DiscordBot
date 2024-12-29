@@ -148,6 +148,12 @@ namespace APP.Events {
                 }
 
             } catch (Exception ex) {
+                if (e.Id == Identity.BUTTON_CANCEL) {
+                    await e.Interaction.CreateResponseAsync(InteractionResponseType.DeferredMessageUpdate);
+                    var deleteMessage = await e.Interaction.GetOriginalResponseAsync().ConfigureAwait(false);
+                    await deleteMessage.DeleteAsync();
+                    return;
+                }
                 Console.WriteLine(ex);
                 throw new EventException("An error occured using the button for embed", ex);
             }

@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace BLL.Enums {
     public enum ComponentButtons {
-        NONE,
-        EMBED,
-        EVENT,
-        INACTIVITY,
-        NITRO,
+        EMBED = 1,
+        EVENT = 2,
+        INACTIVITY = 3,
+        NITRO = 4,
+        EDIT = 5,
     }
 }

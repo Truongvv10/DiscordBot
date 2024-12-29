@@ -77,7 +77,7 @@ namespace APP.Events {
                 message.WithContent($"**`Edited on`** {timestamp}");
                 await discordUtil.UpdateMessageAsync(e.Interaction, message);
             } else {
-                await discordUtil.CreateMessageToChannelAsync(CommandEnum.INACTIVITY, e.Interaction, message, channel);
+                await discordUtil.CreateMessageToChannelAsync(e.Interaction, message, channel);
                 await discordUtil.SendActionMessage(e.Interaction, TemplateMessage.ACTION_SUCCESS, $"Successfully created inactivity notice.");
             }
         }
@@ -85,7 +85,7 @@ namespace APP.Events {
         private async Task UseIntroduction(ModalSubmitEventArgs e) {
             var message = dataService.GetCacheModalData(e.Interaction.Guild.Id, e.Interaction.User.Id);
             var channel = await discordUtil.GetChannelByIdAsync(e.Interaction.Guild, ulong.Parse(message.Data[Identity.INTERNAL_SEND_CHANNEL]));
-            await discordUtil.CreateMessageToChannelAsync(CommandEnum.INTRODUCTION, e.Interaction, message, channel);
+            await discordUtil.CreateMessageToChannelAsync(e.Interaction, message, channel);
             await discordUtil.SendActionMessage(e.Interaction, TemplateMessage.ACTION_SUCCESS, $"Successfully created introduction.");
         }
 
@@ -145,13 +145,13 @@ namespace APP.Events {
                     case Identity.SELECTION_IMAGE:
                         embed.Image = data[Identity.MODAL_DATA_IMAGE];
                         await e.Interaction.CreateResponseAsync(InteractionResponseType.DeferredMessageUpdate);
-                        await discordUtil.ModifyMessageAsync(message.Type, e.Interaction, message, message.IsEphemeral);
+                        await discordUtil.ModifyMessageAsync(e.Interaction, message);
                         return;
 
                     case Identity.SELECTION_THUMBNAIL:
                         embed.Thumbnail = data[Identity.MODAL_DATA_THUMBNAIL];
                         await e.Interaction.CreateResponseAsync(InteractionResponseType.DeferredMessageUpdate);
-                        await discordUtil.ModifyMessageAsync(message.Type, e.Interaction, message, message.IsEphemeral);
+                        await discordUtil.ModifyMessageAsync(e.Interaction, message);
                         return;
 
                     case Identity.SELECTION_PINGROLE:
@@ -217,13 +217,12 @@ namespace APP.Events {
                         var templateUse = await dataService.GetTemplateAsync(e.Interaction.Guild.Id, templateUseName)
                             ?? throw new EventException($"There is no template with the name \"{data[Identity.MODAL_DATA_TEMPLATE_ADD]}\"");
                         var templateUseMessage = templateUse.Message;
-                        templateUseMessage.Type = message.Type;
                         templateUseMessage.GuildId = message.GuildId;
                         templateUseMessage.MessageId = message.MessageId;
                         templateUseMessage.ChannelId = message.ChannelId;
                         templateUseMessage.IsEphemeral = message.IsEphemeral;
                         templateUseMessage.Childs = message.Childs;
-                        await discordUtil.ModifyMessageAsync(templateUseMessage.Type, e.Interaction, templateUseMessage, templateUseMessage.IsEphemeral);
+                        await discordUtil.ModifyMessageAsync(e.Interaction, templateUseMessage);
                         return;
 
                     default:
@@ -268,6 +267,11 @@ namespace APP.Events {
                         message.AddData(Placeholder.TIMEZONE, timezone);
                         message.AddData(Placeholder.DATE_START, start);
                         message.AddData(Placeholder.DATE_END, end);
+
+                        message.ClearComponents();
+                        message.AddButton(ComponentButtons.EMBED);
+                        message.AddSelectOption(ComponentSelectOptions.DEFAULT);
+                        message.AddSelectOption(ComponentSelectOptions.PLACEHOLDER);
 
                         break;
 
@@ -415,7 +419,7 @@ namespace APP.Events {
                 message.AddData(Placeholder.TIMEZONE, timeZone);
                 message.AddData(Placeholder.DATE_START, parsedTime.ToString("dd/MM/yyyy HH:mm"));
 
-                await discordUtil.CreateMessageAsync(CommandEnum.TIMESTAMP, e.Interaction, message, message.IsEphemeral);
+                await discordUtil.CreateMessageAsync(e.Interaction, message);
 
             } catch (UtilException ex) {
                 throw new EventException(ex.Message);

@@ -12,7 +12,6 @@ using System.Threading.Tasks;
 namespace BLL.Model {
     public class Message {
         #region Fields
-        private CommandEnum type;
         private ulong channelId;
         private string? content;
         private ulong? sender;
@@ -22,14 +21,13 @@ namespace BLL.Model {
         private Dictionary<ulong, ulong> childs = new();
         private List<ulong> roles = new();
         private List<ulong> users = new();
+        private List<ComponentButtons> componentButtons = new();
+        private List<ComponentSelectOptions> componentSelectOptions = new();
         private Embed embed;
-        private ComponentButtons componentButtons;
-        private ComponentSelectOptions componentSelectOptions;
         #endregion
 
         #region Constructors
         public Message() {
-            type = CommandEnum.MESSAGE;
             isEphemeral = false;
         }
         public Message(string content) : this() {
@@ -128,11 +126,18 @@ namespace BLL.Model {
             set => users = value != null ? new List<ulong>(value) : new List<ulong>();
         }
 
-        [Column("type")]
-        [JsonProperty("type", NullValueHandling = NullValueHandling.Ignore)]
-        public CommandEnum Type {
-            get => type;
-            set => type = value;
+        [Column("buttons")]
+        [JsonProperty("buttons", NullValueHandling = NullValueHandling.Ignore)]
+        public List<ComponentButtons> ComponentButtons {
+            get => componentButtons;
+            set => componentButtons = value != null ? new List<ComponentButtons>(value) : new List<ComponentButtons>();
+        }
+
+        [Column("select_options")]
+        [JsonProperty("select_options", NullValueHandling = NullValueHandling.Ignore)]
+        public List<ComponentSelectOptions> ComponentSelectOptions {
+            get => componentSelectOptions;
+            set => componentSelectOptions = value != null ? new List<ComponentSelectOptions>(value) : new List<ComponentSelectOptions>();
         }
 
         [JsonProperty("embed", NullValueHandling = NullValueHandling.Ignore)]
@@ -140,27 +145,9 @@ namespace BLL.Model {
             get => embed;
             set => embed = value != null ? value : new Embed();
         }
-
-        [Column("component_buttons")]
-        [JsonProperty("component_buttons", NullValueHandling = NullValueHandling.Ignore)]
-        public ComponentButtons ComponentButtons {
-            get => componentButtons;
-            set => componentButtons = value;
-        }
-
-        [Column("component_select_options")]
-        [JsonProperty("component_select_options", NullValueHandling = NullValueHandling.Ignore)]
-        public ComponentSelectOptions ComponentSelectOptions {
-            get => componentSelectOptions;
-            set => componentSelectOptions = value;
-        }
         #endregion
 
         #region Methods
-        public Message SetType(CommandEnum type) {
-            this.type = type;
-            return this;
-        }
         public Message WithContent(string content) {
             this.content = content;
             return this;
@@ -261,16 +248,21 @@ namespace BLL.Model {
             users.Clear();
             return this;
         }
+        public Message AddButton(ComponentButtons component) {
+            componentButtons.Add(component);
+            return this;
+        }
+        public Message AddSelectOption(ComponentSelectOptions component) {
+            componentSelectOptions.Add(component);
+            return this;
+        }
+        public Message ClearComponents() {
+            componentButtons.Clear();
+            componentSelectOptions.Clear();
+            return this;
+        }
         public Message WithEmbed(Embed embed) {
             this.embed = embed;
-            return this;
-        }
-        public Message SetButtonComponents(ComponentButtons component) {
-            componentButtons = component;
-            return this;
-        }
-        public Message SetSelectOptionComponents(ComponentSelectOptions component) {
-            componentSelectOptions = component;
             return this;
         }
         public Message DeepClone() {

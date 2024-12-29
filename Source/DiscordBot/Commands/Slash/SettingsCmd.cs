@@ -58,7 +58,6 @@ namespace APP.Commands.Slash {
                     var message = template!.Message;
                     message.ChannelId = channel.Id;
                     message.Sender = ctx.User.Id;
-                    message.Type = CommandEnum.SETTINGS_SET_WELCOME;
                     message.AddData(Placeholder.TEXT1, $"Successfully executed command.");
                     message.AddData(Placeholder.TEXT2, $"Edited **`welcome channel`** to {channel.Mention}.");
 
@@ -68,7 +67,7 @@ namespace APP.Commands.Slash {
                     await DataService.UpdateSettingsAsync(settings);
 
                     // Create the embed message
-                    await DiscordUtil.CreateMessageAsync(message.Type, ctx.Interaction, message, true);
+                    await DiscordUtil.CreateMessageAsync(ctx.Interaction, message);
 
                 } catch (Exception ex) {
                     throw new CommandException($"An error occured using the command: /{SETTINGS} {SETTINGS_SET} {SETTINGS_WELCOME}", ex);
@@ -87,7 +86,6 @@ namespace APP.Commands.Slash {
                     var message = template!.Message;
                     message.ChannelId = channel.Id;
                     message.Sender = ctx.User.Id;
-                    message.Type = CommandEnum.SETTINGS_SET_INTRODUCTION;
                     message.AddData(Placeholder.TEXT1, $"Successfully executed command.");
                     message.AddData(Placeholder.TEXT2, $"Edited **`introduction channel`** to {channel.Mention}.");
 
@@ -97,7 +95,7 @@ namespace APP.Commands.Slash {
                     await DataService.UpdateSettingsAsync(settings);
 
                     // Create the embed message
-                    await DiscordUtil.CreateMessageAsync(message.Type, ctx.Interaction, message, true);
+                    await DiscordUtil.CreateMessageAsync(ctx.Interaction, message);
 
                 } catch (Exception ex) {
                     throw new CommandException($"An error occured using the command: /{SETTINGS} {SETTINGS_SET} {SETTINGS_INTRODUCTION}", ex);
@@ -116,7 +114,6 @@ namespace APP.Commands.Slash {
                     var message = template!.Message;
                     message.ChannelId = channel.Id;
                     message.Sender = ctx.User.Id;
-                    message.Type = CommandEnum.SETTINGS_SET_LOG;
                     message.AddData(Placeholder.TEXT1, $"Successfully executed command.");
                     message.AddData(Placeholder.TEXT2, $"Edited **`log channel`** to {channel.Mention}.");
 
@@ -126,7 +123,7 @@ namespace APP.Commands.Slash {
                     await DataService.UpdateSettingsAsync(settings);
 
                     // Create the embed message
-                    await DiscordUtil.CreateMessageAsync(message.Type, ctx.Interaction, message, true);
+                    await DiscordUtil.CreateMessageAsync(ctx.Interaction, message);
 
                 } catch (Exception ex) {
                     throw new CommandException($"An error occured using the command: /{SETTINGS} {SETTINGS_SET} {SETTINGS_LOG}", ex);
@@ -145,7 +142,6 @@ namespace APP.Commands.Slash {
                     var message = template!.Message;
                     message.ChannelId = channel.Id;
                     message.Sender = ctx.User.Id;
-                    message.Type = CommandEnum.SETTINGS_SET_CHANEGLOG;
                     message.AddData(Placeholder.TEXT1, $"Successfully executed command.");
                     message.AddData(Placeholder.TEXT2, $"Edited **`changelog channel`** to {channel.Mention}.");
 
@@ -155,7 +151,7 @@ namespace APP.Commands.Slash {
                     await DataService.UpdateSettingsAsync(settings);
 
                     // Create the embed message
-                    await DiscordUtil.CreateMessageAsync(message.Type, ctx.Interaction, message, true);
+                    await DiscordUtil.CreateMessageAsync(ctx.Interaction, message);
 
                 } catch (Exception ex) {
                     throw new CommandException($"An error occured using the command: /{SETTINGS} {SETTINGS_SET} {SETTINGS_CHANGELOG}", ex);
@@ -174,7 +170,6 @@ namespace APP.Commands.Slash {
                     var message = template!.Message;
                     message.ChannelId = channel.Id;
                     message.Sender = ctx.User.Id;
-                    message.Type = CommandEnum.SETTINGS_SET_INACTIVITY;
                     message.AddData(Placeholder.TEXT1, $"Successfully executed command.");
                     message.AddData(Placeholder.TEXT2, $"Edited **`inactivity channel`** to {channel.Mention}.");
 
@@ -184,7 +179,7 @@ namespace APP.Commands.Slash {
                     await DataService.UpdateSettingsAsync(settings);
 
                     // Create the embed message
-                    await DiscordUtil.CreateMessageAsync(message.Type, ctx.Interaction, message, true);
+                    await DiscordUtil.CreateMessageAsync(ctx.Interaction, message);
 
                 } catch (Exception ex) {
                     throw new CommandException($"An error occured using the command: /{SETTINGS} {SETTINGS_SET} {SETTINGS_INACTIVITY}", ex);
@@ -203,7 +198,6 @@ namespace APP.Commands.Slash {
                     var message = template!.Message;
                     message.ChannelId = channel.Id;
                     message.Sender = ctx.User.Id;
-                    message.Type = CommandEnum.SETTINGS_SET_PUNISHMENT;
                     message.AddData(Placeholder.TEXT1, $"Successfully executed command.");
                     message.AddData(Placeholder.TEXT2, $"Edited **`punishment channel`** to {channel.Mention}.");
 
@@ -213,7 +207,7 @@ namespace APP.Commands.Slash {
                     await DataService.UpdateSettingsAsync(settings);
 
                     // Create the embed message
-                    await DiscordUtil.CreateMessageAsync(message.Type, ctx.Interaction, message, true);
+                    await DiscordUtil.CreateMessageAsync(ctx.Interaction, message);
 
                 } catch (Exception ex) {
                     throw new CommandException($"An error occured using the command: /{SETTINGS} {SETTINGS_SET} {SETTINGS_PUNISHMENT}", ex);
@@ -232,7 +226,6 @@ namespace APP.Commands.Slash {
                     var message = template!.Message;
                     message.ChannelId = channel.Id;
                     message.Sender = ctx.User.Id;
-                    message.Type = CommandEnum.SETTINGS_SET_STRIKE;
                     message.AddData(Placeholder.TEXT1, $"Successfully executed command.");
                     message.AddData(Placeholder.TEXT2, $"Edited **`strike channel`** to {channel.Mention}.");
 
@@ -242,7 +235,7 @@ namespace APP.Commands.Slash {
                     await DataService.UpdateSettingsAsync(settings);
 
                     // Create the embed message
-                    await DiscordUtil.CreateMessageAsync(message.Type, ctx.Interaction, message, true);
+                    await DiscordUtil.CreateMessageAsync(ctx.Interaction, message);
 
                 } catch (Exception ex) {
                     throw new CommandException($"An error occured using the command: /{SETTINGS} {SETTINGS_SET} {SETTINGS_STRIKE}", ex);
@@ -261,7 +254,6 @@ namespace APP.Commands.Slash {
                     var message = template!.Message;
                     message.ChannelId = channel.Id;
                     message.Sender = ctx.User.Id;
-                    message.Type = CommandEnum.SETTINGS_SET_VERIFY;
                     message.AddData(Placeholder.TEXT1, $"Successfully executed command.");
                     message.AddData(Placeholder.TEXT2, $"Edited **`verify channel`** to {channel.Mention}.");
 
@@ -271,7 +263,7 @@ namespace APP.Commands.Slash {
                     await DataService.UpdateSettingsAsync(settings);
 
                     // Create the embed message
-                    await DiscordUtil.CreateMessageAsync(message.Type, ctx.Interaction, message, true);
+                    await DiscordUtil.CreateMessageAsync(ctx.Interaction, message);
 
                 } catch (Exception ex) {
                     throw new CommandException($"An error occured using the command: /{SETTINGS} {SETTINGS_SET} {SETTINGS_VERIFY}", ex);
@@ -300,7 +292,6 @@ namespace APP.Commands.Slash {
                     var message = template!.Message;
                     message.ChannelId = ctx.Channel.Id;
                     message.Sender = ctx.User.Id;
-                    message.Type = CommandEnum.SETTINGS_REMOVE_WELCOME;
                     message.AddData(Placeholder.TEXT1, $"Successfully executed command.");
                     message.AddData(Placeholder.TEXT2, $"removed ####### from **`welcome channel`**.");
 
@@ -310,7 +301,7 @@ namespace APP.Commands.Slash {
                     await DataService.UpdateSettingsAsync(settings);
 
                     // Create the embed message
-                    await DiscordUtil.CreateMessageAsync(message.Type, ctx.Interaction, message, true);
+                    await DiscordUtil.CreateMessageAsync(ctx.Interaction, message);
 
                 } catch (Exception ex) {
                     throw new CommandException($"An error occured using the command: /{SETTINGS} {SETTINGS_REMOVE} {SETTINGS_WELCOME}", ex);
@@ -329,7 +320,6 @@ namespace APP.Commands.Slash {
                     var message = template!.Message;
                     message.ChannelId = ctx.Channel.Id;
                     message.Sender = ctx.User.Id;
-                    message.Type = CommandEnum.SETTINGS_REMOVE_INTRODUCTION;
                     message.AddData(Placeholder.TEXT1, $"Successfully executed command.");
                     message.AddData(Placeholder.TEXT2, $"removed ####### from **`introduction channel`**.");
 
@@ -339,7 +329,7 @@ namespace APP.Commands.Slash {
                     await DataService.UpdateSettingsAsync(settings);
 
                     // Create the embed message
-                    await DiscordUtil.CreateMessageAsync(message.Type, ctx.Interaction, message, true);
+                    await DiscordUtil.CreateMessageAsync(ctx.Interaction, message);
 
                 } catch (Exception ex) {
                     throw new CommandException($"An error occured using the command: /{SETTINGS} {SETTINGS_REMOVE} {SETTINGS_INTRODUCTION}", ex);
@@ -358,7 +348,6 @@ namespace APP.Commands.Slash {
                     var message = template!.Message;
                     message.ChannelId = ctx.Channel.Id;
                     message.Sender = ctx.User.Id;
-                    message.Type = CommandEnum.SETTINGS_REMOVE_LOG;
                     message.AddData(Placeholder.TEXT1, $"Successfully executed command.");
                     message.AddData(Placeholder.TEXT2, $"removed ####### from **`log channel`**.");
 
@@ -368,7 +357,7 @@ namespace APP.Commands.Slash {
                     await DataService.UpdateSettingsAsync(settings);
 
                     // Create the embed message
-                    await DiscordUtil.CreateMessageAsync(message.Type, ctx.Interaction, message, true);
+                    await DiscordUtil.CreateMessageAsync(ctx.Interaction, message);
 
                 } catch (Exception ex) {
                     throw new CommandException($"An error occured using the command: /{SETTINGS} {SETTINGS_REMOVE} {SETTINGS_LOG}", ex);
@@ -387,7 +376,6 @@ namespace APP.Commands.Slash {
                     var message = template!.Message;
                     message.ChannelId = ctx.Channel.Id;
                     message.Sender = ctx.User.Id;
-                    message.Type = CommandEnum.SETTINGS_REMOVE_CHANEGLOG;
                     message.AddData(Placeholder.TEXT1, $"Successfully executed command.");
                     message.AddData(Placeholder.TEXT2, $"removed ####### from **`changelog channel`**.");
 
@@ -397,7 +385,7 @@ namespace APP.Commands.Slash {
                     await DataService.UpdateSettingsAsync(settings);
 
                     // Create the embed message
-                    await DiscordUtil.CreateMessageAsync(message.Type, ctx.Interaction, message, true);
+                    await DiscordUtil.CreateMessageAsync(ctx.Interaction, message);
 
                 } catch (Exception ex) {
                     throw new CommandException($"An error occured using the command: /{SETTINGS} {SETTINGS_REMOVE} {SETTINGS_CHANGELOG}", ex);
@@ -416,7 +404,6 @@ namespace APP.Commands.Slash {
                     var message = template!.Message;
                     message.ChannelId = ctx.Channel.Id;
                     message.Sender = ctx.User.Id;
-                    message.Type = CommandEnum.SETTINGS_REMOVE_INACTIVITY;
                     message.AddData(Placeholder.TEXT1, $"Successfully executed command.");
                     message.AddData(Placeholder.TEXT2, $"removed ####### from **`inactivity channel`**.");
 
@@ -426,7 +413,7 @@ namespace APP.Commands.Slash {
                     await DataService.UpdateSettingsAsync(settings);
 
                     // Create the embed message
-                    await DiscordUtil.CreateMessageAsync(message.Type, ctx.Interaction, message, true);
+                    await DiscordUtil.CreateMessageAsync(ctx.Interaction, message);
 
                 } catch (Exception ex) {
                     throw new CommandException($"An error occured using the command: /{SETTINGS} {SETTINGS_REMOVE} {SETTINGS_INACTIVITY}", ex);
@@ -445,7 +432,6 @@ namespace APP.Commands.Slash {
                     var message = template!.Message;
                     message.ChannelId = ctx.Channel.Id;
                     message.Sender = ctx.User.Id;
-                    message.Type = CommandEnum.SETTINGS_REMOVE_PUNISHMENT;
                     message.AddData(Placeholder.TEXT1, $"Successfully executed command.");
                     message.AddData(Placeholder.TEXT2, $"removed ####### from **`punishment channel`**.");
 
@@ -455,7 +441,7 @@ namespace APP.Commands.Slash {
                     await DataService.UpdateSettingsAsync(settings);
 
                     // Create the embed message
-                    await DiscordUtil.CreateMessageAsync(message.Type, ctx.Interaction, message, true);
+                    await DiscordUtil.CreateMessageAsync(ctx.Interaction, message);
 
                 } catch (Exception ex) {
                     throw new CommandException($"An error occured using the command: /{SETTINGS} {SETTINGS_REMOVE} {SETTINGS_PUNISHMENT}", ex);
@@ -474,7 +460,6 @@ namespace APP.Commands.Slash {
                     var message = template!.Message;
                     message.ChannelId = ctx.Channel.Id;
                     message.Sender = ctx.User.Id;
-                    message.Type = CommandEnum.SETTINGS_REMOVE_STRIKE;
                     message.AddData(Placeholder.TEXT1, $"Successfully executed command.");
                     message.AddData(Placeholder.TEXT2, $"removed ####### from **`strike channel`**.");
 
@@ -484,7 +469,7 @@ namespace APP.Commands.Slash {
                     await DataService.UpdateSettingsAsync(settings);
 
                     // Create the embed message
-                    await DiscordUtil.CreateMessageAsync(message.Type, ctx.Interaction, message, true);
+                    await DiscordUtil.CreateMessageAsync(ctx.Interaction, message);
 
                 } catch (Exception ex) {
                     throw new CommandException($"An error occured using the command: /{SETTINGS} {SETTINGS_REMOVE} {SETTINGS_STRIKE}", ex);
@@ -503,7 +488,6 @@ namespace APP.Commands.Slash {
                     var message = template!.Message;
                     message.ChannelId = ctx.Channel.Id;
                     message.Sender = ctx.User.Id;
-                    message.Type = CommandEnum.SETTINGS_REMOVE_VERIFY;
                     message.AddData(Placeholder.TEXT1, $"Successfully executed command.");
                     message.AddData(Placeholder.TEXT2, $"removed ####### from **`verify channel`**.");
 
@@ -513,7 +497,7 @@ namespace APP.Commands.Slash {
                     await DataService.UpdateSettingsAsync(settings);
 
                     // Create the embed message
-                    await DiscordUtil.CreateMessageAsync(message.Type, ctx.Interaction, message, true);
+                    await DiscordUtil.CreateMessageAsync(ctx.Interaction, message);
 
                 } catch (Exception ex) {
                     throw new CommandException($"An error occured using the command: /{SETTINGS} {SETTINGS_REMOVE} {SETTINGS_VERIFY}", ex);

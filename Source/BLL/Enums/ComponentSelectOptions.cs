@@ -6,8 +6,7 @@ using System.Threading.Tasks;
 
 namespace BLL.Enums {
     public enum ComponentSelectOptions {
-        NONE,
-        DEFAULT,
-        PLACEHOLDER
+        DEFAULT = 0,
+        PLACEHOLDER = 1
     }
 }

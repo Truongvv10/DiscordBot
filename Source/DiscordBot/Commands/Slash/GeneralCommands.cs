@@ -49,7 +49,7 @@ namespace APP.Commands.Slash {
                 var message = new Message(text);
 
                 // Send the message
-                await DiscordUtil.CreateMessageToChannelAsync(CommandEnum.MESSAGE, ctx.Interaction, message, ctx.Channel);
+                await DiscordUtil.CreateMessageToChannelAsync(ctx.Interaction, message, ctx.Channel);
 
             } catch (Exception ex) {
                 throw new CommandException($"An error occured using the command: /{SEND}", ex);
@@ -91,7 +91,7 @@ namespace APP.Commands.Slash {
                 message.SetData(Placeholder.DATE_END, date.ToString("dd/MM/yyyy HH:mm"));
 
                 // Create embed message
-                await DiscordUtil.CreateMessageAsync(CommandEnum.NITRO, ctx.Interaction, message);
+                await DiscordUtil.CreateMessageAsync(ctx.Interaction, message);
 
             } catch (Exception ex) {
                 throw new CommandException($"An error occured using the command: /{NITRO}", ex);
@@ -109,7 +109,7 @@ namespace APP.Commands.Slash {
                 var message = template!.Message;
 
                 // Create embed message
-                await DiscordUtil.CreateMessageAsync(CommandEnum.TEMPLATES, ctx.Interaction, message, true);
+                await DiscordUtil.CreateMessageAsync(ctx.Interaction, message);
 
             } catch (Exception ex) {
                 throw new CommandException($"An error occured using the command: /{TEMPLATES}", ex);
@@ -214,7 +214,6 @@ namespace APP.Commands.Slash {
 
                 embed.ReplaceFieldAt(0, "User", $"```{ctx.Interaction.User.Username}```");
                 embed.WithFooter(ctx.User.Username, ctx.User.AvatarUrl);
-                message.Type = CommandEnum.INACTIVITY;
                 message.AddData(Identity.INTERNAL_SEND_CHANNEL, channel.Id.ToString());
 
                 DataService.AddCacheModalData(ctx.Guild.Id, ctx.User.Id, message);

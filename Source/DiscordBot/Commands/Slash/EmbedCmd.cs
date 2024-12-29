@@ -46,7 +46,6 @@ namespace APP.Commands.Slash {
                 var template = await DataService.GetTemplateAsync(ctx.Guild.Id, TemplateMessage.EMBED);
                 var message = template!.Message;
                 message.AddData(Identity.INTERNAL_SEND_CHANNEL, channel.Id.ToString());
-                message.Type = CommandEnum.EMBED_CREATE;
 
                 // Add the optional values
                 if (image is not null) message.Embed!.Image = image.Url;
@@ -54,7 +53,7 @@ namespace APP.Commands.Slash {
                 if (pingrole is not null) message.AddRole(pingrole.Id);
 
                 // Create the embed message
-                await DiscordUtil.CreateMessageAsync(CommandEnum.EMBED_CREATE, ctx.Interaction, message, hidden);
+                await DiscordUtil.CreateMessageAsync(ctx.Interaction, message);
 
             } catch (Exception ex) {
                 throw new CommandException($"An error occured using the command: /{EMBED} {EMBED_CREATE}", ex);
@@ -73,8 +72,7 @@ namespace APP.Commands.Slash {
                     var message = await DataService.GetMessageAsync(ctx.Guild.Id, messageid) ?? throw new CommandException($"Message with id \"{id}\" in guild \"{ctx.Guild.Id}\" was not found.");
                     var copy = message.DeepClone();
                     copy.AddChild(ulong.Parse(id), message.ChannelId);
-                    copy.Type = CommandEnum.EMBED_EDIT;
-                    await DiscordUtil.CreateMessageAsync(CommandEnum.EMBED_EDIT, ctx.Interaction, copy, false);
+                    await DiscordUtil.CreateMessageAsync(ctx.Interaction, copy);
                 }
             } catch (Exception ex) {
                 throw new CommandException($"An error occured using the command: /{EMBED} {EMBED_EDIT}", ex);
@@ -89,17 +87,16 @@ namespace APP.Commands.Slash {
             [Option("message-id", "The id of the embeded message you want to edit.")] string id,
             [Option("channel", "The channel where the message was in.")] DiscordChannel channel,
             [Option("template", "Modify message to a template?")] TemplateMessage templateId = TemplateMessage.EMBED,
-            [Option("buttons", "What buttons should be added?")] ComponentButtons button = ComponentButtons.NONE) {
+            [Option("button_component", "What buttons should be added?")] ComponentButtons? button = null,
+            [Option("select_component", "What select options should be added?")] ComponentSelectOptions? select = null) {
             try {
                 // Build the embed message with default values
                 var template = await DataService.GetTemplateAsync(ctx.Guild.Id, templateId);
                 var message = template!.Message;
-                message.SetType(CommandEnum.EMBED_EDIT);
-                message.SetButtonComponents(button);
                 message.AddChild(ulong.Parse(id), channel.Id);
 
                 // Create embed message
-                await DiscordUtil.CreateMessageAsync(CommandEnum.EMBED_EDIT, ctx.Interaction, message, false);
+                await DiscordUtil.CreateMessageAsync(ctx.Interaction, message);
 
             } catch (Exception ex) {
                 throw new CommandException($"An error occured using the command: /{EMBED} {EMBED_EDIT}", ex);
@@ -117,7 +114,7 @@ namespace APP.Commands.Slash {
                 var message = template!.Message;
 
                 // Create embed message
-                await DiscordUtil.CreateMessageAsync(CommandEnum.TEMPLATES, ctx.Interaction, message, true);
+                await DiscordUtil.CreateMessageAsync(ctx.Interaction, message);
 
             } catch (Exception ex) {
                 throw new CommandException($"An error occured using the command: /{EMBED_TEMPLATES}", ex);

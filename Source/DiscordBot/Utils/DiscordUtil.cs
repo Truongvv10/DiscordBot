@@ -29,7 +29,7 @@ namespace APP.Utils {
         }
         #endregion
 
-        public async Task CreateMessageAsync(CommandEnum type, DiscordInteraction interaction, Message message, bool hidden = false) {
+        public async Task CreateMessageAsync(DiscordInteraction interaction, Message message) {
             try {
                 // Start the stopwatch
                 Stopwatch stopwatch = Stopwatch.StartNew();
@@ -44,7 +44,7 @@ namespace APP.Utils {
                 await translated.TranslatePlaceholders(interaction, dataService);
 
                 // Create the response
-                var response = await CreateResponseAsync(type, interaction, translated, hidden);
+                var response = await CreateResponseAsync(interaction, translated);
                 await interaction.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, response);
 
                 // Stop the stopwatch and log the elapsed time
@@ -70,7 +70,7 @@ namespace APP.Utils {
             }
         }
 
-        public async Task CreateMessageToChannelAsync(CommandEnum type, DiscordInteraction interaction, Message message, DiscordChannel channel) {
+        public async Task CreateMessageToChannelAsync(DiscordInteraction interaction, Message message, DiscordChannel channel) {
             try {
                 // Start the stopwatch
                 Stopwatch stopwatch = Stopwatch.StartNew();
@@ -85,7 +85,7 @@ namespace APP.Utils {
                 await translated.TranslatePlaceholders(interaction, dataService);
 
                 // Create the response
-                var response = await CreateResponseAsync(type, interaction, translated);
+                var response = await CreateResponseAsync(interaction, translated);
 
                 // Build the message with components
                 var messageBuilder = new DiscordMessageBuilder()
@@ -135,7 +135,7 @@ namespace APP.Utils {
                 var embed = translated.Embed.Build();
 
                 // Create the response
-                var response = await CreateResponseAsync(message.Type, interaction, translated, message.IsEphemeral);
+                var response = await CreateResponseAsync(interaction, translated);
                 var original = await interaction.GetOriginalResponseAsync();
                 await original.ModifyAsync(new DiscordMessageBuilder()
                     .WithContent(response.Content)
@@ -160,7 +160,7 @@ namespace APP.Utils {
             }
         }
 
-        public async Task ModifyMessageAsync(CommandEnum type, DiscordInteraction interaction, Message message, bool hidden = false) {
+        public async Task ModifyMessageAsync(DiscordInteraction interaction, Message message) {
             try {
                 // Start the stopwatch
                 Stopwatch stopwatch = Stopwatch.StartNew();
@@ -170,7 +170,7 @@ namespace APP.Utils {
                 await translated.TranslatePlaceholders(interaction, dataService);
                 var embed = translated.Embed;
 
-                var response = await CreateResponseAsync(type, interaction, translated, message.IsEphemeral);
+                var response = await CreateResponseAsync(interaction, translated);
                 var original = await interaction.GetOriginalResponseAsync();
                 await original.ModifyAsync(new DiscordMessageBuilder()
                     .WithContent(response.Content)
@@ -196,7 +196,7 @@ namespace APP.Utils {
             }
         }
 
-        public async Task<DiscordInteractionResponseBuilder> CreateResponseAsync(CommandEnum type, DiscordInteraction interaction, Message message, bool hidden = false) {
+        public async Task<DiscordInteractionResponseBuilder> CreateResponseAsync(DiscordInteraction interaction, Message message) {
             try {
 
                 // Get discord channel through channel id
@@ -208,69 +208,44 @@ namespace APP.Utils {
                 // List of components
                 List<DiscordActionRowComponent> components = new();
 
-                // Define button components with corresponding actions
-                var buttonComponent = new List<DiscordComponent> {
-                    new DiscordButtonComponent(ButtonStyle.Success, Identity.BUTTON_CHANNEL, $"Send to {channel.Name}"),
-                    new DiscordButtonComponent(ButtonStyle.Secondary, Identity.BUTTON_TEMPLATE, $"Use Template"),
-                    new DiscordButtonComponent(ButtonStyle.Primary, Identity.BUTTON_UPDATE, $"Update"),
-                    new DiscordButtonComponent(ButtonStyle.Danger, Identity.BUTTON_CANCEL, "Cancel", hidden)};
+                foreach (var component in message.ComponentSelectOptions) {
+                    switch (component) {
+                        case ComponentSelectOptions.DEFAULT:
+                            components.Add(SelectComponent.GetDefault());
+                            break;
+                        case ComponentSelectOptions.PLACEHOLDER:
+                            components.Add(SelectComponent.GetPlaceholder(message));
+                            break;
+                        default:
+                            break;
+                    }
+                }
 
-                switch (type) {
-
-                    case CommandEnum.EMBED_CREATE:
-                        components.Add(DefaultComponent().First());
-                        components.Add(PlaceholderComponent(message).First());
-                        components.Add(new DiscordActionRowComponent(buttonComponent));
-                        break;
-
-                    case CommandEnum.EMBED_EDIT:
-                        components.Add(DefaultComponent().First());
-                        components.Add(PlaceholderComponent(message).First());
-                        var updateComponent = new List<DiscordComponent> {
-                            new DiscordButtonComponent(ButtonStyle.Primary, Identity.BUTTON_UPDATE, "Update"),
-                            new DiscordButtonComponent(ButtonStyle.Danger, Identity.BUTTON_CANCEL, "Cancel", hidden)};
-                        components.Add(new DiscordActionRowComponent(updateComponent));
-                        break;
-
-                    case CommandEnum.INACTIVITY:
-                        var inactivityComponent = new List<DiscordComponent> {
-                            new DiscordButtonComponent(ButtonStyle.Primary, Identity.BUTTON_INACTIVITY_SEEN, "Mark as seen"),
-                            new DiscordButtonComponent(ButtonStyle.Danger, Identity.BUTTON_INACTIVITY_EDIT, "Edit")};
-                        components.Add(new DiscordActionRowComponent(inactivityComponent));
-                        break;
-
-                    case CommandEnum.EVENTS_CREATE:
-                        components.Add(DefaultComponent().First());
-                        components.Add(PlaceholderComponent(message).First());
-                        components.Add(new DiscordActionRowComponent(buttonComponent));
-                        break;
-
-                    case CommandEnum.NITRO:
-                        var buttonNitroClaim = new List<DiscordComponent> {
-                            new DiscordButtonComponent(ButtonStyle.Primary, Identity.BUTTON_NITRO, "Claim Nitro")};
-                        components.Add(new DiscordActionRowComponent(buttonNitroClaim));
-                        break;
-
-                    case CommandEnum.EVENTS_SETUP:
-                        var buttonEventSetup = new List<DiscordComponent> {
-                            new DiscordButtonComponent(ButtonStyle.Primary, Identity.BUTTON_EVENT_SETUP, "Setup Event"),
-                            new DiscordButtonComponent(ButtonStyle.Danger, Identity.BUTTON_CANCEL, "Cancel", hidden)};
-                        components.Add(new DiscordActionRowComponent(buttonEventSetup));
-                        break;
-
-                    case CommandEnum.BROADCAST:
-                        break;
-
-                    case CommandEnum.CHANGELOG:
-                        break;
-
-                    default:
-                        break;
+                foreach (var component in message.ComponentButtons) {
+                    switch (component) {
+                        case ComponentButtons.EMBED:
+                            components.Add(ButtonComponent.GetDefault(channel, message.IsEphemeral));
+                            break;
+                        case ComponentButtons.EVENT:
+                            components.Add(ButtonComponent.GetEvent(message.IsEphemeral));
+                            break;
+                        case ComponentButtons.INACTIVITY:
+                            components.Add(ButtonComponent.GetInactivity());
+                            break;
+                        case ComponentButtons.NITRO:
+                            components.Add(ButtonComponent.GetNitro());
+                            break;
+                        case ComponentButtons.EDIT:
+                            components.Add(ButtonComponent.GetEdit(message.IsEphemeral));
+                            break;
+                        default:
+                            break;
+                    }
                 }
 
                 // Build the embed and response
                 var response = ResolveImageAttachment(message.Embed)
-                    .AsEphemeral(hidden)
+                    .AsEphemeral(message.IsEphemeral)
                     .AddComponents(components.ToList());
 
                 // Check for any roles to mention
@@ -365,101 +340,6 @@ namespace APP.Utils {
             }
         }
 
-        public List<DiscordActionRowComponent> DefaultComponent() {
-
-            var selectOptions = new List<DiscordSelectComponentOption>() {
-                    new DiscordSelectComponentOption("Edit Title", Identity.SELECTION_TITLE, "Edit your embed title & url.", emoji: new DiscordComponentEmoji("✏️")),
-                    new DiscordSelectComponentOption("Edit Description", Identity.SELECTION_DESCRIPTION, "Edit your embed description.", emoji: new DiscordComponentEmoji("📄")),
-                    new DiscordSelectComponentOption("Edit Footer", Identity.SELECTION_FOOTER, "Edit your embed footer & image.", emoji: new DiscordComponentEmoji("🧩")),
-                    new DiscordSelectComponentOption("Edit Author", Identity.SELECTION_AUTHOR, "Edit your embed author text, link & url.", emoji: new DiscordComponentEmoji("👤")),
-                    new DiscordSelectComponentOption("Edit Main Image", Identity.SELECTION_IMAGE, "Edit your embed image.", emoji: new DiscordComponentEmoji("🪪")),
-                    new DiscordSelectComponentOption("Edit Thumbnail Image", Identity.SELECTION_THUMBNAIL, "Edit your embed tumbnail.", emoji: new DiscordComponentEmoji("🖼")),
-                    new DiscordSelectComponentOption("Edit Color", Identity.SELECTION_COLOR, "Edit your embed color.", emoji: new DiscordComponentEmoji("🎨")),
-                    new DiscordSelectComponentOption("Edit Roles To Ping", Identity.SELECTION_PINGROLE, "Edit roles to ping on message sent.", emoji: new DiscordComponentEmoji("🔔")),
-                    new DiscordSelectComponentOption("Edit Plain Message", Identity.SELECTION_CONTENT, "Edit plain text to the message.", emoji: new DiscordComponentEmoji("💭")),
-                    new DiscordSelectComponentOption("Toggle Timestamp", Identity.SELECTION_TIMESTAMP, "Toggle embed timestamp.", emoji: new DiscordComponentEmoji("🕙")),
-                    new DiscordSelectComponentOption("Add Field Message", Identity.SELECTION_FIELD_ADD, "Add field message.", emoji: new DiscordComponentEmoji("📕")),
-                    new DiscordSelectComponentOption("Remove Field Message", Identity.SELECTION_FIELD_REMOVE, "Remove field message.", emoji: new DiscordComponentEmoji("❌")),
-                    new DiscordSelectComponentOption("Save To Templates", Identity.SELECTION_TEMPLATE_ADD, "Save this message to your templates.", emoji: new DiscordComponentEmoji("📂")),
-                    new DiscordSelectComponentOption("Use From Templates", Identity.SELECTION_TEMPLATE_USE, "Change this message using your templates.", emoji: new DiscordComponentEmoji("📑")),
-                    new DiscordSelectComponentOption("List Of Templates", Identity.SELECTION_TEMPLATE_LIST, "Have an overview of available templates.", emoji: new DiscordComponentEmoji("📰")),
-                    new DiscordSelectComponentOption("Remove A Template", Identity.SELECTION_TEMPLATE_REMOVE, "Remove a template from your templates.", emoji: new DiscordComponentEmoji("❌"))};
-
-            List<DiscordComponent> selectComponents = new() {
-                new DiscordSelectComponent(Identity.SELECTION_EMBED, "Select message builder components to edit", selectOptions)};
-
-            List<DiscordActionRowComponent> results = new() {
-                new DiscordActionRowComponent(selectComponents)};
-
-            return results;
-        }
-
-        public List<DiscordActionRowComponent> DefaultButtonComponent(DiscordChannel channel) {
-
-            // Define button components with corresponding actions
-            var buttonComponent = new List<DiscordComponent> {
-                    new DiscordButtonComponent(ButtonStyle.Success, "embedButtonChannel", $"Send to {channel.Name}"),
-                    new DiscordButtonComponent(ButtonStyle.Secondary, "embedButtonTemplates", $"Templates"),
-                    new DiscordButtonComponent(ButtonStyle.Primary, "embedButtonUpdate", $"Update"),
-                    new DiscordButtonComponent(ButtonStyle.Danger, "embedButtonCancel", "Cancel")};
-
-            List<DiscordActionRowComponent> results = new() {
-                new DiscordActionRowComponent(buttonComponent)};
-
-            return results;
-        }
-
-        public List<DiscordActionRowComponent> PlaceholderComponent(Message message) {
-
-            var selectOptions = new List<DiscordSelectComponentOption>() {
-                    new DiscordSelectComponentOption("Edit name", Identity.SELECTION_PLACEHOLDER_ID, "Edit the name of this message.", emoji: new DiscordComponentEmoji("🏷️")),
-                    new DiscordSelectComponentOption("Edit time", Identity.SELECTION_PLACEHOLDER_TIME, "Edit the time of this message.", emoji: new DiscordComponentEmoji("🕙")),
-                    new DiscordSelectComponentOption("Edit texts", Identity.SELECTION_PLACEHOLDER_TEXTS, "Edit the texts of this message.", emoji: new DiscordComponentEmoji("💬")),
-                    new DiscordSelectComponentOption("Edit urls", Identity.SELECTION_PLACEHOLDER_URLS, "Edit the urls of this message.", emoji: new DiscordComponentEmoji("🔗"))};
-
-            // Split into nested dictionary
-            var nestedData = new Dictionary<string, List<string>>();
-            List<string> emojis = new() { "🟥", "🟧", "🟨", "🟩", "🟦", "🟪", "⬜", "⬛", "🟫" };
-
-            foreach (var kvp in message.Data) {
-                if (kvp.Key.StartsWith("data.custom")) {
-                    // Split the key into segments
-                    var segments = kvp.Key.Split('.');
-                    if (!nestedData.TryAdd(segments[2], new() { segments[3] })) {
-                        nestedData[segments[2]].Add(segments[3]);
-                    }
-                }
-            }
-
-            var availableEmojis = new List<string>(emojis);
-            int index = 0;
-
-            foreach (var item in nestedData) {
-                string property = item.Key;
-
-                // Pick a random emoji from the available ones
-                string selectedEmoji = availableEmojis[index];
-                index++;
-
-                selectOptions.Add(new DiscordSelectComponentOption(
-                    $"Edit {property}",
-                    $"{Identity.SELECTION_PLACEHOLDER_CUSTOM}.{property}",
-                    $"Edit the {property} of this message.",
-                    emoji: new DiscordComponentEmoji(selectedEmoji)
-                ));
-            }
-
-            selectOptions.Add(new DiscordSelectComponentOption("Placeholder add", Identity.SELECTION_PLACEHOLDER_ADD, "Add a new custom placeholder.", emoji: new DiscordComponentEmoji("➕")));
-
-            List<DiscordComponent> selectComponents = new() {
-                new DiscordSelectComponent(Identity.SELECTION_PLACEHOLDER, "Select placeholder components to edit", selectOptions)};
-
-            List<DiscordActionRowComponent> results = new() {
-                new DiscordActionRowComponent(selectComponents)};
-
-            return results;
-        }
-
         public async Task<DiscordMessage?> GetMessageByIdAsync(DiscordChannel channel, ulong? messageId) {
             try {
                 if (messageId != null) return await channel.GetMessageAsync((ulong)messageId);
@@ -502,7 +382,7 @@ namespace APP.Utils {
             var message = (await dataService.GetTemplateAsync(interaction.Guild.Id, template.ToString().ToUpper()))!.Message;
             message.SetData(Placeholder.TEXT1, title);
             message.SetData(Placeholder.TEXT2, text);
-            await CreateMessageAsync(CommandEnum.NONE, interaction, message, true);
+            await CreateMessageAsync(interaction, message);
         }
     }
 }
