@@ -248,14 +248,8 @@ namespace APP.Utils {
                     .AsEphemeral(message.IsEphemeral)
                     .AddComponents(components.ToList());
 
-                // Check for any roles to mention
-                if (message.Roles is not null && message.Roles.Count > 0) {
-                    var tasks = message.Roles.Select(async x => await GetRolesByIdAsync(interaction.Guild, x));
-                    var roles = await Task.WhenAll(tasks);
-                    var content = string.Empty;
-                    foreach (var role in roles) if (role.Name == "@everyone") content += "@everyone "; else content += role.Mention + " ";
-                    response.WithContent(message.Content + "\n" + content);
-                } else response.WithContent(message.Content);
+                // Check if the message has content
+                if (!string.IsNullOrWhiteSpace(message.Content)) response.WithContent(message.Content);
 
                 // Return the response
                 return response;

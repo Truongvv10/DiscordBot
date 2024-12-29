@@ -92,9 +92,6 @@ namespace APP.Events {
                 await translated.TranslatePlaceholders(e.Interaction, dataService);
                 var embed = translated.Embed;
 
-                // Roles to ping
-                string pingRoles = await discordUtil.AddPingRolesToContentAsync(translated, e.Guild);
-
                 switch (e.Id) {
 
                     case Identity.BUTTON_CHANNEL:
@@ -104,7 +101,7 @@ namespace APP.Events {
                             channel = await discordUtil.GetChannelByIdAsync(e.Guild, ulong.Parse(message.Data[Identity.INTERNAL_SEND_CHANNEL]));
                         }
                         var response = discordUtil.ResolveImageAttachment(translated);
-                        if (!string.IsNullOrWhiteSpace(pingRoles)) response.WithContent(pingRoles);
+                        if (!string.IsNullOrWhiteSpace(message.Content)) response.WithContent(message.Content);
                         var sentMessage = await channel.SendMessageAsync(response);
                         message.AddChild(sentMessage.Id, sentMessage.Channel.Id);
                         var sentMessageClone = message.DeepClone();
@@ -129,7 +126,7 @@ namespace APP.Events {
                                 var oldMessage = await childChannel.GetMessageAsync(m.Key);
                                 if (oldMessage != null) {
                                     var newResponse = discordUtil.ResolveImageAttachment(translated);
-                                    newResponse.WithContent(pingRoles);
+                                    if (!string.IsNullOrWhiteSpace(message.Content)) newResponse.WithContent(message.Content);
                                     var newMessage = await oldMessage.ModifyAsync(newResponse);
                                 }
                             }
