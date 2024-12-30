@@ -100,6 +100,7 @@ namespace APP.Events {
                         if (message.Data.ContainsKey(Identity.INTERNAL_SEND_CHANNEL)) {
                             channel = await discordUtil.GetChannelByIdAsync(e.Guild, ulong.Parse(message.Data[Identity.INTERNAL_SEND_CHANNEL]));
                         }
+                        await discordUtil.CreateMessageToChannelAsync(e.Interaction, translated, channel);
                         var response = discordUtil.ResolveImageAttachment(translated);
                         if (!string.IsNullOrWhiteSpace(translated.Content)) response.WithContent(translated.Content);
                         var sentMessage = await channel.SendMessageAsync(response);
