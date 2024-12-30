@@ -97,17 +97,25 @@ namespace APP.Events {
                     case Identity.BUTTON_CHANNEL:
                         await e.Interaction.CreateResponseAsync(InteractionResponseType.DeferredMessageUpdate);
                         var channel = await discordUtil.GetChannelByIdAsync(e.Guild, message.ChannelId!);
+                        var response = discordUtil.ResolveImageAttachment(translated);
                         if (message.Data.ContainsKey(Identity.INTERNAL_SEND_CHANNEL)) {
                             channel = await discordUtil.GetChannelByIdAsync(e.Guild, ulong.Parse(message.Data[Identity.INTERNAL_SEND_CHANNEL]));
                         }
-                        await discordUtil.CreateMessageToChannelAsync(e.Interaction, translated, channel);
-                        var response = discordUtil.ResolveImageAttachment(translated);
+                        if (message.Users.Count() > 0) {
+                            var mentions = message.Users.Select(x => new UserMention(x)).ToList();
+                            response.AddMentions(mentions.Cast<IMention>());
+                        }
+                        if (message.Roles.Count() > 0) {
+                            var roles = message.Roles.Select(x => new RoleMention(x)).ToList();
+                            response.AddMentions(roles.Cast<IMention>());
+                        }
                         if (!string.IsNullOrWhiteSpace(translated.Content)) response.WithContent(translated.Content);
                         var sentMessage = await channel.SendMessageAsync(response);
                         message.AddChild(sentMessage.Id, sentMessage.Channel.Id);
                         var sentMessageClone = message.DeepClone();
                         sentMessageClone.MessageId = sentMessage.Id;
                         sentMessageClone.ChannelId = sentMessage.Channel.Id;
+                        sentMessageClone.Sender = e.User.Id;
                         sentMessageClone.ClearChilds();
                         await dataService.AddMessageAsync(sentMessageClone);
                         break;

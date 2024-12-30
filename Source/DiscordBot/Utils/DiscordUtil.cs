@@ -15,6 +15,7 @@ using System.Xml;
 using System.Threading.Channels;
 using Microsoft.IdentityModel.Tokens;
 using NodaTime.Text;
+using System.Collections.Immutable;
 
 namespace APP.Utils {
     public class DiscordUtil {
@@ -44,7 +45,7 @@ namespace APP.Utils {
                 await translated.TranslatePlaceholders(interaction, dataService);
 
                 // Create the response
-                var response = await CreateResponseAsync(interaction, translated);
+                var response = await BuildMessageResponse(interaction, translated);
                 await interaction.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, response);
 
                 // Stop the stopwatch and log the elapsed time
@@ -85,7 +86,7 @@ namespace APP.Utils {
                 await translated.TranslatePlaceholders(interaction, dataService);
 
                 // Create the response
-                var response = await CreateResponseAsync(interaction, translated);
+                var response = await BuildMessageResponse(interaction, translated);
 
                 // Build the message with components
                 var messageBuilder = new DiscordMessageBuilder()
@@ -135,7 +136,7 @@ namespace APP.Utils {
                 var embed = translated.Embed.Build();
 
                 // Create the response
-                var response = await CreateResponseAsync(interaction, translated);
+                var response = await BuildMessageResponse(interaction, translated);
                 var original = await interaction.GetOriginalResponseAsync();
                 await original.ModifyAsync(new DiscordMessageBuilder()
                     .WithContent(response.Content)
@@ -170,7 +171,7 @@ namespace APP.Utils {
                 await translated.TranslatePlaceholders(interaction, dataService);
                 var embed = translated.Embed;
 
-                var response = await CreateResponseAsync(interaction, translated);
+                var response = await BuildMessageResponse(interaction, translated);
                 var original = await interaction.GetOriginalResponseAsync();
                 await original.ModifyAsync(new DiscordMessageBuilder()
                     .WithContent(response.Content)
@@ -196,7 +197,7 @@ namespace APP.Utils {
             }
         }
 
-        public async Task<DiscordInteractionResponseBuilder> CreateResponseAsync(DiscordInteraction interaction, Message message) {
+        private async Task<DiscordInteractionResponseBuilder> BuildMessageResponse(DiscordInteraction interaction, Message message) {
             try {
 
                 // Get discord channel through channel id
@@ -250,6 +251,14 @@ namespace APP.Utils {
 
                 // Check if the message has content
                 if (!string.IsNullOrWhiteSpace(message.Content)) response.WithContent(message.Content);
+                if (message.Users.Count() > 0) {
+                    var mentions = message.Users.Select(x => new UserMention(x)).ToList();
+                    response.AddMentions(mentions.Cast<IMention>());
+                }
+                if (message.Roles.Count() > 0) {
+                    var roles = message.Roles.Select(x => new RoleMention(x)).ToList();
+                    response.AddMentions(roles.Cast<IMention>());
+                }
 
                 // Return the response
                 return response;
