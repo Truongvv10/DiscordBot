@@ -174,6 +174,19 @@ namespace APP.Events {
                         await dataService.UpdateMessageAsync(message, selection);
                         break;
 
+                    case Identity.SELECTION_PINGUSER:
+                        List<ulong> pingUserIds = new();
+                        foreach (var item in e.Values.First().Value.Split(",")) {
+                            string trimmedItem = item.Trim();
+                            if (ulong.TryParse(trimmedItem, out ulong userId)) {
+                                var role = await e.Interaction.Guild.GetMemberAsync(userId);
+                                pingUserIds.Add(role.Id);
+                            }
+                        }
+                        message.SetUser(pingUserIds.ToArray());
+                        await dataService.UpdateMessageAsync(message, selection);
+                        break;
+
                     case Identity.SELECTION_FIELD_ADD:
                         embed.AddField(e.Values[Identity.MODAL_DATA_FIELD_TITLE], e.Values[Identity.MODAL_DATA_FIELD_TEXT], bool.Parse(e.Values[Identity.MODAL_DATA_FIELD_INLINE]));
                         await dataService.UpdateMessageAsync(message, selection);

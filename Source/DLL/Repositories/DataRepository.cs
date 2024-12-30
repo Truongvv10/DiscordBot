@@ -308,6 +308,11 @@ namespace DLL.Repositories {
                         dataContext.Entry(fetched).Property(e => e.Roles).IsModified = true;
                         break;
 
+                    case Identity.SELECTION_PINGUSER:
+                        fetched.Users = message.Users;
+                        dataContext.Entry(fetched).Property(e => e.Users).IsModified = true;
+                        break;
+
                     case Identity.SELECTION_FIELD_ADD:
                         fetched.Embed.SetFields(message.Embed.Fields.ToList());
                         dataContext.Entry(fetched.Embed).Property(e => e.Fields).IsModified = true;

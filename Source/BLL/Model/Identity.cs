@@ -21,6 +21,7 @@
         public const string SELECTION_COLOR = $"{SELECTION_EMBED}.color";
         public const string SELECTION_IMAGE = $"{SELECTION_EMBED}.image";
         public const string SELECTION_THUMBNAIL = $"{SELECTION_EMBED}.thumbnail";
+        public const string SELECTION_PINGUSER = $"{SELECTION_EMBED}.pinguser";
         public const string SELECTION_PINGROLE = $"{SELECTION_EMBED}.pingrole";
         public const string SELECTION_TIMESTAMP = $"{SELECTION_EMBED}.timestamp";
         public const string SELECTION_FIELD_ADD = $"{SELECTION_EMBED}.field.add";
@@ -101,6 +102,7 @@
         public const string MODAL_DATA_IMAGE = $"{MODAL_DATA}.image";
         public const string MODAL_DATA_THUMBNAIL = $"{MODAL_DATA}.thumnail";
         public const string MODAL_DATA_PINGROLE = $"{MODAL_DATA}.pingrole";
+        public const string MODAL_DATA_PINGUSER = $"{MODAL_DATA}.pinguser";
         public const string MODAL_DATA_TIMESTAMP = $"{MODAL_DATA}.timestamp";
         public const string MODAL_DATA_FIELD_TITLE = $"{MODAL_DATA}.field.title";
         public const string MODAL_DATA_FIELD_TEXT = $"{MODAL_DATA}.field.text";

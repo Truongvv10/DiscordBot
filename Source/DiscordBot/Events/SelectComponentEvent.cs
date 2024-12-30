@@ -98,6 +98,12 @@ namespace APP.Events {
                             modal.AddComponents(new TextInputComponent($"ROLES", Identity.MODAL_DATA_PINGROLE, roleId, string.Join(", ", message.Roles), true, TextInputStyle.Paragraph));
                             await e.Interaction.CreateResponseAsync(InteractionResponseType.Modal, modal);
                             break;
+                        case Identity.SELECTION_PINGUSER:
+                            string userId = "836964332595707955, 1265749062183813242";
+                            modal.WithTitle($"EDITING PINGED USERS").WithCustomId($"{Identity.MODAL_EMBED};{option};{messageId}");
+                            modal.AddComponents(new TextInputComponent($"USERS", Identity.MODAL_DATA_PINGUSER, userId, string.Join(", ", message.Users), true, TextInputStyle.Paragraph));
+                            await e.Interaction.CreateResponseAsync(InteractionResponseType.Modal, modal);
+                            break;
                         case Identity.SELECTION_TIMESTAMP:
                             embed.HasTimeStamp = !embed.HasTimeStamp;
                             await discordUtil.UpdateMessageAsync(e.Interaction, message);
