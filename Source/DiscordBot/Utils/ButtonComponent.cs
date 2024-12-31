@@ -40,6 +40,13 @@ namespace APP.Utils {
             return new DiscordActionRowComponent(buttons);
         }
 
+        public static DiscordActionRowComponent GetIntroduction() {
+            var buttons = new List<DiscordComponent> {
+                new DiscordButtonComponent(ButtonStyle.Primary, Identity.BUTTON_INTRODUCTION_EDIT, "Edit Introduction"),
+                new DiscordButtonComponent(ButtonStyle.Secondary, Identity.BUTTON_INTRODUCTION_REMOVE, "Remove")};
+            return new DiscordActionRowComponent(buttons);
+        }
+
         public static DiscordActionRowComponent GetNitro() {
             var buttons = new List<DiscordComponent> {
                 new DiscordButtonComponent(ButtonStyle.Primary, Identity.BUTTON_NITRO, "Claim Nitro")};

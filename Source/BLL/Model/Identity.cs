@@ -76,6 +76,11 @@
         public const string BUTTON_INACTIVITY = $"{PREFIX}.button.inactivity";
         public const string BUTTON_INACTIVITY_SEEN = $"{BUTTON_INACTIVITY}.seen";
         public const string BUTTON_INACTIVITY_EDIT = $"{BUTTON_INACTIVITY}.edit";
+
+        // Button Introduction
+        public const string BUTTON_INTRODUCTION = $"{PREFIX}.button.introduction";
+        public const string BUTTON_INTRODUCTION_EDIT = $"{BUTTON_INTRODUCTION}.edit";
+        public const string BUTTON_INTRODUCTION_REMOVE = $"{BUTTON_INTRODUCTION}.remove";
         #endregion
 
         #region Modals
@@ -153,8 +158,9 @@
 
         // Modal Introduction
         private const string MODAL_DATA_INTRODUCTION = $"{MODAL_INTRODUCTION}.component";
+        public const string MODAL_DATA_INTRODUCTION_COUNTRY = $"{MODAL_DATA_INTRODUCTION}.country";
         public const string MODAL_DATA_INTRODUCTION_BIRTHDAY = $"{MODAL_DATA_INTRODUCTION}.birthday";
-        public const string MODAL_DATA_INTRODUCTION_PRONOUNCE = $"{MODAL_DATA_INTRODUCTION}.pronounce";
+        public const string MODAL_DATA_INTRODUCTION_PRONOUNS = $"{MODAL_DATA_INTRODUCTION}.pronouns";
         public const string MODAL_DATA_INTRODUCTION_TEXT = $"{MODAL_DATA_INTRODUCTION}.text";
 
         // Modal Inactivity

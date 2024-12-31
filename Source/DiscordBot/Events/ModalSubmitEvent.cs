@@ -15,6 +15,8 @@ using static NodaTime.TimeZones.TzdbZone1970Location;
 using static System.Net.Mime.MediaTypeNames;
 using System.Drawing;
 using System.Threading.Channels;
+using System.Reflection;
+using System.Text.RegularExpressions;
 
 namespace APP.Events {
     public class ModalSubmitEvent {
@@ -52,7 +54,7 @@ namespace APP.Events {
                     await UseTimestamp(e);
 
                 if (modalId.Contains(Identity.MODAL_INTRODUCTION))
-                    await UseIntroduction(e);
+                    await UseIntroduction(sender, e);
 
                 if (modalId.Contains(Identity.MODAL_INACTIVITY))
                     await UseInactivity(e);
@@ -82,11 +84,42 @@ namespace APP.Events {
             }
         }
 
-        private async Task UseIntroduction(ModalSubmitEventArgs e) {
-            var message = dataService.GetCacheModalData(e.Interaction.Guild.Id, e.Interaction.User.Id);
-            var channel = await discordUtil.GetChannelByIdAsync(e.Interaction.Guild, ulong.Parse(message.Data[Identity.INTERNAL_SEND_CHANNEL]));
-            await discordUtil.CreateMessageToChannelAsync(e.Interaction, message, channel);
-            await discordUtil.SendActionMessage(e.Interaction, TemplateMessage.ACTION_SUCCESS, $"Successfully created introduction.");
+        private async Task UseIntroduction(DiscordClient s, ModalSubmitEventArgs e) {
+            var button = e.Interaction.Data.CustomId.Split(";")[1];
+            var filter = new ProfanityService();
+            var message = await dataService.GetMessageAsync(e.Interaction.Guild.Id, e.Interaction.User.Id) ?? dataService.GetCacheModalData(e.Interaction.Guild.Id, e.Interaction.User.Id);
+            switch (button) {
+                case Identity.BUTTON_INTRODUCTION_EDIT:
+                    var country = e.Values[Identity.MODAL_DATA_INTRODUCTION_COUNTRY];
+                    var birthday = e.Values[Identity.MODAL_DATA_INTRODUCTION_BIRTHDAY];
+                    var pronouns = e.Values[Identity.MODAL_DATA_INTRODUCTION_PRONOUNS];
+                    var introduction = e.Values[Identity.MODAL_DATA_INTRODUCTION_TEXT];
+                    if (string.IsNullOrWhiteSpace(country) || !CountryUtil.IsValidCountry(country)) {
+                        await discordUtil.SendActionMessage(e.Interaction, TemplateMessage.ACTION_INVALID, $"Invalid country \"`{country}`\".", $"Please use a valid country.");
+                        return;
+                    }
+                    if (!DateTime.TryParseExact($"{birthday} 00:00", "dd/MM/yyyy HH:mm", null, System.Globalization.DateTimeStyles.None, out var parsedBirthdayDate)) {
+                        await discordUtil.SendActionMessage(e.Interaction, TemplateMessage.ACTION_INVALID, $"Invalid format with date \"{birthday}\".", "Please use the format \"day/month/year\".");
+                        return;
+                    }
+                    if (string.IsNullOrWhiteSpace(introduction)) {
+                        await discordUtil.SendActionMessage(e.Interaction, TemplateMessage.ACTION_INVALID, $"Invalid introduction.", "Please put an introduction in.");
+                        return;
+                    }
+                    message.SetData($"{Placeholder.CUSTOM}.introduction.country", country);
+                    message.SetData($"{Placeholder.CUSTOM}.introduction.birthday", birthday);
+                    message.SetData($"{Placeholder.CUSTOM}.introduction.pronouns", filter.CensorText(pronouns));
+                    message.SetData($"{Placeholder.CUSTOM}.introduction.text", filter.CensorText(introduction));
+                    await discordUtil.UpdateMessageAsync(e.Interaction, message);
+                    return;
+                default:
+                    var channel = await discordUtil.GetChannelByIdAsync(e.Interaction.Guild, ulong.Parse(message.Data[Identity.INTERNAL_SEND_CHANNEL]));
+                    message.Data[$"{Placeholder.CUSTOM}.introduction.text"] = filter.CensorText(e.Values.Values.First());
+                    var response = await discordUtil.CreateMessageToChannelAsync(e.Interaction, message, channel);
+                    await discordUtil.SendActionMessage(e.Interaction, TemplateMessage.ACTION_SUCCESS, $"Successfully created introduction.");
+                    await response.CreateReactionAsync(DiscordEmoji.FromName(s, ":heart:"));
+                    break;
+            }
         }
 
         private async Task UseEmbed(ModalSubmitEventArgs e) {

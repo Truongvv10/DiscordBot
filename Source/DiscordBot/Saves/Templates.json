@@ -170,7 +170,8 @@
             "color": "#0681cd",
             "timestamp": true
         },
-        "ephemeral": false
+        "ephemeral": false,
+        "buttons": [ 6 ]
     },
     "ACTION_SUCCESS": {
         "embed": {

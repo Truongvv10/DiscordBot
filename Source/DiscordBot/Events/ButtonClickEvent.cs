@@ -11,6 +11,9 @@ using Microsoft.VisualBasic;
 using BLL.Exceptions;
 using System.Runtime.InteropServices;
 using System.Linq;
+using static System.Runtime.InteropServices.JavaScript.JSType;
+using DSharpPlus.SlashCommands.Attributes;
+using DSharpPlus.CommandsNext.Attributes;
 
 namespace APP.Events {
     public class ButtonClickEvent {
@@ -40,6 +43,9 @@ namespace APP.Events {
             }
             if (e.Interaction.Data.ComponentType == ComponentType.Button) {
                 if (e.Id.Contains(Identity.BUTTON_INACTIVITY)) await UseInactivity(e);
+            }
+            if (e.Interaction.Data.ComponentType == ComponentType.Button) {
+                if (e.Id.Contains(Identity.BUTTON_INTRODUCTION)) await UseIntroduction(e);
             }
         }
 
@@ -77,6 +83,46 @@ namespace APP.Events {
                 }
             } catch (Exception ex) {
                 throw new EventException("An error occured using the button for inactivity", ex);
+            }
+        }
+
+        private async Task UseIntroduction(ComponentInteractionCreateEventArgs e) {
+            try {
+                // Get the message
+                var message = await dataService.GetMessageAsync(e.Guild.Id, e.Message.Id) ?? throw new Exception($"Message does not exists");
+                var embed = message.Embed;
+                var user = e.Interaction.User;
+                var member = await e.Guild.GetMemberAsync(user.Id);
+                var button = e.Id;
+
+                // Interaction response
+                if (message.Sender == e.User.Id || (member.Permissions.HasPermission(Permissions.All) || member.Permissions.HasPermission(Permissions.Administrator))) {
+                    switch (button) {
+                        case Identity.BUTTON_INTRODUCTION_REMOVE:
+                            await e.Interaction.CreateResponseAsync(InteractionResponseType.DeferredMessageUpdate);
+                            var deleteMessage = await e.Interaction.GetOriginalResponseAsync();
+                            await deleteMessage.DeleteAsync();
+                            await dataService.RemoveMessageAsync(message);
+                            break;
+                        case Identity.BUTTON_INTRODUCTION_EDIT:
+                            var modal = new DiscordInteractionResponseBuilder();
+                            modal.WithTitle($"INTRODUCTION NOTICE")
+                                .WithCustomId($"{Identity.MODAL_INTRODUCTION};{button}")
+                                .AddComponents(new TextInputComponent("COUNTRY", Identity.MODAL_DATA_INTRODUCTION_COUNTRY, null, message.Data[$"{Placeholder.CUSTOM}.introduction.country"], true, TextInputStyle.Short, 0, 128))
+                                .AddComponents(new TextInputComponent("BIRTHDAY", Identity.MODAL_DATA_INTRODUCTION_BIRTHDAY, null, message.Data[$"{Placeholder.CUSTOM}.introduction.birthday"].Substring(0, 10), true, TextInputStyle.Short, 10, 10))
+                                .AddComponents(new TextInputComponent("PRONOUNS", Identity.MODAL_DATA_INTRODUCTION_PRONOUNS, null, message.Data[$"{Placeholder.CUSTOM}.introduction.pronouns"], true, TextInputStyle.Short, 0, 32))
+                                .AddComponents(new TextInputComponent("TEXT", Identity.MODAL_DATA_INTRODUCTION_TEXT, null, message.Data[$"{Placeholder.CUSTOM}.introduction.text"], true, TextInputStyle.Paragraph, 0, 2048));
+                            await e.Interaction.CreateResponseAsync(InteractionResponseType.Modal, modal);
+                            dataService.AddCacheModalData(e.Guild.Id, user.Id, message);
+                            break;
+                        default:
+                            break;
+                    }
+                } else {
+                    await discordUtil.SendActionMessage(e.Interaction, TemplateMessage.ACTION_FAILED, "This is not your introduction.");
+                }
+            } catch (Exception ex) {
+                throw new EventException("An error occured using the button for introduction", ex);
             }
         }
 

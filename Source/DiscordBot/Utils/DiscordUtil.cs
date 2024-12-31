@@ -94,7 +94,8 @@ namespace APP.Utils {
                 var messageBuilder = new DiscordMessageBuilder()
                     .WithContent(response.Content)
                     .AddEmbeds(response.Embeds)
-                    .AddComponents(response.Components);
+                    .AddComponents(response.Components)
+                    .AddMentions(response.Mentions);
 
                 // Send the message
                 var original = await channel.SendMessageAsync(messageBuilder);
@@ -243,6 +244,9 @@ namespace APP.Utils {
                         case ComponentButtons.INACTIVITY:
                             components.Add(ButtonComponent.GetInactivity());
                             break;
+                        case ComponentButtons.INTRODUCTION:
+                            components.Add(ButtonComponent.GetIntroduction());
+                            break;
                         case ComponentButtons.NITRO:
                             components.Add(ButtonComponent.GetNitro());
                             break;
@@ -268,6 +272,10 @@ namespace APP.Utils {
                 if (message.Roles.Count() > 0) {
                     var roles = message.Roles.Select(x => new RoleMention(x)).ToList();
                     response.AddMentions(roles.Cast<IMention>());
+                }
+                if (message.Sender is not null && message.Sender != 0) {
+                    var user = await interaction.Guild.GetMemberAsync((ulong)message.Sender);
+                    response.AddMention(new UserMention(user));
                 }
 
                 // Return the response

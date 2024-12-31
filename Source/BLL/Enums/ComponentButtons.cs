@@ -11,5 +11,6 @@ namespace BLL.Enums {
         INACTIVITY = 3,
         NITRO = 4,
         EDIT = 5,
+        INTRODUCTION = 6,
     }
 }

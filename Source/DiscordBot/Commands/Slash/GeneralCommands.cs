@@ -119,7 +119,7 @@ namespace APP.Commands.Slash {
 
         #region Command: Introduction
         [SlashCommand(INTRODUCTION, "Introduce yourself to the server.")]
-        [SlashCooldown(1, 60, SlashCooldownBucketType.Guild)]
+        [SlashCooldown(1, 86400, SlashCooldownBucketType.Guild)]
         public async Task Introduction(InteractionContext ctx,
             [Autocomplete(typeof(CountryChoiceProvider))][Option("country", "Which country are you from?")] string country,
             [Option("time-zone", "The time zone you live in.")] TimeZoneEnum timeZone,
@@ -153,7 +153,7 @@ namespace APP.Commands.Slash {
                 // Create embed message
                 var modal = new DiscordInteractionResponseBuilder();
                 modal.WithTitle($"INTRODUCTION")
-                    .WithCustomId(Identity.MODAL_INTRODUCTION)
+                    .WithCustomId($"{Identity.MODAL_INTRODUCTION};None")
                     .AddComponents(new TextInputComponent("INTRODUCTION", Identity.MODAL_DATA_INTRODUCTION_TEXT, "Write about yourself...", text, true, TextInputStyle.Paragraph, 0, 2048));
 
                 // Create response model
@@ -169,6 +169,7 @@ namespace APP.Commands.Slash {
                 message.AddData($"{Placeholder.CUSTOM}.introduction.pronouns", pronouns.GetEnumChoiceName());
                 message.AddData($"{Placeholder.CUSTOM}.introduction.text", text);
                 message.AddData(Identity.INTERNAL_SEND_CHANNEL, channel.Id.ToString());
+                message.WithContent(ctx.Interaction.User.Mention);
 
                 embed.AddField("Country", $"{{{Placeholder.CUSTOM}.introduction.country}}");
                 embed.AddField("Birthday", $"{{{Placeholder.CUSTOM}.introduction.birthday}}");
