@@ -30,7 +30,7 @@ namespace APP.Utils {
         }
         #endregion
 
-        public async Task CreateMessageAsync(DiscordInteraction interaction, Message message) {
+        public async Task<DiscordMessage> CreateMessageAsync(DiscordInteraction interaction, Message message) {
             try {
                 // Start the stopwatch
                 Stopwatch stopwatch = Stopwatch.StartNew();
@@ -66,12 +66,14 @@ namespace APP.Utils {
                     $"{AnsiColor.RESET}({original.Id}) " +
                     $"{AnsiColor.RESET}({interaction.User.Username})");
 
+                // Return the message
+                return original;
             } catch (Exception ex) {
                 throw new CommandException($"Embed.CreateMessageAsync: {ex.Message}", ex);
             }
         }
 
-        public async Task CreateMessageToChannelAsync(DiscordInteraction interaction, Message message, DiscordChannel channel) {
+        public async Task<DiscordMessage> CreateMessageToChannelAsync(DiscordInteraction interaction, Message message, DiscordChannel channel) {
             try {
                 // Start the stopwatch
                 Stopwatch stopwatch = Stopwatch.StartNew();
@@ -113,12 +115,15 @@ namespace APP.Utils {
                     $"{AnsiColor.BRIGHT_GREEN}-> Message creation took {AnsiColor.YELLOW}{stopwatch.ElapsedMilliseconds}ms " +
                     $"{AnsiColor.RESET}({original.Id}) " +
                     $"{AnsiColor.RESET}({interaction.User.Username})");
+
+                // Return the message
+                return original;
             } catch (Exception ex) {
                 throw new CommandException($"Embed.CreateMessageAsync: {ex.Message}", ex);
             }
         }
 
-        public async Task UpdateMessageAsync(DiscordInteraction interaction, Message message, bool isDeferMessageUpdate = true) {
+        public async Task<DiscordMessage> UpdateMessageAsync(DiscordInteraction interaction, Message message, bool isDeferMessageUpdate = true) {
             try {
                 // Deferring the message update
                 if (isDeferMessageUpdate) await interaction.CreateResponseAsync(InteractionResponseType.DeferredMessageUpdate);
@@ -155,13 +160,16 @@ namespace APP.Utils {
                     $"{AnsiColor.BRIGHT_GREEN}-> Message update took {AnsiColor.YELLOW}{stopwatch.ElapsedMilliseconds}ms " +
                     $"{AnsiColor.RESET}({original.Id}) " +
                     $"{AnsiColor.RESET}({interaction.User.Username})");
+
+                // Return the message
+                return original;
             } catch (Exception ex) {
                 Console.WriteLine(ex);
                 throw new UtilException($"Could not create response: {ex.Message}", ex);
             }
         }
 
-        public async Task ModifyMessageAsync(DiscordInteraction interaction, Message message) {
+        public async Task<DiscordMessage> ModifyMessageAsync(DiscordInteraction interaction, Message message) {
             try {
                 // Start the stopwatch
                 Stopwatch stopwatch = Stopwatch.StartNew();
@@ -192,6 +200,8 @@ namespace APP.Utils {
                     $"{AnsiColor.RESET}({original.Id}) " +
                     $"{AnsiColor.RESET}({interaction.User.Username})");
 
+                // Return the message
+                return original;
             } catch (Exception ex) {
                 throw new CommandException($"Embed.UpdateMessageAsync: {ex.Message}", ex);
             }
