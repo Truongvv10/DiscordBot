@@ -16,6 +16,7 @@ using BLL.Services;
 using DLLSQLite.Repositories;
 using DLLSQLite.Contexts;
 using DLLSQLServer.Contexts;
+using DLLProvider;
 
 namespace APP.Services {
     public class DiscordService {
@@ -31,22 +32,7 @@ namespace APP.Services {
 
             // Initialize fields
             var connectionString = config.ConnectionString;
-            if (connectionString != null) {
-                switch (config.DatabaseType) {
-                    case DatabaseSaveType.SqlServer:
-                        var sqlserverDataContext = new SqlServerDataContext(connectionString);
-                        dataService = new SqlServerRepository(cache, sqlserverDataContext);
-                        //dataService = new SqlServerRepository(cache, config.ConnectionString);
-                        break;
-                    case DatabaseSaveType.Sqlite:
-                        var sqliteDataContext = new SqliteDataContext(connectionString);
-                        dataService = new SqliteRepository(cache, sqliteDataContext);
-                        //dataService = new SqliteRepository(cache, config.ConnectionString);
-                        break;
-                    default:
-                        throw new ServiceException($"Connection can not be established");
-                }
-            }
+            dataService = DataRepositoryFactory.GetDataRepositories(connectionString!, config.DatabaseType).dataRepository;
 
             this.cache = cache;
             this.config = config;
@@ -137,6 +123,10 @@ namespace APP.Services {
             // Subscribe to the SlashCommandErrored event
             var slashCommandUseEvent = new SlashCommandUseEvent(dataService, discordUtil);
             commands.SlashCommandErrored += slashCommandUseEvent.OnSlashCommandErrored;
+        }
+
+        public DiscordClient GetDiscordClient() {
+            return client;
         }
     }
 }

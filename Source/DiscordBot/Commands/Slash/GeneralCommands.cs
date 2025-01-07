@@ -56,7 +56,6 @@ namespace APP.Commands.Slash {
             }
         }
         #endregion
-
         #region Command: Timestamp
         [SlashCommand(TIMESTAMP, "Generate dynamic discord timestamp")]
         [RequirePermission(CommandEnum.NONE)]

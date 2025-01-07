@@ -29,8 +29,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\BLL\BLL.csproj" />
-    <ProjectReference Include="..\DLLSQLite\DLLSQLite.csproj" />
-    <ProjectReference Include="..\DLLSQLServer\DLLSQLServer.csproj" />
+    <ProjectReference Include="..\DLLProvider\DLLProvider.csproj" />
   </ItemGroup>
 
 </Project>

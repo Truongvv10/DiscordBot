@@ -6,18 +6,35 @@ using BLL.Managers;
 using BLL.Services;
 using DLLSQLite.Repositories;
 using DLLSQLite.Contexts;
+using DSharpPlus;
 
 namespace APP {
-    internal class Program {
-        static async Task Main(string[] args) {
+    public static class Program {
+        private static DiscordService _discordService;
+        private static readonly object _lock = new object();
+
+        public static DiscordService DiscordService {
+            get {
+                if (_discordService == null) {
+                    throw new InvalidOperationException("DiscordService is not initialized yet.");
+                }
+                return _discordService;
+            }
+        }
+
+        public static async Task Main(string[] args) {
             try {
                 // Initialize the Discord bot
                 DiscordManager manager = new DiscordManager();
                 ICacheData cache = new CacheData();
-                var discordService = new DiscordService(await manager.GetDiscordBotConfig(), cache);
+                var service = new DiscordService(await manager.GetDiscordBotConfig(), cache);
+
+                lock (_lock) {
+                    _discordService = service;
+                }
 
                 // Initialize the Discord bot
-                await discordService.InitializeAsync();
+                await _discordService.InitializeAsync();
 
                 // Keep the application running
                 await Task.Delay(-1);
@@ -29,7 +46,6 @@ namespace APP {
             } catch (Exception ex) {
                 Console.WriteLine($"{AnsiColor.RESET}[{DateTime.Now}] {AnsiColor.BRIGHT_RED}[Error] An unexpected error occurred: {ex.Message}");
             }
-
         }
     }
 }

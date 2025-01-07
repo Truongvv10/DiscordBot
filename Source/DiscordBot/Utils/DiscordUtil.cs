@@ -16,12 +16,14 @@ using System.Threading.Channels;
 using Microsoft.IdentityModel.Tokens;
 using NodaTime.Text;
 using System.Collections.Immutable;
+using DLLProvider;
 
 namespace APP.Utils {
     public class DiscordUtil {
 
         #region Fields
         private IDataRepository dataService;
+        private DataRepositories dataService1;
         #endregion
 
         #region Constructor

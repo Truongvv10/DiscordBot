@@ -29,7 +29,7 @@ namespace APP.Utils {
                     builder.WithColor(new DiscordColor(embed.Color));
                 if (embed.HasTimeStamp)
                     builder.WithTimestamp(DateTime.Now);
-                if (embed.Fields.Count > 0)
+                if (embed.Fields != null && embed.Fields.Count > 0)
                     foreach (var field in embed.Fields) builder.AddField(field.Item1, field.Item2, field.Item3);
 
                 return builder;
