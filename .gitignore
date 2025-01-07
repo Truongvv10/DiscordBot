@@ -407,3 +407,4 @@ Source/DLLSQLite/Migrations
 /Source/DLLSQLite/Data.db
 /Source/TestProjectxUnit
 /Source/TestConsoleApp
+/Source/REST/appsettings.json
