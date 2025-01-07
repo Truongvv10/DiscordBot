@@ -21,6 +21,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestConsoleApp", "TestConso
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DLLCosmos", "DLLCosmos\DLLCosmos.csproj", "{6D21267D-A323-455E-9CBE-B654DBEC71BE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "REST", "REST\REST.csproj", "{7ABE2616-BACE-4F74-B18F-3757BD13282E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DLLProvider", "DLLProvider\DLLProvider.csproj", "{040906CE-A917-485F-961E-A50CEFD9C87C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -59,6 +63,14 @@ Global
 		{6D21267D-A323-455E-9CBE-B654DBEC71BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6D21267D-A323-455E-9CBE-B654DBEC71BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6D21267D-A323-455E-9CBE-B654DBEC71BE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7ABE2616-BACE-4F74-B18F-3757BD13282E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7ABE2616-BACE-4F74-B18F-3757BD13282E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7ABE2616-BACE-4F74-B18F-3757BD13282E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7ABE2616-BACE-4F74-B18F-3757BD13282E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{040906CE-A917-485F-961E-A50CEFD9C87C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{040906CE-A917-485F-961E-A50CEFD9C87C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{040906CE-A917-485F-961E-A50CEFD9C87C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{040906CE-A917-485F-961E-A50CEFD9C87C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -37,6 +37,23 @@ namespace BLL.Model {
             GuildId = guildId;
             MessageId = messageId;
         }
+
+        public Message(string? content, ulong? sender, bool isEphemeral, DateTime? creationDate, Dictionary<string, string> data, List<ulong> roles, List<ulong> users, List<ComponentButtons> componentButtons, List<ComponentSelectOptions> componentSelectOptions, Embed embed, ulong messageId, ulong channelId, ulong guildId) : this(content) {
+            this.content = content;
+            this.sender = sender;
+            this.isEphemeral = isEphemeral;
+            this.creationDate = creationDate;
+            this.childs = childs;
+            this.roles = roles;
+            this.users = users;
+            this.componentButtons = componentButtons;
+            this.componentSelectOptions = componentSelectOptions;
+            this.embed = embed;
+            MessageId = messageId;
+            ChannelId = channelId;
+            GuildId = guildId;
+        }
+
         #endregion
 
         #region Properties

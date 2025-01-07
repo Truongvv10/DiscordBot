@@ -42,6 +42,22 @@ namespace BLL.Model {
         public Embed(string description, string title, string footer) : this(description, title) {
             this.footer = footer;
         }
+        public Embed(string? title, string? titleLink, string? description, string? footer, string? footerUrl, string? author, string? authorLink, string? authorUrl, string? image, string? thumbnail, string? color, bool hasTimeStamp, List<(string, string, bool)> fields) {
+            this.title = title;
+            this.titleLink = titleLink;
+            this.description = description;
+            this.footer = footer;
+            this.footerUrl = footerUrl;
+            this.author = author;
+            this.authorLink = authorLink;
+            this.authorUrl = authorUrl;
+            this.image = image;
+            this.thumbnail = thumbnail;
+            this.color = color;
+            this.hasTimeStamp = hasTimeStamp;
+            this.fields = fields;
+        }
+
         #endregion
 
         #region Properties
