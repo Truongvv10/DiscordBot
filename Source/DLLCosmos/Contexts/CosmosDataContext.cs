@@ -15,10 +15,13 @@ namespace DLLCosmos.Contexts {
         #endregion
 
         #region Constructors
-        public CosmosDataContext(string? endpoint, string? key, string? connectionString = null) : base(connectionString) {
-            this.endpoint = endpoint ?? "https://localhost:8081";
-            this.key = key ?? "C2y6yDjf5/R+ob0N8A7Cgv30VRDJIWEHLM+4QDU5DE2nQ9nDuVTqobD4b8mGGyPMbIZnqyMsEcaGQy67XIw/Jw==";
-            database = connectionString ?? "Database";
+        public CosmosDataContext(string? connectionString = null) : base(connectionString) {
+            if (connectionString is not null) {
+                var values = connectionString.Split(";");
+                endpoint = values[0];
+                key = values[1];
+                database = values[2];
+            }
         }
         #endregion
 
