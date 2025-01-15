@@ -187,35 +187,28 @@ namespace APP.Events {
                         await discordUtil.ModifyMessageAsync(e.Interaction, message);
                         return;
 
-                    case Identity.SELECTION_PINGROLE:
-                        List<ulong> pingIds = new();
-                        foreach (var item in e.Values.First().Value.Split(",")) {
+                    case Identity.SELECTION_PINGS:
+                        string rolePings = data[Identity.MODAL_DATA_PINGROLE];
+                        string userPings = data[Identity.MODAL_DATA_PINGUSER];
+                        List<ulong> pingRoleIds = new();
+                        List<ulong> pingUserIds = new();
+                        foreach (var item in rolePings.Split(",")) {
                             string trimmedItem = item.Trim();
-
-                            // Check if the input is "everyone"
-                            if (trimmedItem.Equals("everyone", StringComparison.OrdinalIgnoreCase)) {
-                                // Add the @everyone role ID, which is the same as the guild ID
-                                pingIds.Add(e.Interaction.Guild.Id);
-                            }
-                            // Check if the input is a valid ulong (role ID)
+                            if (trimmedItem.Equals("everyone", StringComparison.OrdinalIgnoreCase))
+                                pingRoleIds.Add(e.Interaction.Guild.Id);
                             else if (ulong.TryParse(trimmedItem, out ulong roleid)) {
                                 var role = await discordUtil.GetRolesByIdAsync(e.Interaction.Guild, roleid);
-                                pingIds.Add(role.Id);
+                                pingRoleIds.Add(role.Id);
                             }
                         }
-                        message.SetRole(pingIds.ToArray());
-                        await dataService.UpdateMessageAsync(message, selection);
-                        break;
-
-                    case Identity.SELECTION_PINGUSER:
-                        List<ulong> pingUserIds = new();
-                        foreach (var item in e.Values.First().Value.Split(",")) {
+                        foreach (var item in userPings.Split(",")) {
                             string trimmedItem = item.Trim();
                             if (ulong.TryParse(trimmedItem, out ulong userId)) {
                                 var role = await e.Interaction.Guild.GetMemberAsync(userId);
                                 pingUserIds.Add(role.Id);
                             }
                         }
+                        message.SetRole(pingRoleIds.ToArray());
                         message.SetUser(pingUserIds.ToArray());
                         await dataService.UpdateMessageAsync(message, selection);
                         break;

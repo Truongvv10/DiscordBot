@@ -21,8 +21,7 @@
         public const string SELECTION_COLOR = $"{SELECTION_EMBED}.color";
         public const string SELECTION_IMAGE = $"{SELECTION_EMBED}.image";
         public const string SELECTION_THUMBNAIL = $"{SELECTION_EMBED}.thumbnail";
-        public const string SELECTION_PINGUSER = $"{SELECTION_EMBED}.pinguser";
-        public const string SELECTION_PINGROLE = $"{SELECTION_EMBED}.pingrole";
+        public const string SELECTION_PINGS = $"{SELECTION_EMBED}.pinguser";
         public const string SELECTION_TIMESTAMP = $"{SELECTION_EMBED}.timestamp";
         public const string SELECTION_FIELD_ADD = $"{SELECTION_EMBED}.field.add";
         public const string SELECTION_FIELD_REMOVE = $"{SELECTION_EMBED}.field.remove";

@@ -1,8 +1,6 @@
 ﻿using BLL.Enums;
 using BLL.Interfaces;
 using BLL.Services;
-using DLLCosmos.Contexts;
-using DLLCosmos.Repositories;
 using DLLSQLite.Contexts;
 using DLLSQLite.Repositories;
 using DLLSQLServer.Contexts;
@@ -30,10 +28,6 @@ namespace DLLProvider {
                     case DatabaseSaveType.Sqlite:
                         var SqlLiteContext = new SqliteDataContext(connectionString);
                         dataRepository = new SqliteRepository(cacheData, SqlLiteContext);
-                        break;
-                    case DatabaseSaveType.Cosmos:
-                        var CosmosContext = new CosmosDataContext(connectionString);
-                        dataRepository = new CosmosRepository(cacheData, CosmosContext);
                         break;
                     default:
                         throw new Exception("Invalid database type");

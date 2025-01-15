@@ -303,13 +303,10 @@ namespace DLL.Repositories {
                         dataContext.Entry(fetched.Embed).Property(e => e.Thumbnail).IsModified = true;
                         break;
 
-                    case Identity.SELECTION_PINGROLE:
+                    case Identity.SELECTION_PINGS:
                         fetched.Roles = message.Roles;
-                        dataContext.Entry(fetched).Property(e => e.Roles).IsModified = true;
-                        break;
-
-                    case Identity.SELECTION_PINGUSER:
                         fetched.Users = message.Users;
+                        dataContext.Entry(fetched).Property(e => e.Roles).IsModified = true;
                         dataContext.Entry(fetched).Property(e => e.Users).IsModified = true;
                         break;
 

@@ -13,23 +13,22 @@ namespace APP.Utils {
         public static DiscordActionRowComponent GetDefault() {
 
             var selectOptions = new List<DiscordSelectComponentOption>() {
+                    new DiscordSelectComponentOption("Edit Messsage", Identity.SELECTION_CONTENT, "Edit plain text to the message.", emoji: new DiscordComponentEmoji("💭")),
                     new DiscordSelectComponentOption("Edit Title", Identity.SELECTION_TITLE, "Edit your embed title & url.", emoji: new DiscordComponentEmoji("✏️")),
                     new DiscordSelectComponentOption("Edit Description", Identity.SELECTION_DESCRIPTION, "Edit your embed description.", emoji: new DiscordComponentEmoji("📄")),
                     new DiscordSelectComponentOption("Edit Footer", Identity.SELECTION_FOOTER, "Edit your embed footer & image.", emoji: new DiscordComponentEmoji("🧩")),
                     new DiscordSelectComponentOption("Edit Author", Identity.SELECTION_AUTHOR, "Edit your embed author text, link & url.", emoji: new DiscordComponentEmoji("👤")),
-                    new DiscordSelectComponentOption("Edit Main Image", Identity.SELECTION_IMAGE, "Edit your embed image.", emoji: new DiscordComponentEmoji("🪪")),
-                    new DiscordSelectComponentOption("Edit Thumbnail Image", Identity.SELECTION_THUMBNAIL, "Edit your embed tumbnail.", emoji: new DiscordComponentEmoji("🖼")),
+                    new DiscordSelectComponentOption("Edit Main", Identity.SELECTION_IMAGE, "Edit your embed image.", emoji: new DiscordComponentEmoji("🪪")),
+                    new DiscordSelectComponentOption("Edit Thumbnail", Identity.SELECTION_THUMBNAIL, "Edit your embed tumbnail.", emoji: new DiscordComponentEmoji("🖼")),
                     new DiscordSelectComponentOption("Edit Color", Identity.SELECTION_COLOR, "Edit your embed color.", emoji: new DiscordComponentEmoji("🎨")),
-                    new DiscordSelectComponentOption("Edit Users To Ping", Identity.SELECTION_PINGUSER, "Edit user to ping on message sent.", emoji: new DiscordComponentEmoji("🔔")),
-                    new DiscordSelectComponentOption("Edit Roles To Ping", Identity.SELECTION_PINGROLE, "Edit roles to ping on message sent.", emoji: new DiscordComponentEmoji("🔔")),
-                    new DiscordSelectComponentOption("Edit Plain Message", Identity.SELECTION_CONTENT, "Edit plain text to the message.", emoji: new DiscordComponentEmoji("💭")),
                     new DiscordSelectComponentOption("Toggle Timestamp", Identity.SELECTION_TIMESTAMP, "Toggle embed timestamp.", emoji: new DiscordComponentEmoji("🕙")),
-                    new DiscordSelectComponentOption("Add Field Message", Identity.SELECTION_FIELD_ADD, "Add field message.", emoji: new DiscordComponentEmoji("📕")),
-                    new DiscordSelectComponentOption("Remove Field Message", Identity.SELECTION_FIELD_REMOVE, "Remove field message.", emoji: new DiscordComponentEmoji("❌")),
-                    new DiscordSelectComponentOption("Save To Templates", Identity.SELECTION_TEMPLATE_ADD, "Save this message to your templates.", emoji: new DiscordComponentEmoji("📂")),
-                    new DiscordSelectComponentOption("Use From Templates", Identity.SELECTION_TEMPLATE_USE, "Change this message using your templates.", emoji: new DiscordComponentEmoji("📑")),
-                    new DiscordSelectComponentOption("List Of Templates", Identity.SELECTION_TEMPLATE_LIST, "Have an overview of available templates.", emoji: new DiscordComponentEmoji("📰")),
-                    new DiscordSelectComponentOption("Remove A Template", Identity.SELECTION_TEMPLATE_REMOVE, "Remove a template from your templates.", emoji: new DiscordComponentEmoji("❌"))};
+                    new DiscordSelectComponentOption("Add Field", Identity.SELECTION_FIELD_ADD, "Add field message.", emoji: new DiscordComponentEmoji("📕")),
+                    new DiscordSelectComponentOption("Remove Field", Identity.SELECTION_FIELD_REMOVE, "Remove field message.", emoji: new DiscordComponentEmoji("❌")),
+                    new DiscordSelectComponentOption("Edit Pings", Identity.SELECTION_PINGS, "Edit users/roles to ping on message sent.", emoji: new DiscordComponentEmoji("🔔")),
+                    new DiscordSelectComponentOption("Save Templates", Identity.SELECTION_TEMPLATE_ADD, "Save this message to your templates.", emoji: new DiscordComponentEmoji("📂")),
+                    new DiscordSelectComponentOption("Use Templates", Identity.SELECTION_TEMPLATE_USE, "Change this message using your templates.", emoji: new DiscordComponentEmoji("📑")),
+                    new DiscordSelectComponentOption("List Templates", Identity.SELECTION_TEMPLATE_LIST, "Have an overview of available templates.", emoji: new DiscordComponentEmoji("📰")),
+                    new DiscordSelectComponentOption("Remove Templates", Identity.SELECTION_TEMPLATE_REMOVE, "Remove a template from your templates.", emoji: new DiscordComponentEmoji("❌"))};
 
             List<DiscordComponent> selectComponents = new() {
                 new DiscordSelectComponent(Identity.SELECTION_EMBED, "Select message builder components to edit", selectOptions)};

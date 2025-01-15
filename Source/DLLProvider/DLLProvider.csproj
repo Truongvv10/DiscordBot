@@ -7,7 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\DLLCosmos\DLLCosmos.csproj" />
     <ProjectReference Include="..\DLLSQLite\DLLSQLite.csproj" />
     <ProjectReference Include="..\DLLSQLServer\DLLSQLServer.csproj" />
   </ItemGroup>
